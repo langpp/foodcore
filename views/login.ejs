@@ -2,74 +2,50 @@
 <html lang="en">
 <%- include("./template/css.ejs") %>
 <body>
-	<header class="header__section header__transparent">
-    <div class="main__header main__header2 header__sticky sticky">
-      <div class="container">
-        <div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
-          <div class="offcanvas__header--menu__open ">
-            <a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
-            </a>
-          </div>
-          <%- include("./template/header_menu.ejs") %>
-        </div>
-      </div>
-    </div>
-    <%- include("./template/toolbar.ejs") %>
-    <%- include("./template/search_box.ejs") %>
-  </header>
-	<!-- End header area -->
-
 	<main class="main__content_wrapper">
     <!-- Start login section  -->
-    <div class="login__section section--padding mt-100">
+    <div class="login__section login-mid">
       <div class="container">
         <div action="#">
+          <img class="bg-login-after" src="/img/banner/login-bg.png" alt="login-img">
           <div class="login__section--inner">
-            <div class="row row-cols-md-2 row-cols-1">
-              <div class="col d-hide-media">
-                <div class="about__thumb d-flex">
-                  <div class="about__thumb--items">
-                    <img class="about__thumb--img border-radius-5 display-block" src="/img/other/about-thumb-list1.png" alt="about-thumb">
-                  </div>
-                  <div class="about__thumb--items position__relative">
-                    <img class="about__thumb--img border-radius-5 display-block" src="/img/other/about-thumb-list2.png" alt="about-thumb">
-                    <div class="banner__bideo--play about__thumb--play">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col">
+            <div class="row d-flex align-items-center justify-content-center">
+              <div class="col-lg-4 col-md-5 col-sm-9 col-12">
                 <div class="account__login">
                   <div class="account__login--header mb-25">
+                    <img class="main__logo--img mb-25" src="/img/logo/nav-log.png" alt="logo-img" style="margin: 0px auto;margin-bottom: 40px;">
                     <h2 class="account__login--header__title h3 mb-10">Login</h2>
                     <p class="hp account__login--header__desc">Lengkapi No Handphone.</p>
-                    <p class="verify account__login--header__desc">Silahkan masukkan kode verifikasi yang dikirim lewat sms</p>
-                    <p class="password account__login--header__desc">Buat Password Baru</p>
-                    <p class="loginPassword account__login--header__desc">Masukkan Password</p>
+                    <p class="verify account__login--header__desc" style="display: none;">Silahkan masukkan kode verifikasi yang dikirim lewat sms</p>
+                    <p class="password account__login--header__desc" style="display: none;">Buat Password Baru</p>
+                    <p class="loginPassword account__login--header__desc" style="display: none;">Masukkan Password</p>
                   </div>
                   <div class="account__login--inner">
                     <label>
                       <input id="hp" class="hp account__login--input" placeholder="No Handphone" type="text">
                     </label>
                     <label>
-                      <input id="verify" class="verify account__login--input" placeholder="Kode Verifikasi" type="number">
+                      <input id="verify" class="verify account__login--input" style="display: none;" placeholder="Kode Verifikasi" type="number">
                     </label>
                     <label>
-                      <input id="password" class="password account__login--input" placeholder="Password" type="password">
+                      <input id="password" class="password account__login--input" style="display: none;" placeholder="Password" type="password">
                     </label>
                     <label>
-                      <input id="confrimPassword" class="password account__login--input" placeholder="Ulangi Password" type="password">
+                      <input id="confrimPassword" class="password account__login--input" style="display: none;" placeholder="Ulangi Password" type="password">
                     </label>
                     <label>
-                      <input id="loginPassword" class="loginPassword account__login--input" placeholder="Password" type="password">
+                      <input id="loginPassword" class="loginPassword account__login--input" style="display: none;" placeholder="Password" type="password">
                     </label>
-                    <div class="loginInfo account__login--forgot"></div>
+                    <div class="loginInfo account__login--forgot" style="display: none;"></div>
                     <div id="recaptcha-container" class="hp"></div>
                     <br>
-                    <button id="login" class=" hp account__login--btn btn">Masuk</button>
-                    <button id="verifyBtn" class="verify account__login--btn btn">Verify</button>
-                    <button id="save" class="password account__login--btn btn">Simpan</button>
-                    <button id="loginPasswordBtn" class="loginPassword account__login--btn btn">Login</button>
+                    <div class="d-flex align-items-center justify-content-between">
+                      <a href="/" class="account__login--btn btn btn-outline-warning">Kembali</a> &nbsp;
+                      <button id="login" class=" hp account__login--btn btn" style="border: 1px solid #f47722;">Masuk</button>
+                    </div>
+                    <button id="verifyBtn" class="verify account__login--btn btn" style="display: none;">Verify</button>
+                    <button id="save" class="password account__login--btn btn" style="display: none;">Simpan</button>
+                    <button id="loginPasswordBtn" class="loginPassword account__login--btn btn" style="display: none;">Login</button>
                   </div>
                 </div>
               </div>
@@ -82,7 +58,6 @@
   </main>
   
   <br>
-  <%- include("./template/footer.ejs") %>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>  
   <%- include("./template/js.ejs") %>
   <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
