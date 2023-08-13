@@ -1,0 +1,64 @@
+<div class="offcanvas__stikcy--toolbar">
+  <ul class="d-flex justify-content-between">
+    <li class="offcanvas__stikcy--toolbar__list">
+      <a class="offcanvas__stikcy--toolbar__btn" href="<%- session.home %>"> <span class="offcanvas__stikcy--toolbar__icon"> 
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="21.51" height="21.443" viewBox="0 0 22 17"><path fill="currentColor" d="M20.9141 7.93359c.1406.11719.2109.26953.2109.45703 0 .14063-.0469.25782-.1406.35157l-.3516.42187c-.1172.14063-.2578.21094-.4219.21094-.1406 0-.2578-.04688-.3515-.14062l-.9844-.77344V15c0 .3047-.1172.5625-.3516.7734-.2109.2344-.4687.3516-.7734.3516h-4.5c-.3047 0-.5742-.1172-.8086-.3516-.2109-.2109-.3164-.4687-.3164-.7734v-3.6562h-2.25V15c0 .3047-.11719.5625-.35156.7734-.21094.2344-.46875.3516-.77344.3516h-4.5c-.30469 0-.57422-.1172-.80859-.3516-.21094-.2109-.31641-.4687-.31641-.7734V8.46094l-.94922.77344c-.11719.09374-.24609.14062-.38672.14062-.16406 0-.30468-.07031-.42187-.21094l-.35157-.42187C.921875 8.625.875 8.50781.875 8.39062c0-.1875.070312-.33984.21094-.45703L9.73438.832031C10.1094.527344 10.5312.375 11 .375s.8906.152344 1.2656.457031l8.6485 7.101559zm-3.7266 6.50391V7.05469L11 1.99219l-6.1875 5.0625v7.38281h3.375v-3.6563c0-.3046.10547-.5624.31641-.7734.23437-.23436.5039-.35155.80859-.35155h3.375c.3047 0 .5625.11719.7734.35155.2344.211.3516.4688.3516.7734v3.6563h3.375z"></path></svg>
+        </span> <span class="offcanvas__stikcy--toolbar__label">Home</span> 
+      </a>
+    </li>
+    <% if(session.phone){ %>
+      <li class="offcanvas__stikcy--toolbar__list">
+        <a class="offcanvas__stikcy--toolbar__btn" href="/saran"> <span class="offcanvas__stikcy--toolbar__icon"> 
+          <svg fill="currentColor" width="18.51" height="17.443" viewBox="0 0 20 20">
+            <path d="M14.999,8.543c0,0.229-0.188,0.417-0.416,0.417H5.417C5.187,8.959,5,8.772,5,8.543s0.188-0.417,0.417-0.417h9.167C14.812,8.126,14.999,8.314,14.999,8.543 M12.037,10.213H5.417C5.187,10.213,5,10.4,5,10.63c0,0.229,0.188,0.416,0.417,0.416h6.621c0.229,0,0.416-0.188,0.416-0.416C12.453,10.4,12.266,10.213,12.037,10.213 M14.583,6.046H5.417C5.187,6.046,5,6.233,5,6.463c0,0.229,0.188,0.417,0.417,0.417h9.167c0.229,0,0.416-0.188,0.416-0.417C14.999,6.233,14.812,6.046,14.583,6.046 M17.916,3.542v10c0,0.229-0.188,0.417-0.417,0.417H9.373l-2.829,2.796c-0.117,0.116-0.71,0.297-0.71-0.296v-2.5H2.5c-0.229,0-0.417-0.188-0.417-0.417v-10c0-0.229,0.188-0.417,0.417-0.417h15C17.729,3.126,17.916,3.313,17.916,3.542 M17.083,3.959H2.917v9.167H6.25c0.229,0,0.417,0.187,0.417,0.416v1.919l2.242-2.215c0.079-0.077,0.184-0.12,0.294-0.12h7.881V3.959z"></path>
+          </svg>
+          </span> <span class="offcanvas__stikcy--toolbar__label">Saran</span> 
+        </a>
+      </li>
+    <% } %>
+    <li class="offcanvas__stikcy--toolbar__list">
+      <a class="offcanvas__stikcy--toolbar__btn" href="/about"> <span class="offcanvas__stikcy--toolbar__icon"> 
+        <svg fill="currentColor" width="18.51" height="17.443" viewBox="0 0 20 20">
+          <path d="M8.627,7.885C8.499,8.388,7.873,8.101,8.13,8.177L4.12,7.143c-0.218-0.057-0.351-0.28-0.293-0.498c0.057-0.218,0.279-0.351,0.497-0.294l4.011,1.037C8.552,7.444,8.685,7.667,8.627,7.885 M8.334,10.123L4.323,9.086C4.105,9.031,3.883,9.162,3.826,9.38C3.769,9.598,3.901,9.82,4.12,9.877l4.01,1.037c-0.262-0.062,0.373,0.192,0.497-0.294C8.685,10.401,8.552,10.18,8.334,10.123 M7.131,12.507L4.323,11.78c-0.218-0.057-0.44,0.076-0.497,0.295c-0.057,0.218,0.075,0.439,0.293,0.495l2.809,0.726c-0.265-0.062,0.37,0.193,0.495-0.293C7.48,12.784,7.35,12.562,7.131,12.507M18.159,3.677v10.701c0,0.186-0.126,0.348-0.306,0.393l-7.755,1.948c-0.07,0.016-0.134,0.016-0.204,0l-7.748-1.948c-0.179-0.045-0.306-0.207-0.306-0.393V3.677c0-0.267,0.249-0.461,0.509-0.396l7.646,1.921l7.654-1.921C17.91,3.216,18.159,3.41,18.159,3.677 M9.589,5.939L2.656,4.203v9.857l6.933,1.737V5.939z M17.344,4.203l-6.939,1.736v9.859l6.939-1.737V4.203z M16.168,6.645c-0.058-0.218-0.279-0.351-0.498-0.294l-4.011,1.037c-0.218,0.057-0.351,0.28-0.293,0.498c0.128,0.503,0.755,0.216,0.498,0.292l4.009-1.034C16.092,7.085,16.225,6.863,16.168,6.645 M16.168,9.38c-0.058-0.218-0.279-0.349-0.498-0.294l-4.011,1.036c-0.218,0.057-0.351,0.279-0.293,0.498c0.124,0.486,0.759,0.232,0.498,0.294l4.009-1.037C16.092,9.82,16.225,9.598,16.168,9.38 M14.963,12.385c-0.055-0.219-0.276-0.35-0.495-0.294l-2.809,0.726c-0.218,0.056-0.351,0.279-0.293,0.496c0.127,0.506,0.755,0.218,0.498,0.293l2.807-0.723C14.89,12.825,15.021,12.603,14.963,12.385"></path>
+        </svg>
+        </span> <span class="offcanvas__stikcy--toolbar__label">Tentang</span> 
+      </a>
+    </li>
+    <% if(session.phone && (session.userType == 1 || session.userType == 4 || session.userType == 5 || session.userType == 7)){%> 
+      <li class="offcanvas__stikcy--toolbar__list">
+        <% if(session.userType == 1){%> 
+        <a class="offcanvas__stikcy--toolbar__btn" href="/admin/client"> <span class="offcanvas__stikcy--toolbar__icon"> 
+        <%}else if(session.userType == 4){%>  
+        <a class="offcanvas__stikcy--toolbar__btn" href="/admin/jadwal"> <span class="offcanvas__stikcy--toolbar__icon">
+        <%}else if(session.userType == 5 || session.userType == 7){%>  
+        <a class="offcanvas__stikcy--toolbar__btn" href="/user/order"> <span class="offcanvas__stikcy--toolbar__icon"> 
+        <%}%>
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="20.51" height="19.443" viewBox="0 0 512 512">
+            <path d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" />
+            <path d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" />
+          </svg> 
+
+          <% if(session.userType == 1){%> 
+          </span> <span class="offcanvas__stikcy--toolbar__label">Admin</span> 
+          <%}else if(session.userType == 4){%>  
+          </span> <span class="offcanvas__stikcy--toolbar__label">Admin</span> 
+          <%}else if(session.userType == 5 || session.userType == 7){%>  
+          </span> <span class="offcanvas__stikcy--toolbar__label">Akun</span> 
+          <%}%>
+          
+        </a>
+      </li>
+    <%}else{%>  
+      <li class="offcanvas__stikcy--toolbar__list">
+        <a class="offcanvas__stikcy--toolbar__btn" href="/login"> <span class="offcanvas__stikcy--toolbar__icon"> 
+          <svg xmlns="http://www.w3.org/2000/svg" width="20.51" height="19.443" viewBox="0 0 512 512">
+            <path d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" />
+            <path d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" />
+          </svg> 
+          </span> <span class="offcanvas__stikcy--toolbar__label">Akun</span> 
+        </a>
+      </li>
+    <%}%>  
+  </ul>
+</div>

@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+	<%- include("../template/css.ejs") %>
+	<body>
+		<header class="header__section">
+			<%- include("../template/login_info.ejs") %>
+			<div class="main__header main__header2 header__sticky sticky" style="margin-top: 36px;">
+				<div class="container">
+					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+						<div class="offcanvas__header--menu__open ">
+							<a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+							</a>
+						</div>
+						<%- include("../template/header_menu.ejs") %>
+					</div>
+				</div>
+			</div>
+			<%- include("../template/toolbar.ejs") %>
+			<%- include("../template/search_box.ejs") %>
+		</header>
+		<!-- End header area -->
+		<main class="main__content_wrapper">
+			<!-- my account section start -->
+			<section class="section--padding mt-100">
+				<div class="container">
+					<div class="row">
+            <div class="col-lg-12 mt-3">
+							<nav>
+								<ol class="cd-breadcrumb custom-separator">
+									<li><a href="javascript:void(0)">Admin</a></li>
+									<li class="current"><em>Jadwal</em></li>
+								</ol>
+							</nav>
+						</div>
+						<div class="col-lg-3 mb-3">
+							<div class="shop__sidebar--widget widget__area d-lg-block">
+								<div class="single__widget widget__bg">
+									<h2 class="widget__title h3">Menu</h2>
+									<ul class="widget__categories--menu">
+                    <% if(session.userType == '1'){ %>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/client" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-star"></i> 
+											<span class="widget__categories--menu__text">Daftar Client</span>
+											</a>
+										</li>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/paket" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-briefcase"></i> 
+											<span class="widget__categories--menu__text">Daftar Paket</span>
+											</a>
+										</li>
+                    <% } %>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/jadwal" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-list text-warning"></i> 
+											<span class="widget__categories--menu__text text-warning">Daftar Jadwal</span>
+											</a>
+										</li>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/user" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-user"></i> 
+											<span class="widget__categories--menu__text">Daftar User</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-9">
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <% if(session.userType == 1){%>  
+                  <button id="export-btn" class="btn btn-primary btn-sm" type="button">Export ke Excel</button>
+                <%}%>
+                <% if(session.userType == 4 || session.userType == 1){%>  
+                  <button id="addJadwal" class="btn btn-primary btn-sm" type="button">Tambah Jadwal</button>
+                <%}%>
+              </div>
+              <br>
+              <div>
+                <!-- <h2 class="account__content--title h3 mb-20">Orders History</h2> -->
+                <div>
+                  <table id="jadwal" class="display table table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>No.</th>
+                        <th>Tanggal</th>
+                        <th>ID Client</th>
+                        <th>Client</th>
+                        <th>ID Paket</th>
+                        <th>Paket</th>
+                        <th>Status</th>
+                        <th>Qty</th>
+                        <th>Tagihan</th>
+                        <th>Waktu</th>
+                        <th>Sehat</th>
+                      </tr>
+                    </thead>
+                </table>
+                </div>
+              </div>
+            </div>
+					</div>
+				</div>
+			</section>
+			<!-- my account section end -->
+			<!-- Modal -->
+			<div class="modal fade" id="jadwalModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title tambahJadwal" id="exampleModalLabel">Tambah Jadwal</h5>
+              <h5 class="modal-title editJadwal editJadwalTitle" id="exampleModalLabel">Jadwal</h5>            
+              <h5 class="modal-title editJadwal jadwalTitle" id="exampleModalLabel">Jadwal</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+  
+              <div class="row tambahJadwal">
+                <div class="col-lg-12 mb-12">
+                    <div class="checkout__input--list ">
+                      <input id="tanggalJadwal" class="checkout__input--field border-radius-5" placeholder="Tanggal"  type="date">
+                      <div class="invalid-feedback">
+                        Isikan Tanggal!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-12" <%if(session.userType == 4){%>hidden<%}%>>
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="clientJadwal">Client</label>
+                      <select id="clientJadwal" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Client!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-12 mb-12">
+                  <div class="checkout__input--list checkout__input--select select">
+                    <label class="checkout__select--label" for="paketJadwal">Paket</label>
+                      <select id="paketJadwal" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                      </select>
+                    <div class="invalid-feedback">
+                      Isikan Paket!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="waktuPaket">Waktu</label>
+                      <select id="waktuPaket" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                        <option value="Pagi">Pagi</option>
+                        <option value="Siang">Siang</option>
+                        <option value="Sore">Sore</option>
+                        <option value="Malam">Malam</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Waktu Paket!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="sehatPaket">Menu Sehat</label>
+                      <select id="sehatPaket" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                        <option value="Menu Biasa">Menu Biasa</option>
+                        <option value="Menu Sehat">Menu Sehat</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Tipe Sehat Paket!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <label class="label" for="jumlahKaryawan">Jumlah: <span class="jumlahKaryawan">0</span> Karyawan</label>
+              </div>
+              </div>
+  
+              <div class="row editJadwal">              
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <input id="idJadwalEdit" class="checkout__input--field border-radius-5" type="text" hidden>
+                    <input id="tanggalJadwalEdit" class="editDS checkout__input--field border-radius-5" placeholder="Tanggal"  type="date">
+                    <div class="invalid-feedback">
+                      Isikan Tanggal!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 mb-12" <%if(session.userType == 4){%>hidden<%}%>>
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="clientJadwalEdit">Client</label>
+                      <select id="clientJadwalEdit" class="editDS checkout__input--select__field border-radius-5" aria-label="Client">
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Client!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-12 mb-12">
+                  <div class="checkout__input--list checkout__input--select select">
+                    <label class="checkout__select--label" for="paketJadwalEdit">Paket</label>
+                      <select id="paketJadwalEdit" class="editDS checkout__input--select__field border-radius-5" aria-label="Client">
+                      </select>
+                    <div class="invalid-feedback">
+                      Isikan Paket!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="waktuPaketEdit">Waktu</label>
+                      <select id="waktuPaketEdit" class="editDS checkout__input--select__field border-radius-5" aria-label="Client">
+                        <option value="Pagi">Pagi</option>
+                        <option value="Siang">Siang</option>
+                        <option value="Sore">Sore</option>
+                        <option value="Malam">Malam</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Waktu Paket!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="sehatPaketEdit">Menu Sehat</label>
+                      <select id="sehatPaketEdit" class="editDS checkout__input--select__field border-radius-5" aria-label="Client">
+                        <option value="Menu Biasa">Menu Biasa</option>
+                        <option value="Menu Sehat">Menu Sehat</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Tipe Sehat Paket!
+                      </div>
+                    </div>
+                </div>
+              </div>
+  
+              <div class="row buktiBayar">
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <label class="contact__form--label" for="image1">Bukti Transfer: <span class="contact__form--label__star">*</span></label>
+                    <input id="bukti_bayar" class="checkout__input--field border-radius-5" placeholder="Bukti Transfer"  type="file" accept="image/jpg, image/jpeg, image/png">
+                    <div class="invalid-feedback invalid-bukti-bayar">
+                      Isikan bukti transfer!
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+            </div>
+            <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+              <% if(session.userType == 4 || session.userType == 1){%>  
+                <button type="button" class="tambahJadwal saveTambahJadwal btn btn-primary">Simpan</button>
+                <button type="button" class="editJadwal deleteJadwal btn btn-danger" style="background-color: red; color: white;">Delete Jadwal</button>
+                <button type="button" class="editJadwal saveEditJadwal btn btn-primary" >Simpan</button>
+              <%}%>
+              <button type="button" class="editJadwal prosesPesanan Jadwal btn btn-primary btn-sm">Proses Pesanan</button>
+              <button type="button" class="editJadwal kirimInvoice Jadwal btn btn-primary">Kirim Invoice</button>
+              <button type="button" class="editJadwal lihatBuktiBayar Jadwal btn btn-primary">Lihat Bukti Bayar</button>
+              <button type="button" class="editJadwal tandaiSUdahBayar Jadwal btn btn-primary">Tandai Sudah Bayar</button>
+              <button type="button" class="editJadwal lihatInvoice Jadwal btn btn-primary">Lihat Invoice</button>       
+              <button type="button" class="editJadwal kirimBuktiBayar Jadwal btn btn-primary">Kirim Bukti Bayar</button>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+		</main>
+		<%- include("../template/footer.ejs") %>
+		<%- include("../template/js.ejs") %>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-table2excel@1.1.1/dist/jquery.table2excel.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        listJadwal();
+        <% if(session.userType == 1){%>  
+          listClient();
+        <%}%>      
+        listPaket();
+  
+        $(".invalid-feedback").hide();  
+        $(".tambahJadwal").hide();
+        $(".editJadwal").hide(); 
+        $(".buktiBayar").hide();
+        
+        $("#addJadwal").click(function(){
+          $("#tanggalJadwal").val("")
+          $("#clientJadwal").val("")
+          $("#paketJadwal").val("")
+  
+          $("#jadwalModal").modal("show");
+          $(".tambahJadwal").show();
+          $(".editJadwal").hide();
+          $(".buktiBayar").hide(); 
+  
+          <% if(session.userType == 4){%>  
+            jumlahKaryawan(1);
+          <%}%>        
+        });
+  
+        $(".saveTambahJadwal").click(function(){
+          <% if(session.userType == 1){%>
+            if($("#tanggalJadwal").val().trim() !== '' && $("#clientJadwal").val().trim() !== '' && $("#paketJadwal").val().trim() !== ''){
+          <%}else if(session.userType == 4){%>  
+            if($("#tanggalJadwal").val().trim() !== '' && $("#paketJadwal").val().trim() !== ''){
+          <%}%> 
+              $(".invalid-feedback").hide();
+              postJadwal();
+            }else{
+              $(".invalid-feedback").show();          
+            }
+        });
+  
+        $(".saveEditJadwal").click(function(){
+          <% if(session.userType == 1){%>
+            if($("#tanggalJadwalEdit").val().trim() !== '' && $("#clientJadwalEdit").val().trim() !== '' && $("#paketJadwalEdit").val().trim() !== ''){
+          <%}else if(session.userType == 4){%>  
+            if($("#tanggalJadwalEdit").val().trim() !== '' && $("#paketJadwalEdit").val().trim() !== ''){
+          <%}%>
+              $(".invalid-feedback").hide();
+              putJadwal();
+            }else{
+              $(".invalid-feedback").show();          
+            }
+        });
+  
+        $(".deleteJadwal").click(function(){
+          deleteJadwal();
+        });
+  
+        $('#clientJadwal').change(function() {
+          <% if(session.userType == 1){%>  
+            jumlahKaryawan($('#clientJadwal').val());
+          <%}%>
+        });
+  
+        $('#export-btn').click(function() {
+          window.open('/report.xlsx', '_blank');
+          // $('#jadwal').table2excel({
+          //     filename: 'myData.xlsx'
+          // });
+        });
+  
+        $('.prosesPesanan').click(function() {
+          changeStatus($("#idJadwalEdit").val(), 2);        
+        });
+  
+        $('.kirimInvoice').click(function() {
+          changeStatus($("#idJadwalEdit").val(), 3);        
+        });
+  
+        
+        $(".lihatBuktiBayar").click(function() {
+          window.open('/bukti_transfer.jpg', '_blank');
+        });
+  
+        $('.tandaiSUdahBayar').click(function() {
+          changeStatus($("#idJadwalEdit").val(), 4);
+        });
+        
+        $('.lihatInvoice').click(function() {
+          window.open('/invoice/'+$("#idJadwalEdit").val(), '_blank');
+        });
+  
+        $('.kirimBuktiBayar').click(function() {
+          const file_image1 = document.querySelector('#bukti_bayar').files[0];
+          var reader_image1 = new FileReader();
+          if(file_image1){
+            window.location.reload();
+          }else{
+            $(".invalid-bukti-bayar").show();
+            $.LoadingOverlay("hide");
+          }
+          
+        });
+  
+      });
+  
+      function listJadwal(){
+        $.ajax({
+          url: "/admin/jadwal/listJadwal",
+          type: "GET",
+          dataType: "json",
+          data: {
+            <% if(kode){ %> 
+              kode: '<%- kode %>',
+            <% } %> 
+          },
+          success: function(ress) {
+            if(ress.response == "Successful"){
+              dataTableJadwal = ress.result;
+              var tableJadwal = $('#jadwal').dataTable( {
+                data: dataTableJadwal,
+                columnDefs: [
+                  {
+                      target: 0,
+                      visible: false,
+                      searchable: false,
+                  },
+                  {
+                      target: 3,
+                      visible: false,
+                      searchable: false,
+                  },
+                  <% if(session.userType == 4){%>  
+                    {
+                      target: 4,
+                      visible: false,
+                      searchable: false,
+                    },
+                  <%}%>
+                  {
+                      target: 5,
+                      visible: false,
+                      searchable: false,
+                  },
+                  {
+                    targets: 9,
+                    render: function(data, type, row, meta) {
+                      if (type === 'display') {
+                        let harga = 'Rp. ' + thousandSeparator(parseInt(data))
+                        return harga;
+                      } else {
+                        return data;
+                      }
+                    }
+                  }
+                ],
+                order: [[1, 'asc']],
+              });
+  
+              // tableJadwal.buttons().container().appendTo( '#example_wrapper .col-md-6:eq(0)' );
+  
+              $('#jadwal tbody').on( 'click', 'tr', function () {
+                var aData = tableJadwal.fnGetData( this );
+                $("#idJadwalEdit").val(aData[0]);
+                $("#tanggalJadwalEdit").val(aData[2]);
+                $("#clientJadwalEdit").val(aData[3]);
+                $("#paketJadwalEdit").val(aData[5])
+                $("#waktuPaketEdit").val(aData[7])
+                $("#sehatPaketEdit").val(aData[8])
+  
+              // <button type="button" class="editJadwal kirimInvoice Jadwal btn btn-primary">Kirim Invoice</button>
+              // <button type="button" class="editJadwal tandaiSUdahBayar Jadwal btn btn-primary">Tandai Sudah Bayar</button>
+              // <button type="button" class="editJadwal lihatInvoice Jadwal btn btn-primary">Lihat Invoice</button>       
+              // <button type="button" class="editJadwal kirimBuktiBayar Jadwal btn btn-primary">Kirim Bukti Bayar</button>
+  
+                if(aData[7] == 'Belum Diproses'){
+                  <% if(session.userType == 1){%>
+                    $(".editDS").prop("disabled", true);
+                    $("#jadwalModal").modal("show");
+                    $(".tambahJadwal").hide();
+                    $(".editJadwal").show();
+                    $(".buktiBayar").hide(); 
+  
+                    $(".deleteJadwal").show();
+                    $(".saveEditJadwal").show();
+  
+                    $(".prosesPesanan").show();
+  
+                    $(".kirimInvoice").hide();
+                    $(".tandaiSUdahBayar").hide();
+                    $(".lihatBuktiBayar").hide();
+                    $(".lihatInvoice").hide();
+                    $(".kirimBuktiBayar").hide();
+                    
+                    $(".editJadwalTitle").show();
+                    $(".jadwalTitle").hide();
+                  <%}else{%>
+                    $(".editDS").prop("disabled", false);
+                    $("#jadwalModal").modal("show");
+                    $(".tambahJadwal").hide();
+                    $(".editJadwal").show();
+  
+                    $(".deleteJadwal").show();
+                    $(".saveEditJadwal").show();
+  
+                    $(".prosesPesanan").hide();
+                    
+                    $(".kirimInvoice").hide();
+                    $(".tandaiSUdahBayar").hide();
+                    $(".lihatBuktiBayar").hide();
+                    $(".lihatInvoice").hide();
+                    $(".kirimBuktiBayar").hide();
+                    
+                    $(".editJadwalTitle").show();
+                    $(".jadwalTitle").hide();
+                  <%}%>
+                }else if(aData[7] == 'Diproses'){
+                  $(".editDS").prop("disabled", true);
+                  $("#jadwalModal").modal("show");
+                  $(".tambahJadwal").hide();
+                  $(".editJadwal").show();
+                  $(".buktiBayar").hide(); 
+                  
+                  $(".saveTambahJadwal").hide();
+                  $(".deleteJadwal").hide();
+                  $(".saveEditJadwal").hide();
+  
+                  $(".prosesPesanan").hide();
+                  <% if(session.userType == 1){%>  
+                    $(".kirimInvoice").show();
+                  <%}else if(session.userType == 4){%>  
+                    $(".kirimInvoice").hide();
+                  <%}%>                
+                  $(".tandaiSUdahBayar").hide();
+                  $(".lihatBuktiBayar").hide();
+                  $(".lihatInvoice").hide();
+                  $(".kirimBuktiBayar").hide();
+                  
+                  $(".editJadwalTitle").hide();
+                  $(".jadwalTitle").show();
+                }else if(aData[7] == 'Belum Bayar'){
+                  $(".editDS").prop("disabled", true);
+                  $("#jadwalModal").modal("show");
+                  $(".tambahJadwal").hide();
+                  $(".editJadwal").show();
+                  
+                  
+                  $(".saveTambahJadwal").hide();
+                  $(".deleteJadwal").hide();
+                  $(".saveEditJadwal").hide();
+  
+                  $(".prosesPesanan").hide();
+                  $(".kirimInvoice").hide();                
+                  <% if(session.userType == 1){%>  
+                    $(".buktiBayar").hide();
+                    $(".lihatInvoice").hide();
+                    $(".kirimBuktiBayar").hide();
+                    $(".tandaiSUdahBayar").show();
+                    $(".lihatBuktiBayar").show();
+                  <%}else if(session.userType == 4){%>  
+                    $(".buktiBayar").show();
+                    $(".lihatInvoice").show();
+                    $(".kirimBuktiBayar").show();
+                    $(".tandaiSUdahBayar").hide();
+                    $(".lihatBuktiBayar").hide();
+                  <%}%>              
+                  
+                  $(".editJadwalTitle").hide();
+                  $(".jadwalTitle").show();
+                }else if(aData[7] == 'Sudah Bayar'){
+                  $(".editDS").prop("disabled", true);
+                  $("#jadwalModal").modal("show");
+                  $(".tambahJadwal").hide();
+                  $(".editJadwal").show();
+                  $(".buktiBayar").hide(); 
+                  
+                  $(".saveTambahJadwal").hide();
+                  $(".deleteJadwal").hide();
+                  $(".saveEditJadwal").hide();
+  
+                  $(".prosesPesanan").hide();
+                  $(".kirimInvoice").hide();
+                  <% if(session.userType == 1){%>  
+                    $(".lihatInvoice").hide();
+                  <%}else if(session.userType == 4){%>  
+                    $(".lihatInvoice").show();
+                  <%}%>                
+                  $(".kirimBuktiBayar").hide();
+                  $(".tandaiSUdahBayar").hide();  
+                  $(".lihatBuktiBayar").hide();
+                  
+                  $(".editJadwalTitle").hide();
+                  $(".jadwalTitle").show();
+                }
+              });
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function postJadwal(){
+        $.LoadingOverlay("show");
+        $.ajax({
+          url: "/admin/jadwal/postJadwal",
+          type: "POST",
+          dataType: "json",
+          data: {
+            date: $("#tanggalJadwal").val(),
+            <% if(session.userType == 1){%> 
+              company_id: $("#clientJadwal").val(),
+            <%}%>          
+            paket_id: $("#paketJadwal").val(),
+            waktu: $("#waktuPaket").val(),
+            sehat: $("#sehatPaket").val()
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            if(ress.response == "Successful"){
+              window.location.reload();
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function putJadwal(){      
+        $.LoadingOverlay("show");
+        $.ajax({
+          url: "/admin/jadwal/putJadwal",
+          type: "PUT",
+          dataType: "json",
+          data: {
+            id: $("#idJadwalEdit").val(),
+            date: $("#tanggalJadwalEdit").val(),
+            company_id: $("#clientJadwalEdit").val(),
+            paket_id: $("#paketJadwalEdit").val(),
+            waktu: $("#waktuPaketEdit").val(),
+            sehat: $("#sehatPaketEdit").val()
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            if(ress.response == "Successful"){
+              window.location.reload();
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function deleteJadwal(){   
+        $.LoadingOverlay("show");
+        $.ajax({
+          url: "/admin/jadwal/deleteJadwal",
+          type: "DELETE",
+          dataType: "json",
+          data: {
+            id: $("#idJadwalEdit").val()
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            if(ress.response == "Successful"){
+              window.location.reload();
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function changeStatus(id, status){   
+        $.LoadingOverlay("show");
+        $.ajax({
+          url: "/admin/jadwal/changeStatus",
+          type: "PUT",
+          dataType: "json",
+          data: {
+            id: id,
+            status: status
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            if(ress.response == "Successful"){
+              window.location.reload();
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function listClient(){
+        $.ajax({
+          url: "/admin/client/listClient",
+          type: "GET",
+          dataType: "json",
+          data: {
+            
+          },
+          success: function(ress) {
+            if(ress.response == "Successful"){
+              for (let i = 0; i < ress.result.length; i++) {
+                $("#clientJadwal").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');
+                $("#clientJadwalEdit").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');
+              }
+            }else{
+              // alert('Cannot database');
+            }
+          },error: function(err, data) {
+            // alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function listPaket(){
+        $.ajax({
+          url: "/admin/paket/listPaket",
+          type: "GET",
+          dataType: "json",
+          data: {
+            type: 'Reguler'
+          },
+          success: function(ress) {
+            if(ress.response == "Successful"){
+              for (let i = 0; i < ress.result.length; i++) {
+                $("#paketJadwal").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');
+                $("#paketJadwalEdit").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');
+              }
+            }else{
+              // alert('Cannot database');
+            }
+          },error: function(err, data) {
+            // alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function jumlahKaryawan(company_id){
+        $.ajax({
+          url: "/admin/user/jumlahKaryawan",
+          type: "GET",
+          dataType: "json",
+          data: {
+            company_id: company_id
+          },
+          success: function(ress) {
+            if(ress.response == "Successful"){            
+              $(".jumlahKaryawan").text(ress.result);
+            }else{
+              // alert('Cannot database');
+            }
+          },error: function(err, data) {
+            // alert('Cannot acces server');
+          }
+        });
+      }
+    </script>
+	</body>
+</html>

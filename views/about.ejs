@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<%- include("./template/css.ejs") %>
+<body>
+	<header class="header__section header__transparent">
+    <%- include("./template/login_info.ejs") %>
+    <div class="main__header main__header2 header__sticky sticky">
+      <div class="container">
+        <div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+          <div class="offcanvas__header--menu__open ">
+            <a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+            </a>
+          </div>
+          <%- include("./template/header_menu.ejs") %>
+        </div>
+      </div>
+    </div>
+    <%- include("./template/toolbar.ejs") %>
+    <%- include("./template/search_box.ejs") %>
+    <%- include("./template/card.ejs") %>
+  </header>
+	<!-- End header area -->
+
+	<main class="main__content_wrapper">
+    <!-- Start about section -->
+    <section class="about__section section--padding mt-100">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="about__thumb d-flex">
+              <div class="about__thumb--items">
+                <img class="about__thumb--img border-radius-5 display-block" src="/img/other/about-thumb-list1.png" alt="about-thumb">
+              </div>
+              <div class="about__thumb--items position__relative">
+                <img class="about__thumb--img border-radius-5 display-block" src="/img/other/about-thumb-list2.png" alt="about-thumb">
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="about__content">
+              <span class="about__content--subtitle text__secondary mb-20"> Kenapa memilih kami</span>
+              <h2 class="about__content--maintitle mb-25">Kami memberikan makanan berkualitas dan sehat.</h2>
+              <p class="about__content--desc mb-20">FoodCore lahir dari ide ingin memberikan makanan berkualitas dan sehat kepada para pekerja pabrik dan karyawan korporat. Kami menyadari bahwa kesibukan sehari-hari membuat para pekerja sulit untuk mempersiapkan makanan yang sehat dan bergizi, sehingga kami berusaha memberikan solusi dengan menyediakan makanan yang enak, sehat, dan bergizi dan mendistribusikan bahan - bahan mentah seperti sayur dan buah - buahan segar dengan harga terjangkau.</p>
+              <p class="about__content--desc mb-20">Dengan pengalaman dan keahlian dalam industri makanan, kami memulai perusahaan catering ini dengan hanya beberapa karyawan pada awalnya. Namun, dengan semangat kerja yang tinggi dan keinginan untuk memberikan layanan terbaik bagi pelanggan kami, perusahaan kami terus berkembang dan kini mampu memproduksi hingga 10.000 porsi makanan setiap harinya</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-lg-6 order-lg-1 order-2">
+            <p class="about__content--desc mb-20">Kami sangat bangga dengan kemampuan kami dalam mengolah bahan mentah menjadi hidangan yang lezat dan bergizi. Kami hanya menggunakan bahan-bahan segar dan berkualitas tinggi, seperti sayuran, beras, dan bumbu-bumbu masakan lainnya, sehingga kami dapat memastikan kualitas dan rasa yang terbaik untuk setiap hidangan yang kami sajikan.</p>
+            <p class="about__content--desc mb-20">Di FoodCore, kami berkomitmen untuk selalu memberikan pelayanan terbaik bagi pelanggan kami, dengan memperhatikan detail dan kebutuhan khusus setiap pelanggan. Kami mengutamakan kualitas, kebersihan, dan keamanan makanan, sehingga pelanggan kami dapat menikmati hidangan yang sehat dan enak tanpa harus khawatir tentang keamanan makanan.</p>
+            <p class="about__content--desc mb-20">Kami berharap dengan menyajikan hidangan yang enak dan sehat, kami dapat membantu meningkatkan produktivitas dan kesehatan para pekerja pabrik dan karyawan korporat. Kami berterima kasih atas kepercayaan yang diberikan oleh pelanggan kami, dan akan terus berupaya memberikan layanan terbaik dan meningkatkan kualitas hidangan kami.</p>
+            <div class="about__author position__relative">
+              <h3 class="about__author--name h4">FoodCore Team</h3>
+            </div>
+          </div>
+
+          <div class="col-lg-6 order-lg-2 order-1">
+            <div class="about__thumb d-flex">
+              <div class="about__thumb--items">
+                <img class="about__thumb--img border-radius-5 display-block" src="/img/other/about-thumb-list1.png" alt="about-thumb">
+              </div>
+              <div class="about__thumb--items position__relative">
+                <img class="about__thumb--img border-radius-5 display-block" src="/img/other/about-thumb-list2.png" alt="about-thumb">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End about section -->
+  </main>
+  <%- include("./template/footer.ejs") %>
+  <%- include("./template/js.ejs") %>
+
+</body>
+
+</html>

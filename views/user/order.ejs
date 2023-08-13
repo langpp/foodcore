@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<%- include("../template/css.ejs") %>
+<body>
+  <header class="header__section">
+    <%- include("../template/login_info.ejs") %>
+    <div class="main__header main__header2 header__sticky sticky" style="margin-top: 36px;">
+      <div class="container">
+        <div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+          <div class="offcanvas__header--menu__open ">
+            <a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+            </a>
+          </div>
+          <%- include("../template/header_menu.ejs") %>
+        </div>
+      </div>
+    </div>
+    <%- include("../template/toolbar.ejs") %>
+    <%- include("../template/search_box.ejs") %>
+    <%- include("../template/card.ejs") %>
+  </header>
+	<!-- End header area -->
+
+<section class="product__section section--padding mt-100">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 mt-3">
+        <nav>
+          <ol class="cd-breadcrumb custom-separator">
+            <li><a href="javascript:void(0)">User</a></li>
+            <li class="current"><em>Order History</em></li>
+          </ol>
+        </nav>
+      </div>
+      <div class="col">  
+        <div>
+          <table class="cart__table--inner" id="tableorder">
+            <tbody class="cart__table--body">
+               
+            </tbody>
+          </table>
+
+
+          <!-- <div>
+            <table id="order" class="display table table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>No.</th>
+                  <th>Tanggal Order</th>
+                  <th>Tanggal Pengiriman</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+            </table>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+  <!-- my account section end -->
+  <!-- Modal -->
+  <div class="modal fade" id="orderModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title tambahClient" id="exampleModalLabel">Detail order (12 April 2023)</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="minicart__header ">
+            <p class="minicart__header--desc">Tanggal Pengiriman: 12 April 2023</p>
+          </div>
+          <div class="listHistoryOrder">
+          </div>            
+          <div class="minicart__amount">
+            <div class="minicart__amount_list d-flex justify-content-between">
+              <span>Total:</span>
+              <b>Rp. 
+                <span class="totalHistoryOrder">
+                  
+                </span>
+              </b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<%- include("../template/footer.ejs") %>
+<%- include("../template/js.ejs") %>
+  <script type="text/javascript">
+    $(document).ready(function(){    
+      listOrder();
+    });
+
+    function listOrder(){
+      $.ajax({
+        url: "/user/order/listOrder",
+        type: "GET",
+        dataType: "json",
+        data: {
+          
+        },
+        success: function(ress) {
+          if(ress.response == "Successful"){
+            var html = ''
+            $.each(ress.result, function(index, val){
+                html+=`<tr class="cart__table--body__items" onclick="detailOrder('${val[0]}')">
+                    <td class="cart__table--body__list">
+                        <div class="product__image two  d-flex align-items-center">
+                            <div class="product__description">
+                                <h3 class="product__description--name h4"><a href="javascript:void(0)">${moment(val[2]).format('DD MMMM YYYY')}</a></h3>
+                                <span class="product__description--variant">Tanggal Pengiriman: ${moment(val[3]).format('DD MMMM YYYY')}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="cart__table--body__list text-right">
+                        <span class="cart__price">Rp ${thousandSeparator(parseInt(val[4]))}</span>
+                    </td>
+                </tr>`;
+            })
+            $("#tableorder tbody").html(html)
+            // console.log(ress)
+            // dataTableClient = ress.result;
+            // var tableClient = $('#order').dataTable( {
+            //   "drawCallback": function(settings) {
+            //     var api = this.api();
+            //     var startIndex = api.context[0]._iDisplayStart;
+            //     api.column(1, {order:'current'}).nodes().each(function(cell, i) {                  
+            //       cell.innerHTML = i + 1;
+            //     });
+            //   },
+            //   data: dataTableClient,
+            //   columnDefs: [
+            //     {
+            //         target: 0,
+            //         visible: false,
+            //         searchable: false,
+            //     },
+            //     {
+            //       targets: 2,
+            //       render: function(data, type, row, meta) {
+            //         if (type === 'display') {
+            //           moment.locale('id');
+            //           var date = moment(data, 'YYYY-MM-DD');
+            //           var formattedDate = date.format('DD MMMM YYYY');
+            //           return formattedDate;
+            //         } else {
+            //           return data;
+            //         }
+            //       }
+            //     },
+            //     {
+            //       targets: 3,
+            //       render: function(data, type, row, meta) {
+            //         if (type === 'display') {
+            //           moment.locale('id');
+            //           var date = moment(data, 'YYYY-MM-DD');
+            //           var formattedDate = date.format('DD MMMM YYYY');
+            //           return formattedDate;
+            //         } else {
+            //           return data;
+            //         }
+            //       }
+            //     },
+            //     {
+            //       targets: 4,
+            //       render: function(data, type, row, meta) {
+            //         if (type === 'display') {
+            //           let harga = 'Rp. ' + thousandSeparator(parseInt(data))
+            //           return harga;
+            //         } else {
+            //           return data;
+            //         }
+            //       }
+            //     }
+            //   ],
+            //   order: [[1, 'asc']],
+            // } );
+            // $('#order tbody').on( 'click', 'tr', function () {
+            //   var aData = tableClient.fnGetData( this );    
+            //   // console.log(aData[2])
+            //   detailOrder(aData[0])
+            // });
+          }else{
+            alert('Cannot database');
+          }
+        },error: function(err, data) {
+          alert('Cannot acces server');
+        }
+			});
+    }
+
+    function detailOrder(order_id){
+      console.log(order_id)
+      $('.listHistoryOrder').html("");
+      $.ajax({
+        url: "/user/order/detailOrder",
+        type: "GET",
+        dataType: "json",
+        data: {
+          order_id: order_id
+        },
+        success: function(ress) {
+          if(ress.response == "Successful"){
+            ress.result.forEach(function (item, index) {
+              $('.listHistoryOrder').append('<div class="minicart__product"><div class="minicart__product--items d-flex"><div class="minicart__thumb"><div><img src="/img/product/'+item.image1+'" alt="prduct-img"></div></div><div class="minicart__text"><h4 class="minicart__subtitle">'+item.paket+'</h4><div class="minicart__price"><span class="current__price">Rp. '+thousandSeparator(parseInt(item.rate))+'</span></div><div class="minicart__text--footer d-flex align-items-center"><p class="minicart__header--desc">Jumlah: '+item.qty+'</p></div></div></div></div>')
+            })
+            $('.totalHistoryOrder').html(thousandSeparator(parseInt(ress.result[0].total))) 
+            $("#orderModal").modal("show");
+          }else{
+            alert('Cannot database');
+          }
+        },error: function(err, data) {
+          alert('Cannot acces server');
+        }
+			});
+    }
+  </script>
+</body>
+</html>

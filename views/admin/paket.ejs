@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+	<%- include("../template/css.ejs") %>
+	<body>
+		<header class="header__section">
+			<%- include("../template/login_info.ejs") %>
+			<div class="main__header main__header2 header__sticky sticky" style="margin-top: 36px;">
+				<div class="container">
+					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+						<div class="offcanvas__header--menu__open ">
+							<a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+							</a>
+						</div>
+						<%- include("../template/header_menu.ejs") %>
+					</div>
+				</div>
+			</div>
+			<%- include("../template/toolbar.ejs") %>
+			<%- include("../template/search_box.ejs") %>
+		</header>
+		<!-- End header area -->
+		<main class="main__content_wrapper">
+			<!-- my account section start -->
+			<section class="section--padding mt-100">
+				<div class="container">
+					<div class="row">
+            <div class="col-lg-12 mt-3">
+							<nav>
+								<ol class="cd-breadcrumb custom-separator">
+									<li><a href="javascript:void(0)">Admin</a></li>
+									<li class="current"><em>Paket</em></li>
+								</ol>
+							</nav>
+						</div>
+						<div class="col-lg-3 mb-3">
+							<div class="shop__sidebar--widget widget__area d-lg-block">
+								<div class="single__widget widget__bg">
+									<h2 class="widget__title h3">Menu</h2>
+									<ul class="widget__categories--menu">
+                    <% if(session.userType == '1'){ %>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/client" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-star"></i> 
+											<span class="widget__categories--menu__text">Daftar Client</span>
+											</a>
+										</li>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/paket" class="widget__categories--menu__label d-flex align-items-center p-menu text-warning">
+											<i class="fas fa-briefcase"></i> 
+											<span class="widget__categories--menu__text text-warning">Daftar Paket</span>
+											</a>
+										</li>
+                    <% } %>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/jadwal" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-list"></i> 
+											<span class="widget__categories--menu__text">Daftar Jadwal</span>
+											</a>
+										</li>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/user" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-user"></i> 
+											<span class="widget__categories--menu__text">Daftar User</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-9">
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button id="addPaket" class="btn btn-primary btn-sm" type="button">Tambah Paket</button>
+              </div>
+              <br>
+              <div>
+                <!-- <h2 class="account__content--title h3 mb-20">Orders History</h2> -->
+                <div>
+                  <table id="paket" class="display table table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>No.</th>
+                        <th>Nama</th>
+                        <th>Keterangan</th>
+                        <th>type</th>
+                        <th>Harga</th>
+                      </tr>
+                    </thead>
+                </table>
+                </div>
+              </div>
+            </div>
+					</div>
+				</div>
+			</section>
+			<!-- my account section end -->
+			<!-- Modal -->
+			<div class="modal fade" id="paketModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title tambahPaket">Tambah Paket</h5>
+              <h5 class="modal-title editPaket">Edit Paket</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+  
+              <div class="row tambahPaket">
+                <div class="col-lg-12 mb-12">
+                    <div class="checkout__input--list ">
+                      <label class="contact__form--label" for="name">Nama Paket: <span class="contact__form--label__star">*</span></label>
+                      <input id="namaPaket" class="checkout__input--field border-radius-5" placeholder="Nama Paket"  type="text">
+                      <div class="invalid-feedback">
+                        Isikan Nama Paket!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <label class="contact__form--label" for="name">Harga: <span class="contact__form--label__star">*</span></label>
+                    <input id="hargaPaket" class="checkout__input--field border-radius-5" placeholder="Harga"  type="number">
+                    <div class="invalid-feedback">
+                      Isikan Harga Paket!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="typePaket">Tipe Paket</label>
+                      <select id="typePaket" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                        <option value="Premium">Premium</option>
+                        <option value="Reguler">Reguler</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Tipe Paket!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <label class="contact__form--label" for="image1">Foto 1: <span class="contact__form--label__star">*</span></label>
+                    <input id="image1" class="checkout__input--field border-radius-5" placeholder="Foto 1"  type="file" accept="image/jpg, image/jpeg">
+                    <div class="invalid-feedback">
+                      Isikan Gambar Paket!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <label class="contact__form--label" for="image2">Foto 2: <span class="contact__form--label__star">*</span></label>
+                    <input id="image2" class="checkout__input--field border-radius-5" placeholder="Foto 2"  type="file" accept="image/jpg, image/jpeg">
+                    <div class="invalid-feedback">
+                      Isikan Gambar Paket!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 mb-12">
+                  <div class="checkout__input--list">
+                    <label class="contact__form--label" for="name">Keterangan:</label>
+                    <textarea id="keteranganPaket" class="checkout__input--field border-radius-5" id="exampleFormControlTextarea1" placeholder="Keterangan" rows="3"></textarea>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="row editPaket">
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <input id="idPaketEdit" class="checkout__input--field border-radius-5" type="text" hidden>
+                    <label class="contact__form--label" for="name">Nama Paket: <span class="contact__form--label__star">*</span></label>
+                    <input id="namaPaketEdit" class="checkout__input--field border-radius-5" placeholder="Nama Paket"  type="text">
+                    <div class="invalid-feedback">
+                      Isikan Nama Paket!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <input id="idPaketEdit" class="checkout__input--field border-radius-5" type="text" hidden>
+                    <label class="contact__form--label" for="name">Harga: <span class="contact__form--label__star">*</span></label>
+                    <input id="hargaPaketEdit" class="checkout__input--field border-radius-5" placeholder="Harga"  type="number">
+                    <div class="invalid-feedback">
+                      Isikan Harga Paket!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="typePaketEdit">Tipe Paket</label>
+                      <select id="typePaketEdit" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                        <option value="Premium">Premium</option>
+                        <option value="Reguler">Reguler</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Tipe Paket!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <label class="contact__form--label" for="image1">Foto 1: <span class="contact__form--label__star">*</span></label>
+                    <input id="image1Edit" class="checkout__input--field border-radius-5" placeholder="Foto 1"  type="file" accept="image/jpg, image/jpeg">
+                    <div class="invalid-feedback">
+                      Isikan Gambar Paket!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <label class="contact__form--label" for="image2">Foto 2: <span class="contact__form--label__star">*</span></label>
+                    <input id="image2Edit" class="checkout__input--field border-radius-5" placeholder="Foto 2"  type="file" accept="image/jpg, image/jpeg">
+                    <div class="invalid-feedback">
+                      Isikan Gambar Paket!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 mb-12">
+                  <div class="checkout__input--list">
+                    <label class="contact__form--label" for="name">Keterangan:</label>
+                    <textarea id="keteranganPaketEdit" class="checkout__input--field border-radius-5" id="exampleFormControlTextarea1" placeholder="Keterangan" rows="3"></textarea>
+                  </div>
+                </div>
+              </div>
+  
+            </div>
+            <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+              <button type="button" class="tambahPaket saveTambahPaket btn btn-primary">Simpan</button>
+              <button type="button" class="editPaket deletePaket btn btn-danger" style="background-color: red; color: white;">Delete Paket</button>
+              <button type="button" class="editPaket saveEditPaket btn btn-primary">Simpan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+		</main>
+		<%- include("../template/footer.ejs") %>
+		<%- include("../template/js.ejs") %>
+		<script type="text/javascript">
+      $(document).ready(function(){
+        listPaket();
+  
+        $(".invalid-feedback").hide();  
+        $(".tambahPaket").hide();
+        $(".editPaket").hide();  
+  
+        tinymce.init({
+          selector: '#keteranganPaket',
+          skin: 'bootstrap',
+          menubar: false,
+          height: "200"
+        });
+  
+        tinymce.init({
+          selector: '#keteranganPaketEdit',
+          skin: 'bootstrap',
+          menubar: false,
+          height: "200"
+        });
+        
+        $("#addPaket").click(function(){
+          $("#namaPaket").val("")
+          $("#hargaPaket").val("")
+          tinyMCE.get('keteranganPaket').setContent("")
+  
+          $("#paketModal").modal("show");
+          $(".tambahPaket").show();
+          $(".editPaket").hide();
+        });
+  
+        $(".saveTambahPaket").click(function(){
+          $.LoadingOverlay("show");
+          if($("#namaPaket").val().trim() !== ''){
+            $(".invalid-feedback").hide();
+            var checkImage = 0;
+            const file_image1 = document.querySelector('#image1').files[0];
+            var reader_image1 = new FileReader();
+            // localStorage.setItem("image1", null);
+            if(file_image1){
+              reader_image1.readAsDataURL(file_image1);
+              reader_image1.onload = function () {
+                localStorage.setItem("image1", reader_image1.result);
+                checkImage = checkImage+1
+                if(checkImage === 2){
+                  postPaket();
+                }
+                // console.log(localStorage.getItem("image1"))
+                // document.getElementById("image1").setAttribute("src", localStorage.getItem("image1"))
+              };
+              // console.log(localStorage.getItem("image1"))
+            }else{
+              localStorage.setItem("image1", null);
+              $(".invalid-feedback").show();
+              $.LoadingOverlay("hide");
+            }
+  
+            const file_image2 = document.querySelector('#image2').files[0];
+            var reader_image2 = new FileReader();
+            // localStorage.setItem("image2", null);
+            if(file_image2){
+              reader_image2.readAsDataURL(file_image2);
+              reader_image2.onload = function () {
+                localStorage.setItem("image2", reader_image2.result);
+                checkImage = checkImage+1
+                if(checkImage === 2){
+                  postPaket();
+                }
+                // console.log(localStorage.getItem("image2"))
+                // document.getElementById("image2").setAttribute("src", localStorage.getItem("image2"))
+              };
+              // console.log(localStorage.getItem("image2"))
+            }else{
+              localStorage.setItem("image2", null);
+              $(".invalid-feedback").show();
+              $.LoadingOverlay("hide");
+            }
+          }else{
+            $(".invalid-feedback").show();   
+            $.LoadingOverlay("hide");       
+          }
+        });
+  
+        $(".saveEditPaket").click(function(){
+          if($("#namaPaketEdit").val().trim() !== ''){
+            $(".invalid-feedback").hide();
+            $.LoadingOverlay("show");
+  
+            var checkImage = 0;
+            const file_image1 = document.querySelector('#image1Edit').files[0];
+            var reader_image1 = new FileReader();
+            // localStorage.setItem("image1", null);
+            if(file_image1){
+              reader_image1.readAsDataURL(file_image1);
+              reader_image1.onload = function () {
+                localStorage.setItem("image1Edit", reader_image1.result);
+                checkImage = checkImage+1
+                if(checkImage === 2){
+                  putPaket();
+                }
+                // console.log(localStorage.getItem("image1"))
+                // document.getElementById("image1").setAttribute("src", localStorage.getItem("image1"))
+              };
+              // console.log(localStorage.getItem("image1"))
+            }else{
+              localStorage.setItem("image1", null);
+              checkImage = checkImage+1
+              if(checkImage === 2){
+                putPaket();
+              }
+            }
+  
+            const file_image2 = document.querySelector('#image2Edit').files[0];
+            var reader_image2 = new FileReader();
+            // localStorage.setItem("image2", null);
+            if(file_image2){
+              reader_image2.readAsDataURL(file_image2);
+              reader_image2.onload = function () {
+                localStorage.setItem("image2Edit", reader_image2.result);
+                checkImage = checkImage+1
+                if(checkImage === 2){
+                  putPaket();
+                }
+                // console.log(localStorage.getItem("image2"))
+                // document.getElementById("image2").setAttribute("src", localStorage.getItem("image2"))
+              };
+              // console.log(localStorage.getItem("image2"))
+            }else{
+              localStorage.setItem("image2", null);
+              checkImage = checkImage+1
+              if(checkImage === 2){
+                putPaket();
+              }
+            }
+          }else{
+            $(".invalid-feedback").show();  
+            $.LoadingOverlay("hide");        
+          }
+        });
+  
+        $(".deletePaket").click(function(){
+          deletePaket();
+        });
+      });
+  
+      function listPaket(){
+        $.ajax({
+          url: "/admin/paket/listPaket",
+          type: "GET",
+          dataType: "json",
+          data: {
+            
+          },
+          success: function(ress) {
+            if(ress.response == "Successful"){
+              dataTablePaket = ress.result;
+              var tablePaket = $('#paket').dataTable( {
+                "drawCallback": function(settings) {
+                  var api = this.api();
+                  var startIndex = api.context[0]._iDisplayStart;
+                  api.column(1, {order:'current'}).nodes().each(function(cell, i) {                  
+                    cell.innerHTML = i + 1;
+                  });
+                },
+                data: dataTablePaket,
+                columnDefs: [
+                  {
+                      target: 0,
+                      visible: false,
+                      searchable: false,
+                  },                
+                  {
+                    targets: 5,
+                    render: function(data, type, row, meta) {
+                      if (type === 'display') {
+                        let harga = 'Rp. ' + thousandSeparator(parseInt(data))
+                        return harga;
+                      } else {
+                        return data;
+                      }
+                    }
+                  }
+                ],
+                order: [[1, 'asc']],
+              });
+              $('#paket tbody').on( 'click', 'tr', function () {
+                // var aData = tablePaket.fnGetData( this );
+                var aData = tablePaket.fnGetData( this );              
+                $("#idPaketEdit").val(aData[0]);
+                $("#namaPaketEdit").val(aData[2]);
+                $("#hargaPaketEdit").val(aData[5]);
+                $("#typePaketEdit").val(aData[4]);
+                tinyMCE.get('keteranganPaketEdit').setContent(aData[3])
+                // console.log(aData[0])
+                $("#paketModal").modal("show");
+                $(".tambahPaket").hide();
+                $(".editPaket").show();
+              });
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function postPaket(){
+        $.ajax({
+          url: "/admin/paket/postPaket",
+          type: "POST",
+          dataType: "json",
+          data: {
+            name: $("#namaPaket").val(),
+            harga: $("#hargaPaket").val(),
+            type: $("#typePaket").val(),
+            keterangan: tinyMCE.get('keteranganPaket').getContent(),
+            image1 : localStorage.getItem("image1"),
+            image2 : localStorage.getItem("image2"),
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            if(ress.response == "Successful"){
+              window.location.reload();
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function putPaket(){      
+        $.ajax({
+          url: "/admin/paket/putPaket",
+          type: "PUT",
+          dataType: "json",
+          data: {
+            id: $("#idPaketEdit").val(),
+            name: $("#namaPaketEdit").val(),
+            harga: $("#hargaPaketEdit").val(),
+            type: $("#typePaketEdit").val(),
+            keterangan: tinyMCE.get('keteranganPaketEdit').getContent(),
+            image1 : localStorage.getItem("image1Edit"),
+            image2 : localStorage.getItem("image2Edit")
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            if(ress.response == "Successful"){
+              window.location.reload();
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function deletePaket(){   
+        $.LoadingOverlay("show");
+        $.ajax({
+          url: "/admin/paket/deletePaket",
+          type: "DELETE",
+          dataType: "json",
+          data: {
+            id: $("#idPaketEdit").val()
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            if(ress.response == "Successful"){
+              window.location.reload();
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            alert('Cannot acces server');
+          }
+        });
+      }
+    </script>
+	</body>
+</html>

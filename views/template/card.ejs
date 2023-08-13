@@ -1,0 +1,97 @@
+<!-- Start offCanvas minicart -->
+<div class="offCanvas__minicart mt-100">
+  <div class="minicart__header ">
+    <div class="minicart__header--top d-flex justify-content-between align-items-center">
+      <h3 class="minicart__title"> Pesanan Makanan</h3>
+      <button class="minicart__close--btn" aria-label="minicart close btn" data-offcanvas>
+        <svg class="minicart__close--icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <path fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M368 368L144 144M368 144L144 368" />
+        </svg>
+      </button>
+    </div>
+    <!-- <p class="minicart__header--desc">Pesanan menu premium</p> -->
+  </div>
+  <div class="row">
+    <div class="col-lg-12 mb-12">
+      <div class="col-lg-12 mb-12">
+        <div class="checkout__input--list ">
+          <label class="contact__form--label" for="tanggalOrder">Tanggal Pengiriman: <span class="contact__form--label__star">*</span></label>
+          <input id="tanggalOrder" class="checkout__input--field border-radius-5" placeholder="Tanggal"  type="date">
+          <div class="invalid-feedback">
+            Isikan Tanggal!
+          </div>
+        </div>
+    </div>
+  </div>        
+  <div class="isiCard minicart__product">
+    
+    <div class="minicart__product--items d-flex">
+      <div class="minicart__thumb">
+        <a href="product-details.html">
+          <img src="/img/product/product2.png" alt="prduct-img">
+        </a>
+      </div>
+      <div class="minicart__text">
+        <h4 class="minicart__subtitle">
+          <a href="product-details.html"></a>
+        </h4>
+        <span class="color__variant">
+          
+        <div class="minicart__price">
+          
+        </div>
+        <div class="minicart__text--footer d-flex align-items-center">
+          <div class="quantity__box minicart__quantity">
+            <button type="button" class="quantity__value decrease" aria-label="quantity value" value="Decrease Value">-</button>
+            <label>
+              <input type="number" class="quantity__number" value="1" data-counter />
+            </label>
+            <button type="button" class="quantity__value increase" aria-label="quantity value" value="Increase Value">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="notEmptyCard">
+    <div class="minicart__amount">
+      <div class="minicart__amount_list d-flex justify-content-between">
+        <span>Sub Total:</span>
+        <b>Rp 
+          <span class="subtotal">0</span>
+        </b>
+      </div>
+      <div class="minicart__amount_list d-flex justify-content-between">
+        <span>Potongan Kantor:</span>
+        <b>Rp 
+          <span class="potonganKantor">0</span>
+        </b>
+      </div>
+      <div class="minicart__amount_list d-flex justify-content-between">
+        <span>Total:</span>
+        <b>Rp 
+          <span class="total">0</span>
+        </b>
+      </div>
+    </div>
+    <br>
+    <div class="lanjutBayar minicart__button d-flex justify-content-center">
+      <a class="lanjutBayar btnCheckout btn minicart__button--link" href="/pay">Lanjut Bayar</a>
+    </div>
+  </div>
+  <div class="emptyCard">
+    <div class="minicart__button d-flex justify-content-center">
+      Keranjang belanja anda kosong. Silahkan pilih menu yang anda inginkan
+    </div>
+  </div>
+  <div class="badDate">
+    <div class="minicart__button d-flex justify-content-center">
+      Anda tidak dapat memesan pada tanggal ini karena admin kantor anda belum menentukan pesanan reguler untuk tanggal ini. Silahkan pilih tanggal lain.
+    </div>
+  </div> 
+  <div class="closeChange">
+    <div class="minicart__button d-flex justify-content-center">
+      Pesanan telah melakukan perubahan dan pembayaran untuk tanggal ini. Silahkan pilih tanggal lain.
+    </div>
+  </div> 
+</div>
+<!-- End offCanvas minicart -->

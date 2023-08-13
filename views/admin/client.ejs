@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+	<%- include("../template/css.ejs") %>
+	<body>
+		<header class="header__section">
+			<%- include("../template/login_info.ejs") %>
+			<div class="main__header main__header2 header__sticky sticky" style="margin-top: 36px;">
+				<div class="container">
+					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+						<div class="offcanvas__header--menu__open ">
+							<a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+							</a>
+						</div>
+						<%- include("../template/header_menu.ejs") %>
+					</div>
+				</div>
+			</div>
+			<%- include("../template/toolbar.ejs") %>
+			<%- include("../template/search_box.ejs") %>
+		</header>
+		<!-- End header area -->
+		<main class="main__content_wrapper">
+			<!-- my account section start -->
+			<section class="section--padding mt-100">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12 mt-3">
+							<nav>
+								<ol class="cd-breadcrumb custom-separator">
+									<li><a href="javascript:void(0)">Admin</a></li>
+									<li class="current"><em>Client</em></li>
+								</ol>
+							</nav>
+						</div>
+						<div class="col-lg-3 mb-3">
+							<div class="shop__sidebar--widget widget__area d-lg-block">
+								<div class="single__widget widget__bg">
+									<h2 class="widget__title h3">Menu</h2>
+									<ul class="widget__categories--menu">
+										<% if(session.userType == '1'){ %>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/client" class="widget__categories--menu__label d-flex align-items-center p-menu text-warning">
+											<i class="fas fa-star"></i> 
+											<span class="widget__categories--menu__text text-warning">Daftar Client</span>
+											</a>
+										</li>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/paket" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-briefcase"></i> 
+											<span class="widget__categories--menu__text">Daftar Paket</span>
+											</a>
+										</li>
+										<% } %>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/jadwal" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-list"></i> 
+											<span class="widget__categories--menu__text">Daftar Jadwal</span>
+											</a>
+										</li>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/user" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-user"></i> 
+											<span class="widget__categories--menu__text">Daftar User</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-9">
+							<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+								<button id="addClient" class="btn btn-primary btn-sm" type="button">Tambah Client</button>
+							</div>
+							<br>        
+							<div>
+								<div>
+									<table id="client" class="display table table-striped">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>No.</th>
+												<th>Nama</th>
+												<th>Kode</th>
+												<th>Keterangan</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- my account section end -->
+			<!-- Modal -->
+			<div class="modal fade" id="clientModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title tambahClient" id="exampleModalLabel">Tambah Client</h5>
+							<h5 class="modal-title editClient" id="exampleModalLabel">Edit Client</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div class="row tambahClient">
+								<div class="col-lg-12 mb-12">
+									<div class="checkout__input--list ">
+										<label class="contact__form--label" for="name">Nama Perushaan: <span class="contact__form--label__star">*</span></label>
+										<input id="namaPerusahaan" class="checkout__input--field border-radius-5" placeholder="Nama Perushaan"  type="text">
+										<div class="invalid-feedback">
+											Isikan Nama Perusahaan!
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-12 mb-12">
+									<div class="checkout__input--list">
+										<label class="contact__form--label" for="name">Kode Perushaan: <span class="contact__form--label__star">*</span></label>
+										<input id="kodePerusahaan" class="checkout__input--field border-radius-5" placeholder="Kode Perushaan"  type="text">
+										<div class="invalid-feedback">
+											Isikan Kode perusahaan. Bisa 3 sampai 4 huruf!
+										</div>
+									</div>
+								</div>
+								<div class="col-12 mb-12">
+									<div class="checkout__input--list">
+										<label class="contact__form--label" for="name">Keterangan:</label>
+										<textarea id="keteranganPerusahaan" class="checkout__input--field border-radius-5" id="exampleFormControlTextarea1" placeholder="Keterangan" rows="3"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="row editClient">
+								<div class="col-lg-12 mb-12">
+									<div class="checkout__input--list ">
+										<input id="idPerusahaanEdit" class="checkout__input--field border-radius-5" type="text" hidden>
+										<label class="contact__form--label" for="name">Nama Perushaan: <span class="contact__form--label__star">*</span></label>
+										<input id="namaPerusahaanEdit" class="checkout__input--field border-radius-5" placeholder="Nama Perushaan"  type="text">
+										<div class="invalid-feedback">
+											Isikan Nama Perusahaan!
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-12 mb-12">
+									<div class="checkout__input--list">
+										<label class="contact__form--label" for="name">Kode Perushaan: <span class="contact__form--label__star">*</span></label>
+										<input id="kodePerusahaanEdit" class="checkout__input--field border-radius-5" placeholder="Kode Perushaan"  type="text">
+										<div class="invalid-feedback">
+											Isikan Kode perusahaan. Bisa 3 sampai 4 huruf!
+										</div>
+									</div>
+								</div>
+								<div class="col-12 mb-12">
+									<div class="checkout__input--list">
+										<label class="contact__form--label" for="name">Keterangan:</label>
+										<textarea id="keteranganPerusahaanEdit" class="checkout__input--field border-radius-5" id="exampleFormControlTextarea1" placeholder="Keterangan" rows="3"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+							<button type="button" class="tambahClient saveTambahClient btn btn-primary">Simpan</button>
+							<button type="button" class="editClient deleteClient btn btn-danger" style="background-color: red; color: white;">Delete Client</button>
+							<!-- <button type="button" class="editClient halamanClient btn btn-danger">Halaman Client</button> -->
+							<button type="button" class="editClient saveEditClient btn btn-primary">Simpan</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+		<%- include("../template/footer.ejs") %>
+		<%- include("../template/js.ejs") %>
+		<script type="text/javascript">
+			$(document).ready(function(){    
+			  listClient();
+			
+			  $(".invalid-feedback").hide();  
+			  $(".tambahClient").hide();
+			  $(".editClient").hide();  
+			
+			  tinymce.init({
+			    selector: '#keteranganPerusahaan',
+			    skin: 'bootstrap',
+			    menubar: false,
+			    height: "200"
+			  });
+			
+			  tinymce.init({
+			    selector: '#keteranganPerusahaanEdit',
+			    skin: 'bootstrap',
+			    menubar: false,
+			    height: "200"
+			  });
+			  
+			  $("#addClient").click(function(){
+			    $("#namaPerusahaan").val("")
+			    $("#kodePerusahaan").val("")
+			    tinyMCE.get('keteranganPerusahaan').setContent("")
+			
+			    $("#clientModal").modal("show");
+			    $(".tambahClient").show();
+			    $(".editClient").hide();
+			  });
+			
+			  $(".saveTambahClient").click(function(){
+			    if($("#namaPerusahaan").val().trim() !== '' && $("#kodePerusahaan").val().trim() !== ''){
+			      $(".invalid-feedback").hide();
+			      postClient();
+			    }else{
+			      $(".invalid-feedback").show();          
+			    }
+			  });
+			
+			  $(".halamanClient").click(function(){
+			    window.location.replace("/cp/"+$("#kodePerusahaanEdit").val())
+			  });      
+			
+			  $(".saveEditClient").click(function(){
+			    if($("#namaPerusahaanEdit").val().trim() !== '' && $("#kodePerusahaanEdit").val().trim() !== ''){
+			      $(".invalid-feedback").hide();
+			      putClient();
+			    }else{
+			      $(".invalid-feedback").show();          
+			    }
+			  });
+			
+			  $(".deleteClient").click(function(){
+			    deleteClient();
+			  });
+			
+			});
+			
+			function listClient(){
+			  $.ajax({
+			    url: "/admin/client/listClient",
+			    type: "GET",
+			    dataType: "json",
+			    data: {
+			      
+			    },
+			    success: function(ress) {
+			      if(ress.response == "Successful"){
+			        dataTableClient = ress.result;
+			        var tableClient = $('#client').dataTable( {
+			          "drawCallback": function(settings) {
+			            var api = this.api();
+			            var startIndex = api.context[0]._iDisplayStart;
+			            api.column(1, {order:'current'}).nodes().each(function(cell, i) {                  
+			              cell.innerHTML = i + 1;
+			            });
+			            // api.column(5, {order:'current'}).nodes().each(function(cell, i) {                  
+			            //   cell.innerHTML = '<a href="/admin/jadwal/htp" class="btn btn-primary btn-sm" type="button">Lihat Jadwal</a>';
+			            // });
+			          },
+			          data: dataTableClient,
+			          columnDefs: [
+			            {
+			                target: 0,
+			                visible: false,
+			                searchable: false,
+			            },
+			          ],
+			          order: [[1, 'asc']],
+			        } );
+			        $('#client tbody').on( 'click', 'tr', function () {
+			          var aData = tableClient.fnGetData( this );              
+			          $("#idPerusahaanEdit").val(aData[0]);
+			          $("#namaPerusahaanEdit").val(aData[2]);
+			          $("#kodePerusahaanEdit").val(aData[3]);
+			          tinyMCE.get('keteranganPerusahaanEdit').setContent(aData[4])
+			          // console.log(aData[0])
+			          $("#clientModal").modal("show");
+			          $(".tambahClient").hide();
+			          $(".editClient").show();
+			        });
+			      }else{
+			        alert('Cannot database');
+			      }
+			    },error: function(err, data) {
+			      alert('Cannot acces server');
+			    }
+			});
+			}
+			
+			function postClient(){
+			  $.LoadingOverlay("show");
+			  $.ajax({
+			    url: "/admin/client/postClient",
+			    type: "POST",
+			    dataType: "json",
+			    data: {
+			      name: $("#namaPerusahaan").val(),
+			      kode: $("#kodePerusahaan").val(),
+			      keterangan: tinyMCE.get('keteranganPerusahaan').getContent()
+			    },
+			    success: function(ress) {
+			      $.LoadingOverlay("hide");
+			      if(ress.response == "Successful"){
+			        window.location.reload();
+			      }else{
+			        alert('Cannot database');
+			      }
+			    },error: function(err, data) {
+			      $.LoadingOverlay("hide");
+			      alert('Cannot acces server');
+			    }
+			  });
+			}
+			
+			function putClient(){      
+			  $.LoadingOverlay("show");
+			  $.ajax({
+			    url: "/admin/client/putClient",
+			    type: "PUT",
+			    dataType: "json",
+			    data: {
+			      id: $("#idPerusahaanEdit").val(),
+			      name: $("#namaPerusahaanEdit").val(),
+			      kode: $("#kodePerusahaanEdit").val(),
+			      keterangan: tinyMCE.get('keteranganPerusahaanEdit').getContent()
+			    },
+			    success: function(ress) {
+			      $.LoadingOverlay("hide");
+			      if(ress.response == "Successful"){
+			        window.location.reload();
+			      }else{
+			        alert('Cannot database');
+			      }
+			    },error: function(err, data) {
+			      $.LoadingOverlay("hide");
+			      alert('Cannot acces server');
+			    }
+			  });
+			}
+			
+			function deleteClient(){   
+			  $.LoadingOverlay("show");
+			  $.ajax({
+			    url: "/admin/client/deleteClient",
+			    type: "DELETE",
+			    dataType: "json",
+			    data: {
+			      id: $("#idPerusahaanEdit").val()
+			    },
+			    success: function(ress) {
+			      $.LoadingOverlay("hide");
+			      if(ress.response == "Successful"){
+			        window.location.reload();
+			      }else{
+			        alert('Cannot database');
+			      }
+			    },error: function(err, data) {
+			      $.LoadingOverlay("hide");
+			      alert('Cannot acces server');
+			    }
+			  });
+			}
+		</script>
+	</body>
+</html>

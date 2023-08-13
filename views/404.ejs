@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+	<%- include("./template/css.ejs") %>
+	<body>
+		<header class="header__section">
+			<div class="main__header main__header2 header__sticky sticky">
+				<div class="container">
+					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+						<div class="offcanvas__header--menu__open ">
+							<a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+							</a>
+						</div>
+						<%- include("./template/header_menu.ejs") %>
+					</div>
+				</div>
+			</div>
+			<%- include("./template/toolbar.ejs") %>
+			<%- include("./template/search_box.ejs") %>
+		</header>
+	<!-- End header area -->
+
+	<main class="main__content_wrapper">
+    <!-- Start error section -->
+    <section class="error__section section--padding mt-100">
+      <div class="container">
+        <div class="row row-cols-1">
+          <div class="col">
+            <div class="error__content text-center">
+              <img class="error__content--img display-block mb-50" src="/img/other/404-thumb.png" alt="error-img">
+              <h2 class="error__content--title">Opps ! We,ar Not Found This Page </h2>
+              <p class="error__content--desc">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Excepturi animi aliquid minima assumenda.</p>
+              <a class="error__content--btn btn" href="/">Back To Home</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End error section -->
+  </main>
+  <%- include("./template/footer.ejs") %>
+  <%- include("./template/js.ejs") %>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+	<%- include("./template/css.ejs") %>
+	<body>
+		<header class="header__section">
+			<%- include("./template/login_info.ejs") %>
+			<div class="main__header main__header2 header__sticky sticky" style="margin-top: 36px;">
+				<div class="container">
+					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+						<div class="offcanvas__header--menu__open ">
+							<a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+							</a>
+						</div>
+						<%- include("./template/header_menu.ejs") %>
+					</div>
+				</div>
+			</div>
+			<%- include("./template/toolbar.ejs") %>
+			<%- include("./template/search_box.ejs") %>
+      <%- include("./template/card.ejs") %>
+  </header>
+	<!-- End header area -->
+
+	<main class="main__content_wrapper">
+    <!-- Start product section -->
+    <section class="product__section section--padding mt-100">
+      <div class="container">
+        <div class="col-lg-12 mt-3">
+          <nav>
+            <ol class="cd-breadcrumb custom-separator">
+              <li><a href="javascript:void(0)">Admin</a></li>
+              <li class="current"><em>Menu Reguler</em></li>
+            </ol>
+          </nav>
+        </div>
+        <div class="product__section--inner">
+          <ul class="widget__categories--menu">                
+            <% data_jadwal_menu.forEach(function (item, index) { %> 
+              <li class="widget__categories--menu__list">
+                <label class="widget__categories--menu__label d-flex align-items-center label_date" date="<%- moment(item.date).format('YYYYMMDD'); %>">
+                  <span class="widget__categories font-weight-bold" style="padding: 10px;"><%- moment(item.date).format('dddd, DD MMM YYYY');  %></span>
+                  <svg class="widget__categories--menu__arrowdown--icon" xmlns="http://www.w3.org/2000/svg" width="12.355" height="8.394">
+                    <path d="M15.138,8.59l-3.961,3.952L7.217,8.59,6,9.807l5.178,5.178,5.178-5.178Z" transform="translate(-6 -8.59)" fill="currentColor"></path>
+                  </svg>
+                </label>
+                <ul class="isi_menu widget__categories--sub__menu">
+                  <% data_jadwal_detail.forEach(function (item2, index) { %> 
+                    <% if(moment(item.date).format('YYYYMMDD') == moment(item2.date).format('YYYYMMDD')){ %>
+                      <li class="widget__categories--sub__menu--list">
+                        <% if(item2.sehat == 'Menu Sehat'){ %>
+                          <h3><%- item2.waktu %> - <span class="text-success"><%- item2.sehat %></span></h3>
+                        <% }else{ %> 
+                          <h3><%- item2.waktu %></h3>
+                        <% } %>                             
+                        <h4><%- item2.paket %></h4>
+                        <div>
+                          <%- item2.keterangan %>
+                        </div>
+                      </li>
+                    <% } %> 
+                  <% }) %> 
+                </ul>
+              </li>
+            <% }) %> 
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- End product section -->
+  </main>
+  <%- include("./template/footer.ejs") %>
+  <%- include("./template/js.ejs") %>
+  <script>
+    $(document).ready(function(){
+      $(".label_date").click(function(){
+        // listMenuDay($(this).attr("date"))
+      });
+
+      $(document).on('click', '.feedback', function() {
+        window.location.href = '/saran'
+      });
+    });
+
+    function listMenuDay(date){
+      $('.isi_menu').html("")
+      $.ajax({
+        url: "/reguler/listMenuDay",
+        type: "GET",
+        dataType: "json",
+        data: {
+          date: date
+        },
+        success: function(ress) {
+          if(ress.response == "Successful"){
+            console.log(ress.result)
+            let menu = ress.result
+            menu.forEach(function (item, index) {
+              if(moment(item.date).format('YYYYMMDD') == moment().format('YYYYMMDD')){
+                if(item.sehat == 'Menu Sehat'){
+                  $('.isi_menu').append('<li class="widget__categories--sub__menu--list"><h3>'+item.waktu+' - <span class="text-success">'+item.sehat+'</span></h3><h4>'+item.paket+'</h4><div>'+item.keterangan+'</div><br><div class="d-grid gap-2 justify-content-md-end"><button class="feedback btn btn-primary btn-sm" type="button">Feed Back</button></div><br></li>');
+                }else{
+                  $('.isi_menu').append('<li class="widget__categories--sub__menu--list"><h3>'+item.waktu+'</h3><h4>'+item.paket+'</h4><div>'+item.keterangan+'</div><br><div class="d-grid gap-2 justify-content-md-end"><button class="feedback btn btn-primary btn-sm" type="button">Feed Back</button></div><br></li>');
+                } 
+              }else{
+                if(item.sehat == 'Menu Sehat'){
+                  $('.isi_menu').append('<li class="widget__categories--sub__menu--list"><h3>'+item.waktu+' - <span class="text-success">'+item.sehat+'</span></h3><h4>'+item.paket+'</h4><div>'+item.keterangan+'</div></li>');
+                }else{
+                  $('.isi_menu').append('<li class="widget__categories--sub__menu--list"><h3>'+item.waktu+'</h3><h4>'+item.paket+'</h4><div>'+item.keterangan+'</div></li>');
+                }
+              }
+            })
+            
+          }else{
+            alert('Cannot database');
+          }
+        },error: function(err, data) {
+          alert('Cannot acces server');
+        }
+			});
+    }
+  </script>
+</body>
+</html>

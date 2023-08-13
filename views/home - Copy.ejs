@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>FoodCore</title>
+	<meta name="description" content="Nourishment of Productivity">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
+  
+	<link rel="stylesheet" href="/css/plugins/swiper-bundle.min.css">
+	<link rel="stylesheet" href="/css/plugins/glightbox.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&amp;family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/css/vendor/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/style.css"> 
+	<link rel="stylesheet" href="/css/modal.css"> 
+  
+  
+  <meta name="theme-color" content="#F7F8FC">
+  <link rel="apple-touch-icon" href="/img/icons/icon-96x96.png">
+  <meta name="apple-mobile-web-app-status-bar" content="#FFE1C4">
+</head>
+
+
+<body>
+	<header class="header__section header__transparent">
+    <div class="main__header main__header2 header__sticky">
+      <div class="container">
+        <div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+          <div class="offcanvas__header--menu__open ">
+            <a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+              <!-- <svg xmlns="http://www.w3.org/2000/svg" class="ionicon offcanvas__header--menu__open--svg" viewBox="0 0 512 512">
+                <path fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352" />
+              </svg> -->
+              <!-- <span class="visually-hidden">Offcanvas Menu Open</span> -->
+            </a>
+          </div>
+          <%- include("./template/header_menu.ejs") %>
+        </div>
+      </div>
+    </div>
+
+    <%- include("./template/toolbar.ejs") %>
+
+    <%- include("./template/search_box.ejs") %>
+
+  </header>
+	<!-- End header area -->
+
+	<main class="main__content_wrapper">
+    <!-- Start slider section -->
+    <section class="hero__slider--section">
+      <div class="hero__slider--inner hero__slider--activation swiper">
+        <div class="hero__slider--wrapper swiper-wrapper">
+
+          
+          <div class="swiper-slide ">
+            <div class="hero__slider--items bg__gray--color">
+              <div class="container slider__items--container">
+                <div class="hero__slider--items__inner">
+                  <div class="row row-cols-lg-2 row-cols-md-2 row-cols-1 align-items-center">
+                    <div class="col">
+                      <div class="slider__content slider__content--padding__left">
+                        <!-- <span class="slider__content--subtitle text__secondary">Eat clean and green</span> -->
+                        <h2 class="slider__content--maintitle h1">Penggunaan <span class="text__secondary">bahan segar</span>
+                          <br> pada makanan
+                        </h2>
+                        <p class="slider__content--desc">Foodcore selelu menggunakan bahan - bahan mentah berkualitas seperti sayur dan buah - buahan segar</p>
+                        <!-- <a class="btn slider__btn" href="/shop.html">Shop Now</a> -->
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="hero__slider--layer">
+                        <img class="slider__layer--img " src="/img/slider/home1-slider1-layer.png" alt="slider-img">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+        </div>
+        <div class="slider__pagination swiper-pagination"></div>
+      </div>
+    </section>
+    <!-- End slider section -->
+    <!-- Start product section -->
+    <section class="product__section section--padding pt-0">
+      <div class="container">
+        <div class="section__heading text-center mb-25">
+          <!-- <span class="section__heading--subtitle">Recently added our store</span> -->
+          <br>
+          <h2 class="section__heading--maintitle">List Menu</h2>
+        </div>
+        <!-- <ul class="product__tab--one product__tab--btn d-flex justify-content-center mb-35"><li class="product__tab--btn__list active" data-toggle="tab" data-target="#product_all">All</li><li class="product__tab--btn__list" data-toggle="tab" data-target="#product_fresh">Fresh</li><li class="product__tab--btn__list" data-toggle="tab" data-target="#product_fruits">Fruits </li><li class="product__tab--btn__list" data-toggle="tab" data-target="#product_nature">Nature</li><li class="product__tab--btn__list" data-toggle="tab" data-target="#product_recipies">Recipies </li><li class="product__tab--btn__list" data-toggle="tab" data-target="#product_vegetable">Vegetable </li></ul> -->
+        <div class="tab_content">
+          <div id="product_all" class="tab_pane active show">
+            <div class="product__section--inner">
+              <div class="row row-cols-lg-4 row-cols-md-3 row-cols-2 mb--n28">
+                <% data_jadwal_menu.forEach(function (item, index) { %> 
+                  <div class="col md-28" style="margin-bottom: 30px;">
+                    <div class="product__items ">
+                      <div class="product__items--thumbnail">
+                        <a class="product__items--link modal-description" paket_id="<%- item.id %>" data-open="modal<%- item.id %>">
+                          <img class="product__items--img product__primary--img" src="/img/product/<%- item.image1 %>" alt="product-img">
+                          <img class="product__items--img product__secondary--img" src="/img/product/<%- item.image2 %>" alt="product-img">
+                        </a>
+                        <div class="product__badge">
+                          <span class="product__badge--items sale">Paket <%- index+1 %></span>
+                        </div>
+                        <ul class="product__items--action">
+                          <li class="product__items--action__list">
+                            <a class="product__items--action__btn modal-description" paket_id="<%- item.id %>" data-open="modal<%- item.id %>" href="javascript:void(0)">
+                              <svg class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" />
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448" />
+                              </svg>
+                              <span class="visually-hidden">Quick View</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="product__items--content text-center">
+                        <a class="add__to--cart__btn modal-description" paket_id="<%- item.id %>" data-open="modal<%- item.id %>"><%- item.name %></a>
+                        <h3 class="product__items--content__title h4">
+                          <a class="modal-description" paket_id="<%- item.id %>" data-open="modal<%- item.id %>"><%- item.name %></a>
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                <% }) %> 
+
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End product section -->
+  </main>
+  
+  <br>
+  <%- include("./template/footer.ejs") %>
+  
+  <% data_jadwal_menu.forEach(function (item, index) { %> 
+    <div class="modal" id="modal<%- item.id %>" data-animation="slideInUp">
+      <div class="modal-dialog quickview__main--wrapper">
+        <header class="modal-header quickview__header">
+          <button class="close-modal quickview__close--btn" aria-label="close modal" data-close>✕ </button>
+        </header>
+        <div class="quickview__inner">
+          <div class="row row-cols-lg-2 row-cols-md-2 row-cols-1">
+            <div class="col">
+              <div class="quickview__gallery">
+                <img class="product__media--preview__items--img" src="/img/product/<%- item.image1 %>" alt="product-media-img">
+              </div>
+            </div>
+            <div class="col">
+              <div class="quickview__info">
+                <form action="#">
+                  <h2 class="product__details--info__title mb-15"><%- item.paket %></h2>
+                  <div class="product__items--rating d-flex align-items-center mb-12">
+                    <ul class="d-flex">
+                      <li class="product__items--rating__list"> 
+                        <span class="product__items--rating__icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16.105" height="14.732" viewBox="0 0 10.105 9.732">
+                            <path  data-name="star - Copy" d="M9.837,3.5,6.73,3.039,5.338.179a.335.335,0,0,0-.571,0L3.375,3.039.268,3.5a.3.3,0,0,0-.178.514L2.347,6.242,1.813,9.4a.314.314,0,0,0,.464.316L5.052,8.232,7.827,9.712A.314.314,0,0,0,8.292,9.4L7.758,6.242l2.257-2.231A.3.3,0,0,0,9.837,3.5Z" transform="translate(0 -0.018)" fill="currentColor"/>
+                          </svg>
+                        </span> 
+                      </li>
+                      <li class="product__items--rating__list"> 
+                        <span class="product__items--rating__icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16.105" height="14.732" viewBox="0 0 10.105 9.732">
+                            <path  data-name="star - Copy" d="M9.837,3.5,6.73,3.039,5.338.179a.335.335,0,0,0-.571,0L3.375,3.039.268,3.5a.3.3,0,0,0-.178.514L2.347,6.242,1.813,9.4a.314.314,0,0,0,.464.316L5.052,8.232,7.827,9.712A.314.314,0,0,0,8.292,9.4L7.758,6.242l2.257-2.231A.3.3,0,0,0,9.837,3.5Z" transform="translate(0 -0.018)" fill="currentColor"/>
+                          </svg>
+                        </span> 
+                      </li>
+                      <li class="product__items--rating__list"> 
+                        <span class="product__items--rating__icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16.105" height="14.732" viewBox="0 0 10.105 9.732">
+                            <path  data-name="star - Copy" d="M9.837,3.5,6.73,3.039,5.338.179a.335.335,0,0,0-.571,0L3.375,3.039.268,3.5a.3.3,0,0,0-.178.514L2.347,6.242,1.813,9.4a.314.314,0,0,0,.464.316L5.052,8.232,7.827,9.712A.314.314,0,0,0,8.292,9.4L7.758,6.242l2.257-2.231A.3.3,0,0,0,9.837,3.5Z" transform="translate(0 -0.018)" fill="currentColor"/>
+                          </svg>
+                        </span> 
+                      </li>
+                      <li class="product__items--rating__list"> 
+                        <span class="product__items--rating__icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16.105" height="14.732" viewBox="0 0 10.105 9.732">
+                            <path  data-name="star - Copy" d="M9.837,3.5,6.73,3.039,5.338.179a.335.335,0,0,0-.571,0L3.375,3.039.268,3.5a.3.3,0,0,0-.178.514L2.347,6.242,1.813,9.4a.314.314,0,0,0,.464.316L5.052,8.232,7.827,9.712A.314.314,0,0,0,8.292,9.4L7.758,6.242l2.257-2.231A.3.3,0,0,0,9.837,3.5Z" transform="translate(0 -0.018)" fill="currentColor"/>
+                          </svg>
+                        </span> 
+                      </li>
+                      <li class="product__items--rating__list"> 
+                        <span class="product__items--rating__icon">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16.105" height="14.732" viewBox="0 0 10.105 9.732">
+                            <path  data-name="star - Copy" d="M9.837,3.5,6.73,3.039,5.338.179a.335.335,0,0,0-.571,0L3.375,3.039.268,3.5a.3.3,0,0,0-.178.514L2.347,6.242,1.813,9.4a.314.314,0,0,0,.464.316L5.052,8.232,7.827,9.712A.314.314,0,0,0,8.292,9.4L7.758,6.242l2.257-2.231A.3.3,0,0,0,9.837,3.5Z" transform="translate(0 -0.018)" fill="currentColor"/>
+                          </svg>
+                        </span> 
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="product__details--info__desc mb-10">
+                    <%- item.keterangan %>
+                  </div>								
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+  
+	<button id="scroll__top">
+		<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+			<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 244l144-144 144 144M256 120v292" />
+		</svg>
+	</button>
+  
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+	<script src="/js/vendor/popper.js" defer="defer"></script>
+	<script src="/js/vendor/bootstrap.min.js" defer="defer"></script>
+	<script src="/js/plugins/swiper-bundle.min.js"></script>
+	<script src="/js/plugins/glightbox.min.js"></script>
+	<!-- Customscript js -->
+	<script src="/js/script.js"></script>
+
+  <!-- <script src="/js/app.js"></script> -->
+
+  <script>
+    $(document).ready(function(){
+      
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+	<%- include("./template/css.ejs") %>
+	<body>
+		<header class="header__section">
+			<%- include("./template/login_info.ejs") %>
+			<div class="main__header main__header2 header__sticky sticky" style="margin-top: 36px;">
+				<div class="container">
+					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+						<div class="offcanvas__header--menu__open ">
+							<a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+							</a>
+						</div>
+						<%- include("./template/header_menu.ejs") %>
+					</div>
+				</div>
+			</div>
+			<%- include("./template/toolbar.ejs") %>
+			<%- include("./template/search_box.ejs") %>
+			<%- include("./template/card.ejs") %>
+		</header>
+	<!-- End header area -->
+
+	<main class="main__content_wrapper">
+    <section class="product__section section--padding mt-100">
+      <div class="container">
+        <div class="col-lg-12 mt-3">
+          <nav>
+            <ol class="cd-breadcrumb custom-separator">
+              <li><a href="javascript:void(0)">Home</a></li>
+              <li class="current"><em>Pembayaran</em></li>
+            </ol>
+          </nav>
+        </div>
+          <div class="detailPembayaran">
+            <p>Detail Pembayaran:</p>
+            <form action="#">
+              <div class="checkout__content--step checkout__contact--information2 border-radius-5">
+                <div class="checkout__review d-flex justify-content-between align-items-center">
+                  <div class="checkout__review--inner d-flex align-items-center">
+                    <!-- <label class="checkout__review--label">Tanggal</label> -->
+                    <span class="checkout__review--content">Tanggal</span>
+                  </div>
+                  <div class="checkout__review--link">
+                    <div id="tanggalOrderPay" class="checkout__review--link__text"></div>
+                  </div>
+                </div>
+                <div class="checkout__review d-flex justify-content-between align-items-center">
+                  <div class="checkout__review--inner d-flex align-items-center">
+                    <!-- <label class="checkout__review--label"> Total Harga</label> -->
+                    <span class="checkout__review--content"> Total Harga</span>
+                  </div>
+                  <div class="checkout__review--link">
+                    <div class="checkout__review--link__text">Rp. <span class="total"></span></div>
+                  </div>
+                </div>
+                <div class="checkout__review d-flex justify-content-between align-items-center">
+                  <div class="checkout__review--inner d-flex align-items-center">
+                    <!-- <label class="checkout__review--label"> Metode Pembayran</label> -->
+                    <span class="checkout__review--content"> Metode Pembayaran
+                    </span>
+                  </div>
+                  <div class="checkout__review--link">
+                    <div class="checkout__review--link__text">Midtrans</div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!-- <br><br> -->
+
+            <div class="text-right">
+              <!-- <img src="/img/qr.jpg" class="mx-auto" alt="QR" style="width: 300px;"> -->
+
+              <button id="pay" class="btn btn-primary mt-3" onclick="snapPay()">Bayar Sekarang</button>  
+            </div>
+            <br><br>
+            <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end"> -->
+              <!-- <div class="checkout__content--step__footer d-md-flex justify-content-md-end">
+                <a class="btnPay continue__shipping--btn btn border-radius-5" href="javascript:void(0)">Bayar</a>
+              </div> -->
+          </div>
+
+          <!-- Start deals banner section -->
+          <section class="statusPembayaran deals__banner--section banner__bg">
+            <div class="container">
+              <div class="row align-items-center">
+                <div class="col-lg-5 col-md-5 deals__baner--col">
+                  <div class="deals__banner--content">
+                    <h3 class="deals__banner--content__subtitle text__secondary">Pembayaran Berhasil!</h3>
+                    <h2 class="deals__banner--content__maintitle">Kami akan mengirim pesanan sesuai tanggal yang anda pilih.</h2>
+                    <div class="checkout__content--step__footer d-md-flex">
+                      <a class="continue__shipping--btn btn border-radius-5" href="/">Kembali Ke Beranda</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-7 col-md-7 deals__baner--col">
+                  <div class="banner__items text-right">
+                    <div class="banner__items--thumbnail display-block">
+                      <img class="banner__items--thumbnail__img display-block" src="/img/banner/banner-layer.png" alt="banner-layer-img">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </section>
+          <!-- End deals banner section -->
+        </div>
+      </div>
+    </section>
+    <!-- End product section -->
+  </main>
+  <%- include("./template/footer.ejs") %>
+  <%- include("./template/js.ejs") %>
+  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-DcCuq4OcwlgozvHl"></script>
+  <script>
+    $(document).ready(function(){     
+      moment.locale('id');
+
+      $('.detailPembayaran').show();
+      $('.statusPembayaran').hide();
+
+      $(".btnPay").click(function(){
+        confirmPay();
+        // $('.detailPembayaran').hide();
+        // $('.statusPembayaran').show();
+      });
+
+      if(localStorage.getItem('tanggalOrder')){
+        $("#tanggalOrderPay").html(moment(localStorage.getItem('tanggalOrder')).format('dddd, DD MMM YYYY'))
+      }
+      calculateTotal(); 
+      
+    });
+
+    function snapPay(){
+      $.LoadingOverlay("show");
+      $.ajax({
+        url: "/pay/snapPay",
+        type: "POST",
+        dataType: "json",
+        data: {
+          date: localStorage.getItem('tanggalOrder'),
+          subtotal: subTotalOrder,
+          total: totalOrder,
+          resultCard: JSON.parse(localStorage.getItem('resultCard'))
+        },
+        success: function(ress) {
+          $.LoadingOverlay("hide");
+          snap.pay(ress.result, {
+            // Optional
+            onSuccess: function(result){
+              confirmPay();
+            },
+            // Optional
+            onPending: function(result){
+              //catat transaksi yang pending
+              console.log(result);
+            // Optional
+            },
+            onError: function(result){
+              swal("Notifikasi!", "Transaksi Gagal!", "error");
+              // catat transaksi yang gagal
+              console.log(result);
+            }
+          })
+        },error: function(err, data) {
+          $.LoadingOverlay("hide");
+          alert('Cannot acces server');
+        }
+      });
+    }
+
+    function confirmPay(){
+      $.LoadingOverlay("show");
+      $.ajax({
+        url: "/pay/confirmPay",
+        type: "POST",
+        dataType: "json",
+        data: {
+          date: localStorage.getItem('tanggalOrder'),
+          subtotal: subTotalOrder,
+          total: totalOrder,
+          resultCard: JSON.parse(localStorage.getItem('resultCard'))
+        },
+        success: function(ress) {
+          $.LoadingOverlay("hide");
+          $('.detailPembayaran').hide();
+          $('.statusPembayaran').show();
+          resultCard = []
+          subTotalOrder = 0
+          totalOrder = 0
+          localStorage.removeItem('tanggalOrder')
+          localStorage.removeItem('resultCard')
+          updateCard();
+        },error: function(err, data) {
+          $.LoadingOverlay("hide");
+          alert('Cannot acces server');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

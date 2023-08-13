@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<%- include("./template/css.ejs") %>
+<body>
+	<header class="header__section header__transparent">
+    <div class="main__header main__header2 header__sticky sticky">
+      <div class="container">
+        <div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+          <div class="offcanvas__header--menu__open ">
+            <a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+            </a>
+          </div>
+          <%- include("./template/header_menu.ejs") %>
+        </div>
+      </div>
+    </div>
+    <%- include("./template/toolbar.ejs") %>
+    <%- include("./template/search_box.ejs") %>
+  </header>
+	<!-- End header area -->
+
+	<main class="main__content_wrapper">
+    <!-- Start login section  -->
+    <div class="login__section section--padding mt-100">
+      <div class="container">
+        <div action="#">
+          <div class="login__section--inner">
+            <div class="row row-cols-md-2 row-cols-1">
+              <div class="col d-hide-media">
+                <div class="about__thumb d-flex">
+                  <div class="about__thumb--items">
+                    <img class="about__thumb--img border-radius-5 display-block" src="/img/other/about-thumb-list1.png" alt="about-thumb">
+                  </div>
+                  <div class="about__thumb--items position__relative">
+                    <img class="about__thumb--img border-radius-5 display-block" src="/img/other/about-thumb-list2.png" alt="about-thumb">
+                    <div class="banner__bideo--play about__thumb--play">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="account__login">
+                  <div class="account__login--header mb-25">
+                    <h2 class="account__login--header__title h3 mb-10">Login</h2>
+                    <p class="hp account__login--header__desc">Lengkapi No Handphone.</p>
+                    <p class="verify account__login--header__desc">Silahkan masukkan kode verifikasi yang dikirim lewat sms</p>
+                    <p class="password account__login--header__desc">Buat Password Baru</p>
+                    <p class="loginPassword account__login--header__desc">Masukkan Password</p>
+                  </div>
+                  <div class="account__login--inner">
+                    <label>
+                      <input id="hp" class="hp account__login--input" placeholder="No Handphone" type="text">
+                    </label>
+                    <label>
+                      <input id="verify" class="verify account__login--input" placeholder="Kode Verifikasi" type="number">
+                    </label>
+                    <label>
+                      <input id="password" class="password account__login--input" placeholder="Password" type="password">
+                    </label>
+                    <label>
+                      <input id="confrimPassword" class="password account__login--input" placeholder="Ulangi Password" type="password">
+                    </label>
+                    <label>
+                      <input id="loginPassword" class="loginPassword account__login--input" placeholder="Password" type="password">
+                    </label>
+                    <div class="loginInfo account__login--forgot"></div>
+                    <div id="recaptcha-container" class="hp"></div>
+                    <br>
+                    <button id="login" class=" hp account__login--btn btn">Masuk</button>
+                    <button id="verifyBtn" class="verify account__login--btn btn">Verify</button>
+                    <button id="save" class="password account__login--btn btn">Simpan</button>
+                    <button id="loginPasswordBtn" class="loginPassword account__login--btn btn">Login</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End login section  -->
+  </main>
+  
+  <br>
+  <%- include("./template/footer.ejs") %>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>  
+  <%- include("./template/js.ejs") %>
+  <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-auth.js"></script>
+  <script>
+    var config = {
+      apiKey: "AIzaSyBAmLid97zxuwNEUhO-xABuHTXBo6dXxWg",
+      authDomain: "catering-da52b.firebaseapp.com",
+      projectId: "catering-da52b",
+      storageBucket: "catering-da52b.appspot.com",
+      messagingSenderId: "53556742932",
+      appId: "1:53556742932:web:992f4c4d4840d224479001",
+      measurementId: "G-CTH469PXN7"
+    };
+    firebase.initializeApp(config);
+
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+      "recaptcha-container",
+      {
+        size: "normal",
+        callback: function(response) {
+          submitPhoneNumberAuth();
+        }
+      }
+    );
+
+    function submitPhoneNumberAuth() {
+      var phoneNumber = validatePhone($("#hp").val());
+      var appVerifier = window.recaptchaVerifier;
+      firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then(function(confirmationResult) {
+          window.confirmationResult = confirmationResult;
+          $(".hp").hide();
+          $(".verify").show();
+          $(".password").hide();
+          $(".loginInfo").hide();
+          $(".loginPassword").hide();
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+    }
+
+    function submitPhoneNumberAuthCode() {
+      var code = $("#verify").val();
+      confirmationResult.confirm(code)
+        .then(function(result) {
+          // var user = result.user;
+          window.user = result.user;
+          $(".hp").hide();
+          $(".verify").hide();
+          $(".password").show();
+          $(".loginInfo").hide();
+          $(".loginPassword").hide();
+        });        
+    }
+
+    function inputNewPassword() {
+      $.ajax({
+        url: "login",
+        type: "POST",
+        dataType: "json",
+        data: {
+          idToken: user._lat,
+          uid: user.uid,
+          password: $("#password").val()
+        },
+        success: function(data) {
+          // $.LoadingOverlay("hide");
+          // console.log(data)
+          // console.log(data.response)
+          if(data.response == "succeed"){
+            document.location.href = data.url;
+            // document.location.href='/';
+          }else if(data.response == "phone not valid" || data.response == "Password minimal 8 karakter."){
+            $(".loginInfo").html(data.response)
+            $(".loginInfo").show();
+          }else{
+            $(".loginInfo").html("Cannot acces server")
+            $(".loginInfo").show();
+            // alert("Cannot acces server");
+          }          
+        },
+        error: function(err, data) {
+          // $.LoadingOverlay("hide");
+          alert(err);
+        },
+
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }    
+
+    function checkPhone() {
+      var phoneNumber = validatePhone($("#hp").val());
+      $.ajax({
+        url: "login/checkPhone",
+        type: "POST",
+        dataType: "json",
+        data: {
+          phone: phoneNumber
+        },
+        success: function(data) {
+          if(data.response == "password exist"){
+            $(".hp").hide();
+            $(".verify").hide();
+            $(".password").hide();
+            $(".loginInfo").hide();
+            $(".loginPassword").show();
+          }else if(data.response == "password not exist"){
+            $(".loginInfo").hide();
+            submitPhoneNumberAuth();
+          }else if(data.response == "user not exist"){
+            $(".loginInfo").html("No hp tidak terdaftar di perusahaan manapun")
+            $(".loginInfo").show();
+          }else{
+            $(".loginInfo").html("Cannot acces server")
+            $(".loginInfo").show();
+          }          
+        },
+        error: function(err, data) {
+          $(".loginInfo").html("Cannot acces server")
+          $(".loginInfo").show();
+        },
+
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }
+
+    function loginPassword() {
+      var phoneNumber = $("#hp").val();
+      if(phoneNumber.charAt(0) == "0"){
+        phoneNumber = phoneNumber.substr(1);
+        phoneNumber = '+62'+phoneNumber
+      }
+      $.ajax({
+        url: "login/loginPassword",
+        type: "POST",
+        dataType: "json",
+        data: {
+          phone: phoneNumber,
+          password: $("#loginPassword").val()
+        },
+        success: function(data) {
+          if(data.response == "succeed"){
+            document.location.href = data.url;
+          }else if(data.response == "Password incorrect"){
+            $(".loginInfo").html(data.response)
+            $(".loginInfo").show();
+          }else{
+            $(".loginInfo").html("Cannot acces server")
+            $(".loginInfo").show();
+          }          
+        },
+        error: function(err, data) {
+          $(".loginInfo").html("Cannot acces server")
+          $(".loginInfo").show();
+        },
+
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }
+
+    $(document).ready(function(){
+      $(".verify").hide();
+      $(".password").hide();
+      $(".loginInfo").hide();
+      $(".loginPassword").hide();
+      $("#login").click(function(){
+        checkPhone();        
+        // $.LoadingOverlay("show");
+        // $.LoadingOverlay("hide");
+      });
+      $("#verifyBtn").click(function(){
+        submitPhoneNumberAuthCode();
+        // $.LoadingOverlay("show");
+        // $.LoadingOverlay("hide");
+      });
+      $("#save").click(function(){
+        if($("#password").val().length >= 8){
+          if($("#password").val()==$("#confrimPassword").val()){
+            inputNewPassword();
+          }else{          
+            $(".loginInfo").html("Password tidak cocok, periksa kembali password yang anda masukkan.")
+            $(".loginInfo").show();
+          }      
+        }else{
+          $(".loginInfo").html("Password minimal 8 karakter.")
+          $(".loginInfo").show();
+        }
+        // $.LoadingOverlay("show");
+        // $.LoadingOverlay("hide");
+      });
+      $("#loginPasswordBtn").click(function(){
+        loginPassword();
+      });
+    })
+
+    function validatePhone (phone){
+      var phoneNumber = phone.replace(/ /g, '');
+      phoneNumber = phoneNumber.replace(/-/g, '');
+      phoneNumber = phoneNumber.replace(/\(/g, "");
+      phoneNumber = phoneNumber.replace(/\)/g, "");
+      if(phoneNumber.charAt(0) == "0"){
+        phoneNumber = phoneNumber.substr(1);
+        phoneNumber = '+62'+phoneNumber
+      }else if(phoneNumber.charAt(0) != "+" && phoneNumber.charAt(0) != "0"){
+        phoneNumber = '+'+phoneNumber
+      }
+      return phoneNumber;
+    }
+  </script>
+</body>
+
+</html>

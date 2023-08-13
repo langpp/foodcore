@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+	<%- include("../template/css.ejs") %>
+	<body>
+		<header class="header__section">
+			<%- include("../template/login_info.ejs") %>
+			<div class="main__header main__header2 header__sticky sticky" style="margin-top: 36px;">
+				<div class="container">
+					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+						<div class="offcanvas__header--menu__open ">
+							<a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+							</a>
+						</div>
+						<%- include("../template/header_menu.ejs") %>
+					</div>
+				</div>
+			</div>
+			<%- include("../template/toolbar.ejs") %>
+			<%- include("../template/search_box.ejs") %>
+		</header>
+		<!-- End header area -->
+		<main class="main__content_wrapper">
+			<!-- my account section start -->
+			<section class="section--padding mt-100">
+				<div class="container">
+					<div class="row">
+            <div class="col-lg-12 mt-3">
+							<nav>
+								<ol class="cd-breadcrumb custom-separator">
+									<li><a href="javascript:void(0)">Admin</a></li>
+									<li class="current"><em>User</em></li>
+								</ol>
+							</nav>
+						</div>
+						<div class="col-lg-3 mb-3">
+							<div class="shop__sidebar--widget widget__area d-lg-block">
+								<div class="single__widget widget__bg">
+									<h2 class="widget__title h3">Menu</h2>
+									<ul class="widget__categories--menu">
+                    <% if(session.userType == '1'){ %>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/client" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-star"></i> 
+											<span class="widget__categories--menu__text">Daftar Client</span>
+											</a>
+										</li>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/paket" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-briefcase"></i> 
+											<span class="widget__categories--menu__text">Daftar Paket</span>
+											</a>
+										</li>
+                    <% } %>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/jadwal" class="widget__categories--menu__label d-flex align-items-center p-menu">
+											<i class="fas fa-list"></i> 
+											<span class="widget__categories--menu__text">Daftar Jadwal</span>
+											</a>
+										</li>
+										<li class="widget__categories--menu__list">
+											<a href="/admin/user" class="widget__categories--menu__label d-flex align-items-center p-menu text-warning">
+											<i class="fas fa-user"></i> 
+											<span class="widget__categories--menu__text text-warning">Daftar User</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-9">
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button id="importUser" class="btn btn-primary btn-sm" type="button">Import User</button>
+                <button id="addUser" class="btn btn-primary btn-sm" type="button">Tambah User</button>
+              </div>
+              <br>
+              <div>
+                <!-- <h2 class="account__content--title h3 mb-20">Orders History</h2> -->
+                <div>
+                  <table id="user" class="display table table-striped">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>No.</th>
+                        <th>Nama</th>
+                        <th>No Hp</th>
+                        <th>Id Status</th>
+                        <th>Status</th>
+                        <th>Id Client</th>
+                        <th>Perusahaan</th>
+                        <th>Id Tipe User</th>                      
+                        <th>Tipe User</th>
+                      </tr>
+                    </thead>
+                </table>
+                </div>
+              </div>
+            </div>
+					</div>
+				</div>
+			</section>
+			<!-- my account section end -->
+			<!-- Modal -->
+      <div class="modal fade" id="userModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title tambahUser">Tambah User</h5>
+              <h5 class="modal-title editUser">Edit User</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+  
+              <div class="row tambahUser">
+                <div class="col-lg-12 mb-12">
+                    <div class="checkout__input--list ">
+                      <label class="contact__form--label" for="name">Nama User: <span class="contact__form--label__star">*</span></label>
+                      <input id="name" class="checkout__input--field border-radius-5" placeholder="Nama User"  type="text">
+                      <div class="invalid-feedback">
+                        Isikan Nama User!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <label class="contact__form--label" for="phone">No Handphone: <span class="contact__form--label__star">*</span></label>
+                    <input id="phone" class="checkout__input--field border-radius-5" placeholder="No Handphone"  type="text">
+                    <div class="invalid-feedback">
+                      Isikan No Handphone!
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 mb-12" <%if(session.userType == 4){%>hidden<%}%>>
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="company">Perusahaan</label>
+                      <select id="company" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                        
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Perushaan!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="userType">Tipe User</label>
+                      <select id="userType" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                        <option value="7">Karyawan</option>
+                        <option value="4">Admin</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Perushaan!
+                      </div>
+                    </div>
+                </div>
+              </div>
+  
+              <div class="row editUser">
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <input id="idUserEdit" class="checkout__input--field border-radius-5" type="text" hidden>
+                    <label class="contact__form--label" for="nameEdit">Nama User: <span class="contact__form--label__star">*</span></label>
+                    <input id="nameEdit" class="checkout__input--field border-radius-5" placeholder="Nama User"  type="text">
+                    <div class="invalid-feedback">
+                      Isikan Nama User!
+                    </div>
+                  </div>
+              </div>
+              <div class="col-lg-12 mb-12">
+                <div class="checkout__input--list ">
+                  <label class="contact__form--label" for="phoneEdit">No Handphone: <span class="contact__form--label__star">*</span></label>
+                  <input id="phoneEdit" class="checkout__input--field border-radius-5" placeholder="No Handphone"  type="text">
+                  <div class="invalid-feedback">
+                    Isikan No Handphone!
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 mb-12" <%if(session.userType == 4){%>hidden<%}%>>
+                <div class="checkout__input--list checkout__input--select select">
+                    <label class="checkout__select--label" for="companyEdit">Perusahaan</label>
+                    <select id="companyEdit" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                      
+                    </select>
+                    <div class="invalid-feedback">
+                      Isikan Perushaan!
+                    </div>
+                  </div>
+              </div>
+              <div class="col-lg-12 mb-12">
+                <div class="checkout__input--list checkout__input--select select">
+                    <label class="checkout__select--label" for="userTypeEdit">Tipe User</label>
+                    <select id="userTypeEdit" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                      <option value="7">Karyawan</option>
+                      <option value="4">Admin</option>
+                    </select>
+                    <div class="invalid-feedback">
+                      Isikan Perushaan!
+                    </div>
+                  </div>
+              </div>
+              </div>
+  
+            </div>
+            <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+              <button type="button" class="tambahUser saveTambahUser btn btn-primary">Simpan</button>
+              <button type="button" class="editUser deleteUser btn btn-danger" style="background-color: red; color: white;">Delete User</button>
+              <button type="button" class="editUser saveEditUser btn btn-primary">Simpan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+			<div class="modal fade" id="importModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Import User</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- <form id="upload-form" enctype="multipart/form-data">
+                <input type="file" name="file">
+                <button type="submit">Upload</button>
+              </form> -->
+              <form id="upload-form" class="row">
+                
+                <div class="col-lg-12 mb-12" <%if(session.userType == 4){%>hidden<%}%>>
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="companyImport">Perusahaan</label>
+                      <select id="companyImport" name="companyImport" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                        
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Perushaan!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-12">
+                  <div class="checkout__input--list ">
+                    <label class="contact__form--label" for="image1">Excel Karyawan: <span class="contact__form--label__star">*</span></label>
+                    <input id="excelKaryawan" name="file" class="checkout__input--field border-radius-5" placeholder="Foto 1"  type="file" accept=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                    <div class="invalid-feedback">
+                      Isikan Excel Karyawan!
+                    </div>
+                  </div>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <button type="submit" class="uploadDataKaryawan btn btn-primary">Import</button>
+                </div>
+                
+              </form>
+            </div>
+            <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+              <!-- <button type="submit" class="uploadDataKaryawan btn btn-primary">Import</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+		</main>
+		<%- include("../template/footer.ejs") %>
+		<%- include("../template/js.ejs") %>
+		<script type="text/javascript">
+      $(document).ready(function(){
+        $('#upload-form').submit(function(event) {
+          $.LoadingOverlay("show");
+          event.preventDefault();
+          var formData = new FormData(this);
+          $.ajax({
+            url: '/admin/user/importUser',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(ress) {
+              $.LoadingOverlay("hide");
+              if(ress.response == "Successful"){
+                window.location.reload();
+              }else{
+                alert('Cannot acces server');
+              }
+  
+            },
+            error: function(xhr, status, error) {
+              console.log(error);
+            }
+          });
+        });
+  
+        listUser();
+        listClient();
+  
+        $(".invalid-feedback").hide();  
+        $(".tambahUser").hide();
+        $(".editUser").hide();  
+  
+        $("#importUser").click(function(){
+          $("#importModal").modal("show");
+        });
+  
+        // $(".uploadDataKaryawan").click(function(){
+        //   console.log($('#excelKaryawan').prop('files')[0])
+        //   $.ajax({
+        //     url: "/upload",
+        //     type: "POST",
+        //     dataType: "json",
+        //     data: {
+        //       file: $('#excelKaryawan').prop('files')[0] //document.querySelector('#excelKaryawan').files[0]
+        //     },
+        //     success: function(ress) {            
+        //       console.log(ress)
+        //     },error: function(err, data) {
+        //       console.log(err)
+        //       console.log(data)
+        //     }
+        //   });
+        // });
+        
+        $("#addUser").click(function(){
+          $("#name").val("")
+          $("#phone").val("")
+          $("#company").val("")
+  
+          $("#userModal").modal("show");
+          $(".tambahUser").show();
+          $(".editUser").hide();
+        });
+  
+        $(".saveTambahUser").click(function(){
+          $.LoadingOverlay("show");
+          if($("#phone").val().trim() !== ''){
+            postUser();
+          }else{
+            $(".invalid-feedback").show();   
+            $.LoadingOverlay("hide");       
+          }
+        });
+  
+        $(".saveEditUser").click(function(){
+          if($("#phoneEdit").val().trim() !== ''){
+            putUser();
+          }else{
+            $(".invalid-feedback").show();   
+            $.LoadingOverlay("hide");       
+          }
+        });
+  
+        $(".deleteUser").click(function(){
+          deleteUser();
+        });
+      });
+  
+      function listUser(){
+        $.ajax({
+          url: "/admin/user/listUser",
+          type: "GET",
+          dataType: "json",
+          data: {
+            
+          },
+          success: function(ress) {
+            if(ress.response == "Successful"){
+              dataTableUser = ress.result;
+              // console.log(dataTableUser)
+              var tableUser = $('#user').dataTable( {
+                "drawCallback": function(settings) {
+                  var api = this.api();
+                  var startIndex = api.context[0]._iDisplayStart;
+                  api.column(1, {order:'current'}).nodes().each(function(cell, i) {                  
+                    cell.innerHTML = i + 1;
+                  });
+                },
+                data: dataTableUser,
+                columnDefs: [
+                  {
+                    target: 0,
+                    visible: false,
+                    searchable: false,
+                  },
+                  {
+                    target: 4,
+                    visible: false,
+                    searchable: false,
+                  },
+                  {
+                    target: 6,
+                    visible: false,
+                    searchable: false,
+                  },
+                  <% if(session.userType == 4){%>  
+                    {
+                      target: 7,
+                      visible: false,
+                      searchable: false,
+                    },
+                  <%}%>
+                  {
+                    target: 8,
+                    visible: false,
+                    searchable: false,
+                  },
+                ],
+                order: [[1, 'asc']],
+              });
+              $('#user tbody').on( 'click', 'tr', function () {
+                // var aData = tableUser.fnGetData( this );
+                var aData = tableUser.fnGetData( this );
+                $("#idUserEdit").val(aData[0]);
+                $("#nameEdit").val(aData[2]);
+                $("#phoneEdit").val(aData[3]);
+                $("#companyEdit").val(aData[6]);
+                $("#userTypeEdit").val(aData[8]);
+                // console.log(aData[0])
+                $("#userModal").modal("show");
+                $(".tambahUser").hide();
+                $(".editUser").show();
+              });
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function postUser(){
+        $.ajax({
+          url: "/admin/user/postUser",
+          type: "POST",
+          dataType: "json",
+          data: {
+            name: $("#name").val(),
+            phone: $("#phone").val(),
+            <% if(session.userType == 1){%> 
+              company_id: $("#company").val(),
+            <%}%>              
+            userType: $("#userType").val()
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            console.log(ress)
+            if(ress.response == "Successful"){
+              window.location.reload();
+            }else if(ress.response == "Duplicate phone"){
+              alert('Ho handphone telah terdaftar');
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function putUser(){      
+        $.ajax({
+          url: "/admin/user/putUser",
+          type: "PUT",
+          dataType: "json",
+          data: {
+            id: $("#idUserEdit").val(),
+            name: $("#nameEdit").val(),
+            phone: $("#phoneEdit").val(),
+            <% if(session.userType == 1){%> 
+              company_id: $("#companyEdit").val(),
+            <%}%>          
+            userType: $("#userTypeEdit").val()
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            if(ress.response == "Successful"){
+              window.location.reload();
+            }else if(ress.response == "Duplicate phone"){
+              alert('Ho handphone telah terdaftar');
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function deleteUser(){   
+        $.LoadingOverlay("show");
+        $.ajax({
+          url: "/admin/user/deleteUser",
+          type: "DELETE",
+          dataType: "json",
+          data: {
+            id: $("#idUserEdit").val()
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            if(ress.response == "Successful"){
+              window.location.reload();
+            }else{
+              alert('Cannot database');
+            }
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            alert('Cannot acces server');
+          }
+        });
+      }
+  
+      function listClient(){
+        $.ajax({
+          url: "/admin/client/listClient",
+          type: "GET",
+          dataType: "json",
+          data: {
+            
+          },
+          success: function(ress) {
+            if(ress.response == "Successful"){
+              for (let i = 0; i < ress.result.length; i++) {
+                $("#company").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');
+                $("#companyImport").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');              
+                $("#companyEdit").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');
+              }
+            }else{
+              // alert('Cannot database');
+            }
+          },error: function(err, data) {
+            // alert('Cannot acces server');
+          }
+        });
+      }
+    </script>
+	</body>
+</html>
