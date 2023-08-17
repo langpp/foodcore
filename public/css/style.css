@@ -11975,6 +11975,10 @@ input:checked + .slide-container .nav label { display: block; }
   justify-content: center;
 }
 
+.border-7{
+  border-radius: 7px;
+}
+
 @media(max-width:767px){
   .carousel{
     height:150px
@@ -12045,7 +12049,12 @@ input:checked + .slide-container .nav label { display: block; }
   }
 
   .predictive__search--input{
-    font-size:15px
+    font-size:15px !important
+  }
+
+  .predictive__search--title{
+    font-size: 18px;
+    margin-bottom: 11px;
   }
 }
 
