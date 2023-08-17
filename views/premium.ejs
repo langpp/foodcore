@@ -35,23 +35,23 @@
         <div class="product__section--inner">
           <div class="row row-cols-lg-4 row-cols-md-3 row-cols-2 mb--n28">
             <% data_paket.forEach(function (item, index) { %> 
-              <div class="col-lg-3 col-md-4 col-sm-6 col-6 mb-3">
+              <div class="col-lg-3 col-md-4 col-sm-4 col-4 mb-3">
                 <div class="product__items ">
                   <div class="product__items--thumbnail">
                     <a class="product__items--link modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">
-                    <img class="product__items--img product__primary--img" src="/img/product/<%- item.image1 %>" alt="product-img">
-                    <img class="product__items--img product__secondary--img" src="/img/product/<%- item.image2 %>" alt="product-img">
+                    <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/<%- item.image1 %>" alt="product-img">
+                    <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/<%- item.image2 %>" alt="product-img">
                     </a>
                     <div class="product__badge">
                       <span class="product__badge--items sale">Rp <%- item.rateThousand %></span>
                     </div>
-                    <span class="product__love"><i class="fas fa-heart"></i></span>
+                    <span class="product__love bottom-10"><i class="fas fa-heart"></i></span>
                   </div>
-                  <div class="product__items--content d-flex justify-content-between align-items-center">
-                    <h3 class="product__items--content__title h4">
+                  <div class="product__items--content d-flex justify-content-between align-items-center flex-media-row">
+                    <h3 class="product__items--content__title text-overflow h4">
                       <a class="modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal"><%- item.name %></a>
                     </h3>
-                    <button class="addPaket btn btn-primary btn-sm minicart__open--btn" href="javascript:void(0)" paketID="<%- item.id %>" paketName="<%- item.name %>" paketRate="<%- item.rate %>" paketRateThousand="<%- item.rateThousand %>" image1="<%- item.image1 %>" image2="<%- item.image2 %>" data-offcanvas>+</button>
+                    <button class="addPaket btn btn-primary btn-sm minicart__open--btn w-100-media" href="javascript:void(0)" paketID="<%- item.id %>" paketName="<%- item.name %>" paketRate="<%- item.rate %>" paketRateThousand="<%- item.rateThousand %>" image1="<%- item.image1 %>" image2="<%- item.image2 %>" data-offcanvas>+</button>
                   </div>
                 </div>
               </div>
