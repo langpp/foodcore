@@ -1478,7 +1478,7 @@ select {
   color: var(--white-color);
 }
 .text-black {
-  color: var(--black-color);
+  color: var(--black-color) !important;
 }
 .body__background {
   background: var(----gray-color);
@@ -3028,7 +3028,8 @@ body.overlay__active::before {
   visibility: visible;
   -webkit-transform: translateX(0);
   transform: translateX(0);
-  padding-bottom: 115px;
+  padding-bottom: 135px;
+  z-index:999
 }
 @media only screen and (min-width: 480px) {
   .offCanvas__minicart {
@@ -11786,6 +11787,10 @@ input:checked + .slide-container .nav label { display: block; }
   margin-top:100px;
 }
 
+.mt-120{
+  margin-top:120px
+}
+
 .p-menu{
   padding: 14px 10px !important;
 }
@@ -11992,16 +11997,20 @@ div.dataTables_wrapper div.dataTables_filter{
 }
 
 .cart-red{
-  background: #f4040480;
+  background: #04f47080;
 }
 
 .cart-red label, .cart-red label:hover{
-  color:#fff
+  color:#000
 }
 
 .i-cart{
   font-size: 20px;
   padding: 3px;
+}
+
+.ml-2{
+  margin-left: 1.2rem;
 }
 
 @media(max-width:767px){
