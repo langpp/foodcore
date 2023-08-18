@@ -12,7 +12,7 @@
     <!-- <p class="minicart__header--desc">Pesanan menu premium</p> -->
   </div>
   <div class="row">
-    <div class="col-lg-12 mb-12">
+    <div class="col-lg-12">
       <div class="col-lg-12 mb-12">
         <div class="checkout__input--list ">
           <label class="contact__form--label" for="tanggalOrder">Tanggal Pengiriman: <span class="contact__form--label__star">*</span></label>
@@ -21,7 +21,34 @@
             Isikan Tanggal!
           </div>
         </div>
-    </div>
+      </div>
+      <div class="col-lg-12 mb-12">
+        <div class="checkout__input--list checkout__input--select select">
+          <label class="checkout__select--label" for="country">Jadwal</label>
+          <select class="checkout__input--select__field border-radius-5" id="country">
+              <option value="1" disabled>Pagi</option>
+              <option value="2">Siang</option>
+              <option value="3" disabled>Sore</option>
+              <option value="4">Malam</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <ul class="widget__categories--menu d-flex">
+          <li class="widget__categories--menu__list cart-red">
+              <label class="widget__categories--menu__label d-flex align-items-center">
+                  <i class="fas fa-times i-cart"></i>
+                  <span class="widget__categories--menu__text">Pagi</span>
+              </label>
+          </li>
+          <li class="widget__categories--menu__list cart-red">
+            <label class="widget__categories--menu__label d-flex align-items-center">
+                <i class="fas fa-times i-cart"></i>
+                <span class="widget__categories--menu__text">Sore</span>
+            </label>
+        </li>
+        </ul>
+      </div>
   </div>        
   <div class="isiCard minicart__product">
     

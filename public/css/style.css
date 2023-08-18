@@ -11991,6 +11991,19 @@ div.dataTables_wrapper div.dataTables_filter{
   font-size: 12px;
 }
 
+.cart-red{
+  background: #f4040480;
+}
+
+.cart-red label, .cart-red label:hover{
+  color:#fff
+}
+
+.i-cart{
+  font-size: 20px;
+  padding: 3px;
+}
+
 @media(max-width:767px){
   .carousel{
     height:150px
