@@ -68,7 +68,7 @@
 							</div>
 						</div>
 						<div class="col-lg-9">
-              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end d-flex justify-content-end">
                 <% if(session.userType == 1){%>  
                   <button id="export-btn" class="btn btn-primary btn-sm" type="button">Export ke Excel</button>
                 <%}%>
@@ -94,7 +94,7 @@
                         <th>Qty</th>
                         <th>Tagihan</th>
                         <th>Waktu</th>
-                        <th>Jenis</th>
+                        <th>Sehat</th>
                       </tr>
                     </thead>
                 </table>
@@ -162,7 +162,7 @@
                 </div>
                 <div class="col-lg-12 mb-12">
                   <div class="checkout__input--list checkout__input--select select">
-                      <label class="checkout__select--label" for="sehatPaket">Jenis Menu</label>
+                      <label class="checkout__select--label" for="sehatPaket">Menu Sehat</label>
                       <select id="sehatPaket" class="checkout__input--select__field border-radius-5" aria-label="Client">
                         <option value="Menu Biasa">Menu Biasa</option>
                         <option value="Menu Sehat">Menu Sehat</option>
@@ -223,7 +223,7 @@
                 </div>
                 <div class="col-lg-12 mb-12">
                   <div class="checkout__input--list checkout__input--select select">
-                      <label class="checkout__select--label" for="sehatPaketEdit">Jenis Menu</label>
+                      <label class="checkout__select--label" for="sehatPaketEdit">Menu Sehat</label>
                       <select id="sehatPaketEdit" class="editDS checkout__input--select__field border-radius-5" aria-label="Client">
                         <option value="Menu Biasa">Menu Biasa</option>
                         <option value="Menu Sehat">Menu Sehat</option>

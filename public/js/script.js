@@ -60,10 +60,10 @@ $('.owl-menu').owlCarousel({
     dots: false,
     responsive: {
       0: {
-        items: 3
+        items: 2
       },
       600: {
-        items: 4
+        items: 3
       },
       1000: {
         items: 5

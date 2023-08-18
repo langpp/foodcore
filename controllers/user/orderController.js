@@ -46,7 +46,37 @@ exports.listOrder = async(req, res, next) =>{
       ]
     })
 
-    return res.status(200).json({ status: 200, response: 'Successful', result: data_order.map( Object.values )})
+    let allid_order = data_order.map(({ id }) => id)
+
+    const data_order_item = await order_item.findAll({
+      raw: true,
+      attributes: [
+        'qty', 'rate',
+        [sequelize.col('paket.name'), 'paket'], [sequelize.col('paket.image1'), 'image1'], [sequelize.col('paket.image2'), 'image2'],
+        [sequelize.col('order.date'), 'date'], [sequelize.col('order.total'), 'total'], [sequelize.col('order.id'), 'id']
+      ],
+      where: { 
+        status: {[Op.ne]: 0}, 
+        order_id: allid_order 
+      },
+      order: [
+        ['id', 'ASC']
+      ],
+      include: [
+        {
+          model: paket,
+          as: 'paket',  
+          attributes: []
+        },
+        {
+          model: order,
+          as: 'order',  
+          attributes: []
+        },
+      ]
+    })
+
+    return res.status(200).json({ status: 200, response: 'Successful', result: data_order.map( Object.values ), order_details: data_order_item})
 	}else{
 		res.redirect('/login')
 	}

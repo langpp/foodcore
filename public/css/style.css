@@ -11979,6 +11979,18 @@ input:checked + .slide-container .nav label { display: block; }
   border-radius: 7px;
 }
 
+div.dataTables_wrapper div.dataTables_filter{
+  display:flex;
+  justify-content: end;
+}
+
+.li-style-number{
+  list-style: decimal;
+  margin-left: 12px;
+  margin-bottom: 7px;
+  font-size: 12px;
+}
+
 @media(max-width:767px){
   .carousel{
     height:150px
@@ -12005,7 +12017,9 @@ input:checked + .slide-container .nav label { display: block; }
   }
   
   .owl-media-3{
-    height:100px
+    height: 150px;
+    padding: 20px;
+    border-radius: 25px;
   }
 
   .bottom-10{
