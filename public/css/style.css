@@ -12013,6 +12013,14 @@ div.dataTables_wrapper div.dataTables_filter{
   margin-left: 1.2rem;
 }
 
+.minicart__thumb img{
+  border-radius: 7px;
+}
+
+.ml-0{
+  margin-left: 0px !important;
+}
+
 @media(max-width:767px){
   .carousel{
     height:150px
@@ -12042,6 +12050,8 @@ div.dataTables_wrapper div.dataTables_filter{
     height: 150px;
     padding: 20px;
     border-radius: 25px;
+    width:100%;
+    object-fit: cover;
   }
 
   .bottom-10{

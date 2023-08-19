@@ -23,6 +23,7 @@ const admin_user = require('./admin/user')
 
 
 const user_order = require('./user/order')
+const user_profile = require('./user/profile')
 
 
 
@@ -47,5 +48,6 @@ router.use('/admin/jadwal', admin_jadwal)
 router.use('/admin/user', admin_user)
 
 router.use('/user/order', user_order)
+router.use('/user/profile', user_profile)
 
 module.exports = router
