@@ -12021,6 +12021,43 @@ div.dataTables_wrapper div.dataTables_filter{
   margin-left: 0px !important;
 }
 
+
+/* .profile-pic {
+  max-width: 200px;
+  max-height: 200px;
+  display: block;
+} */
+
+.file-upload {
+  display: none;
+}
+.circle {
+  border-radius: 1000px !important;
+  overflow: hidden;
+  width: 200px;
+  height: 200px;
+  border: 8px solid #ddd;
+}
+.p-image {
+  position: absolute;
+  margin-right: 0px;
+  margin-left: 0px;
+  top: 180px;
+  color: #666666;
+  transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+}
+.p-image:hover {
+  transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+}
+.upload-button {
+  font-size: 1.2em;
+}
+
+.upload-button:hover {
+  transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+  color: #999;
+}
+
 @media(max-width:767px){
   .carousel{
     height:150px

@@ -61,53 +61,66 @@
                                   <h3 class="contact__form--title mb-40">Ubah Profile</h3>
                                   <div class="contact__form--inner" action="#">
                                     <div class="row">
-                                      <div class="col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="contact__form--list mb-15">
-                                          <label class="contact__form--label" for="name">Nama <span class="contact__form--label__star">*</span>
-                                          </label>
-                                          <input id="name" class="contact__form--input" name="name" placeholder="Nama Anda" type="text" required>
-                                          <div class="invalid-feedback">
-                                            Isikan Nama!
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="contact__form--list mb-15">
-                                          <label class="contact__form--label" for="name">No HP <span class="contact__form--label__star">*</span>
-                                          </label>
-                                          <input id="name" class="contact__form--input" name="name" placeholder="No HP Anda" type="text" required disabled>
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="contact__form--list mb-15">
-                                          <label class="contact__form--label" for="name">Email <span class="contact__form--label__star">*</span>
-                                          </label>
-                                          <input id="name" class="contact__form--input" name="name" placeholder="example@mail.com" type="email" required>
-                                          <div class="invalid-feedback">
-                                            Isikan Email!
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="contact__form--list mb-15">
-                                          <label class="contact__form--label" for="name">Foto Profile
-                                          </label>
-                                          <input id="name" class="contact__form--input" name="name"  type="file" required>
-                                          <div class="invalid-feedback">
-                                            Isikan Foto!
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-12 col-md-6 col-sm-6 col-12">
-                                        <div class="contact__form--list mb-15">
-                                          <label class="contact__form--label" for="input5">Alamat <span class="contact__form--label__star">*</span>
-                                          </label>
-                                          <textarea class="contact__form--textarea" name="alamat" id="alamat" placeholder="Alamat Lengkap" required></textarea>
-                                          <div class="invalid-feedback">
-                                            Isikan Alamat Lengkap!
-                                          </div>
-                                        </div>
-                                      </div>
+										<div class="col-lg-4 col-md-4 col-sm-6 col-12 d-flex justify-content-center" style="position: relative">
+											<div class="circle">
+												<img class="profile-pic" src="https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png">
+											  </div>
+											<div class="p-image">
+												<i class="fas fa-camera upload-button"></i>
+												 <input class="file-upload" type="file" accept="image/*"/>
+											</div>
+										</div>
+										<div class="col-lg-8 col-md-8 col-sm-6 col-12">
+											<div class="row">
+												<div class="col-lg-6 col-md-6 col-sm-6 col-12">
+													<div class="contact__form--list mb-15">
+													<label class="contact__form--label" for="name">Nama <span class="contact__form--label__star">*</span>
+													</label>
+													<input id="name" class="contact__form--input" name="name" placeholder="Nama Anda" type="text" required>
+													<div class="invalid-feedback">
+														Isikan Nama!
+													</div>
+													</div>
+												</div>
+												<div class="col-lg-6 col-md-6 col-sm-6 col-12">
+													<div class="contact__form--list mb-15">
+													<label class="contact__form--label" for="name">No HP <span class="contact__form--label__star">*</span>
+													</label>
+													<input id="name" class="contact__form--input" name="name" placeholder="No HP Anda" type="text" required disabled>
+													</div>
+												</div>
+												<div class="col-lg-12 col-md-12 col-sm-12 col-12">
+													<div class="contact__form--list mb-15">
+													<label class="contact__form--label" for="name">Email <span class="contact__form--label__star">*</span>
+													</label>
+													<input id="name" class="contact__form--input" name="name" placeholder="example@mail.com" type="email" required>
+													<div class="invalid-feedback">
+														Isikan Email!
+													</div>
+													</div>
+												</div>
+												<div class="col-lg-6 col-md-6 col-sm-6 col-12">
+													<div class="contact__form--list mb-15">
+													<label class="contact__form--label" for="name">Foto Profile
+													</label>
+													<input id="name" class="contact__form--input" name="name"  type="file" required>
+													<div class="invalid-feedback">
+														Isikan Foto!
+													</div>
+													</div>
+												</div>
+												<div class="col-lg-12 col-md-12 col-sm-12 col-12">
+													<div class="contact__form--list mb-15">
+													<label class="contact__form--label" for="input5">Alamat <span class="contact__form--label__star">*</span>
+													</label>
+													<textarea class="contact__form--textarea" name="alamat" id="alamat" placeholder="Alamat Lengkap" required></textarea>
+													<div class="invalid-feedback">
+														Isikan Alamat Lengkap!
+													</div>
+													</div>
+												</div>
+											</div>
+										</div>
                                     </div>
                                     <button id="sentSaran" class="contact__form--btn btn">
                                       <span>Simpan</span>
@@ -125,7 +138,25 @@
 		<%- include("../template/footer.ejs") %>
 		<%- include("../template/js.ejs") %>
 		<script type="text/javascript">
-			
+			function previewFile() {
+				var preview = document.querySelector('img');
+				var file    = document.querySelector('input[type=file]').files[0];
+				var reader  = new FileReader();
+
+				reader.addEventListener("load", function () {
+					preview.src = reader.result;
+				}, false);
+
+				if (file) {
+					reader.readAsDataURL(file);
+				}
+				}
+			$(function() {
+				$('#profile-image1').on('click', function() {
+					$('#profile-image-upload').click();
+				});
+			});
+						
 		</script>
 	</body>
 </html>
