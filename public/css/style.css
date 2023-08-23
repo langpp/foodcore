@@ -11974,7 +11974,7 @@ input:checked + .slide-container .nav label { display: block; }
 }
 
 .login-mid{
-  height: 100vh;
+  height: 95vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12058,6 +12058,12 @@ div.dataTables_wrapper div.dataTables_filter{
   color: #999;
 }
 
+.owl-media-4{
+  height: 100%;
+  padding: 25px;
+  width:100%;
+}
+
 @media(max-width:767px){
   .carousel{
     height:150px
@@ -12089,6 +12095,12 @@ div.dataTables_wrapper div.dataTables_filter{
     border-radius: 25px;
     width:100%;
     object-fit: cover;
+  }
+
+  .owl-media-4{
+    height: 100%;
+    padding: 25px;
+    width:100%;
   }
 
   .bottom-10{
@@ -12138,6 +12150,10 @@ div.dataTables_wrapper div.dataTables_filter{
   .predictive__search--title{
     font-size: 18px;
     margin-bottom: 11px;
+  }
+
+  .main__logo--login{
+    max-width: 240px;
   }
 }
 
