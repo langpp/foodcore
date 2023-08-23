@@ -12060,7 +12060,7 @@ div.dataTables_wrapper div.dataTables_filter{
 
 .owl-media-4{
   height: 100%;
-  padding: 25px;
+  padding: 35px;
   width:100%;
 }
 
@@ -12099,7 +12099,7 @@ div.dataTables_wrapper div.dataTables_filter{
 
   .owl-media-4{
     height: 100%;
-    padding: 25px;
+    padding: 45px 50px 10px 50px;
     width:100%;
   }
 
@@ -12153,7 +12153,7 @@ div.dataTables_wrapper div.dataTables_filter{
   }
 
   .main__logo--login{
-    max-width: 240px;
+    max-width: 60%;
   }
 }
 
