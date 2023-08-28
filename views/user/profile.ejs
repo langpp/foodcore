@@ -60,71 +60,60 @@
                                 <div class="contact__form ml-0 p-5">
                                   <h3 class="contact__form--title mb-40">Ubah Profile</h3>
                                   <div class="contact__form--inner" action="#">
+									<form id="changeuser">
                                     <div class="row">
 										<div class="col-lg-4 col-md-4 col-sm-6 col-12 d-flex justify-content-center" style="position: relative">
 											<div class="circle">
+												<%if(!data_user.foto_profile){%>
 												<img class="profile-pic" src="https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png">
+												<%}else{%>
+												<img class="profile-pic" src="/profile/<%= data_user.foto_profile %>">
+												<%}%>
 											  </div>
-											<div class="p-image">
+											<div class="p-image" id="profile-image1">
 												<i class="fas fa-camera upload-button"></i>
-												 <input class="file-upload" type="file" accept="image/*"/>
 											</div>
+											<input class="file-upload" type="file" accept="image/*" id="img"/>
 										</div>
 										<div class="col-lg-8 col-md-8 col-sm-6 col-12">
 											<div class="row">
 												<div class="col-lg-6 col-md-6 col-sm-6 col-12">
 													<div class="contact__form--list mb-15">
-													<label class="contact__form--label" for="name">Nama <span class="contact__form--label__star">*</span>
+													<label class="contact__form--label" for="name">Nama Depan<span class="contact__form--label__star">*</span>
 													</label>
-													<input id="name" class="contact__form--input" name="name" placeholder="Nama Anda" type="text" required>
-													<div class="invalid-feedback">
-														Isikan Nama!
-													</div>
+													<input id="name" class="contact__form--input" name="name" placeholder="Nama Anda" type="text" required value="<%= data_user.name %>">
 													</div>
 												</div>
 												<div class="col-lg-6 col-md-6 col-sm-6 col-12">
 													<div class="contact__form--list mb-15">
 													<label class="contact__form--label" for="name">No HP <span class="contact__form--label__star">*</span>
 													</label>
-													<input id="name" class="contact__form--input" name="name" placeholder="No HP Anda" type="text" required disabled>
+													<input class="contact__form--input" placeholder="No HP Anda" type="text" required disabled value="<%= data_user.phone %>">
 													</div>
 												</div>
 												<div class="col-lg-12 col-md-12 col-sm-12 col-12">
 													<div class="contact__form--list mb-15">
 													<label class="contact__form--label" for="name">Email <span class="contact__form--label__star">*</span>
 													</label>
-													<input id="name" class="contact__form--input" name="name" placeholder="example@mail.com" type="email" required>
-													<div class="invalid-feedback">
-														Isikan Email!
-													</div>
-													</div>
-												</div>
-												<div class="col-lg-6 col-md-6 col-sm-6 col-12">
-													<div class="contact__form--list mb-15">
-													<label class="contact__form--label" for="name">Foto Profile
-													</label>
-													<input id="name" class="contact__form--input" name="name"  type="file" required>
-													<div class="invalid-feedback">
-														Isikan Foto!
-													</div>
+													<input id="email" class="contact__form--input" name="email" placeholder="example@mail.com" type="email" required value="<%= data_user.email %>">
 													</div>
 												</div>
 												<div class="col-lg-12 col-md-12 col-sm-12 col-12">
 													<div class="contact__form--list mb-15">
 													<label class="contact__form--label" for="input5">Alamat <span class="contact__form--label__star">*</span>
 													</label>
-													<textarea class="contact__form--textarea" name="alamat" id="alamat" placeholder="Alamat Lengkap" required></textarea>
-													<div class="invalid-feedback">
-														Isikan Alamat Lengkap!
-													</div>
+													<textarea class="contact__form--textarea" name="alamat" id="alamat" placeholder="Alamat Lengkap" required><%= data_user.address %></textarea>
 													</div>
 												</div>
 											</div>
 										</div>
                                     </div>
-                                    <button id="sentSaran" class="contact__form--btn btn">
-                                      <span>Simpan</span>
-                                    </button>
+									<div class="d-flex justify-content-end">
+										<button type="submit" class="contact__form--btn btn float-right">
+										Simpan
+										</button>
+									</div>
+									</form>
                                   </div>
                                 </div>
                             </div>
@@ -138,13 +127,51 @@
 		<%- include("../template/footer.ejs") %>
 		<%- include("../template/js.ejs") %>
 		<script type="text/javascript">
+			$(document).ready(function(){
+				$("#changeuser").submit(function(e){
+					e.preventDefault();
+					$.LoadingOverlay("show");
+
+					var form = new FormData();
+
+					form.append('name', $("#name").val());
+					form.append('email', $('#email').val());
+					form.append('alamat', $('#alamat').val());
+					if ($('input[id="img"]').val() != "") {
+						form.append('foto', $('input[id="img"]')[0].files[0]);
+					}
+					
+					$.ajax({
+						method: 'POST',
+						url: "/user/profile/change",
+						
+						data:form,
+						contentType: false,
+						processData: false,
+						cache: false,
+						datatype : "JSON",
+						success: function(res) {
+							$(".hsi-loader").fadeOut();
+							if(!res.error){
+								swal("Notification", "Berhasil Mengubah Data!", "success")
+								$.LoadingOverlay("hide");
+								setTimeout(() => {
+									window.location.reload();
+								}, 2000);
+							}else{
+								swal("Notification", res.response, "error")
+							}
+						}
+					});
+					
+				})
+			})
 			function previewFile() {
-				var preview = document.querySelector('img');
 				var file    = document.querySelector('input[type=file]').files[0];
 				var reader  = new FileReader();
 
 				reader.addEventListener("load", function () {
-					preview.src = reader.result;
+					$('.profile-pic').attr('src', reader.result);
 				}, false);
 
 				if (file) {
@@ -153,8 +180,12 @@
 				}
 			$(function() {
 				$('#profile-image1').on('click', function() {
-					$('#profile-image-upload').click();
+					$('#img').click();
 				});
+
+				$("#img").change(function() {
+					previewFile()
+				})
 			});
 						
 		</script>

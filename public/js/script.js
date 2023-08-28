@@ -623,7 +623,7 @@ const newsletterPopup = function() {
 
       $(".addPaket").click(function(){
         if($('#tanggalOrder').val()){
-          let newItem = {id: $(this).attr("paketID"), name: $(this).attr("paketName"), rate: $(this).attr("paketRate"), rateThousand: $(this).attr("paketRateThousand"), image1: $(this).attr("image1"), image2: $(this).attr("image2"), type_paket: 'Premium'};
+          let newItem = {id: $(this).attr("paketID"), name: $(this).attr("paketName"), rate: $(this).attr("paketRate"), rateThousand: $(this).attr("paketRateThousand"), image1: $(this).attr("image1"), image2: $(this).attr("image2"), type: 'Premium'};
           let existingItem = resultCard.find(i => i.id === newItem.id);
           if (existingItem) {
             existingItem.count++;
@@ -633,6 +633,7 @@ const newsletterPopup = function() {
           localResultCard();
           updateCard();
           changeEmptyState();
+		  calculateTotal()
         }else{
           $('.isiCard').html("");
           $('.notEmptyCard').hide();
@@ -681,7 +682,6 @@ const newsletterPopup = function() {
 
 
       $('#tanggalOrder').change(function() {
-        // console.log($('#tanggalOrder').val())
         checkOrder($('#tanggalOrder').val())
       });
     });
@@ -701,15 +701,16 @@ const newsletterPopup = function() {
               return {
                 ...item,
                 id: item.id.toString(),
-                rateThousand: thousandSeparator(parseFloat(item.rate))
+                rateThousand: thousandSeparator(parseFloat(item.rate)),
+				free: true,
+				tanggal: date
               }
             })
-            const hasRegulerStatus1 = orderItem.some(item => item.type_paket === 'Reguler');
-            let orderItemReguler = orderItem.find(obj => obj.type_paket === "Reguler");
-            // console.log(orderItemReguler.status)
-            if (hasRegulerStatus1) {              
+            const hasRegulerStatus1 = orderItem.some(item => item.type === 'Reguler');
+            let orderItemReguler = orderItem.find(obj => obj.type === "Reguler");
+            if (hasRegulerStatus1) {      
               if(orderItemReguler.status == 1){
-                resultCard = resultCard.filter(obj => obj.type_paket !== 'Reguler');
+                resultCard = resultCard.filter(obj => obj.type !== 'Reguler');
                 resultCard = resultCard.concat(orderItem);
                 updateCard();
                 localResultCard();
@@ -741,7 +742,7 @@ const newsletterPopup = function() {
     }
 
     function changeEmptyState(){
-      let orderItemReguler = resultCard.find(obj => obj.type_paket === "Reguler");
+      let orderItemReguler = resultCard.find(obj => obj.type === "Reguler");
       if(resultCard.length>0){
         if(orderItemReguler){
           if(orderItemReguler.status == 1){
@@ -782,27 +783,26 @@ const newsletterPopup = function() {
       $('.items__count').html(resultCard.length);
 
       resultCard.sort(function(a, b) {
-        if (a.type_paket === 'Reguler' && b.type_paket !== 'Reguler') {
+        if (a.type === 'Reguler' && b.type !== 'Reguler') {
           return -1; // move a to the front
-        } else if (a.type_paket !== 'Reguler' && b.type_paket === 'Reguler') {
+        } else if (a.type !== 'Reguler' && b.type === 'Reguler') {
           return 1; // move b to the front
         } else {
           return 0; // do nothing
         }
       });
 
-      // console.log(resultCard)
       resultCard.forEach(function (item, index) {
-        let orderItemReguler = resultCard.find(obj => obj.type_paket === "Reguler");  
+        let orderItemReguler = resultCard.find(obj => obj.type === "Reguler");  
         if(orderItemReguler){
           if(orderItemReguler.status == 1){
-            if(item.type_paket == 'Reguler'){
-              $('.isiCard').append('<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="product-details.html"> <img src="/img/product/'+item.image1+'" alt="prduct-img"> </a> </div> <div class="minicart__text"> <span class="current__price"><b>Menu Reguler</b></span> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">'+item.name+'</a> </h4> <div class="minicart__price"> <span class="current__price">'+item.rateThousand+'</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="'+item.id+'" aria-label="quantity value" value="Decrease Value">-</button> <label> <input type="number" class="quantity__number" value="'+item.count+'" data-counter /> </label> <button type="button" class="quantity__value increase" paketID="'+item.id+'" aria-label="quantity value" value="Increase Value">+</button> </div>  </div> </div> </div>')
+            if(item.type == 'Reguler'){
+              $('.isiCard').append(`<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="product-details.html"> <img src="/img/product/${item.image1}" alt="prduct-img"> </a> </div> <div class="minicart__text"> <span class="current__price"><b>Menu Reguler</b></span> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">${item.name}</a> </h4> <div class="minicart__price"> <span class="current__price">${item.rateThousand}</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="${item.id}" aria-label="quantity value" value="Decrease Value">-</button> <label> <input type="number" class="quantity__number" value="${item.count ? item.count : '1'}" data-counter /> </label> <button type="button" class="quantity__value increase" paketID="${item.id}" aria-label="quantity value" value="Increase Value">+</button> </div>  </div> </div> </div>`)
             }else{
               $('.isiCard').append('<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="product-details.html"> <img src="/img/product/'+item.image1+'" alt="prduct-img"> </a> </div> <div class="minicart__text"> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">'+item.name+'</a> </h4> <div class="minicart__price"> <span class="current__price">'+item.rateThousand+'</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="'+item.id+'" aria-label="quantity value" value="Decrease Value">-</button> <label> <input type="number" class="quantity__number" value="'+item.count+'" data-counter /> </label> <button type="button" class="quantity__value increase" paketID="'+item.id+'" aria-label="quantity value" value="Increase Value">+</button> </div> <button class="minicart__product--remove removeProduct" paketID="'+item.id+'" type="button">Remove</button> </div> </div> </div>')
             }
           }else if(orderItemReguler.status == 2){
-            $('.isiCard').append('<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="product-details.html"> <img src="/img/product/'+item.image1+'" alt="prduct-img"> </a> </div> <div class="minicart__text"> <span class="current__price"><b>Menu Reguler</b></span> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">'+item.name+'</a> </h4> <div class="minicart__price"> <span class="current__price">'+item.rateThousand+'</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="'+item.id+'" aria-label="quantity value" value="Decrease Value" disabled>-</button> <label> <input type="number" class="quantity__number" value="'+item.count+'" data-counter disabled/> </label> <button type="button" class="quantity__value increase" paketID="'+item.id+'" aria-label="quantity value" value="Increase Value" disabled>+</button> </div>  </div> </div> </div>')
+            $('.isiCard').append(`<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="product-details.html"> <img src="/img/product/${item.image1}" alt="prduct-img"> </a> </div> <div class="minicart__text"> <span class="current__price"><b>Menu Reguler</b></span> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">${item.name}</a> </h4> <div class="minicart__price"> <span class="current__price">${item.rateThousand}</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="${item.id}" aria-label="quantity value" value="Decrease Value" disabled>-</button> <label> <input type="number" class="quantity__number" value="${item.count ? item.count : 1}" data-counter disabled/> </label> <button type="button" class="quantity__value increase" paketID="${item.id}" aria-label="quantity value" value="Increase Value" disabled>+</button> </div>  </div> </div> </div>`)
           }
         }else{
           
@@ -813,7 +813,7 @@ const newsletterPopup = function() {
 
     function calculateTotal(){
       ///////////////hitung potongan kantor/////////
-      let menuReguler = resultCard.find(obj => obj.type_paket === 'Reguler');
+      let menuReguler = resultCard.find(obj => obj.type === 'Reguler');
       if(menuReguler){
         $('.potonganKantor').html(thousandSeparator(parseInt(menuReguler.rate)))
       }
@@ -821,10 +821,15 @@ const newsletterPopup = function() {
       ////////////////////////////////////////////////
 
       let subtotal = 0;
-      resultCard.forEach(function (item, index) {
-        subtotal = subtotal + item.rate*item.count
-      })
-      $('.subtotal').html(thousandSeparator(subtotal))
+	  if(resultCard.length > 0){
+		resultCard.forEach(function (item, index) {
+			if(typeof(item.count) == "undefined"){
+				subtotal = subtotal+ 15000
+			}
+			subtotal = subtotal + item.rate*(item.count > 0 ? item.count : 0)
+		})
+		$('.subtotal').html(thousandSeparator(subtotal))
+	  }
 
       let total = subtotal
       if(menuReguler){

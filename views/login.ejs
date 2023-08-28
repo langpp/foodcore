@@ -18,7 +18,7 @@
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-6 col-12 d-flex align-items-center">
                         <div class="w-100">
-                        <h2 class="account__login--header__title h3 mb-10">Login</h2>
+                        <h2 class="account__login--header__title h2 mb-10">Login</h2>
                         <p class="hp account__login--header__desc">Lengkapi No Handphone.</p>
                         <p class="verify account__login--header__desc" style="display: none;">Silahkan masukkan kode verifikasi yang dikirim lewat sms</p>
                         <p class="password account__login--header__desc" style="display: none;">Buat Password Baru</p>
@@ -141,7 +141,7 @@
             document.location.href = data.url;
             // document.location.href='/';
           }else if(data.response == "phone not valid" || data.response == "Password minimal 8 karakter."){
-            $(".loginInfo").html(data.response)
+            $(".loginInfo").html(`${data.response}`)
             $(".loginInfo").show();
           }else{
             $(".loginInfo").html("Cannot acces server")
@@ -180,7 +180,7 @@
             $(".loginInfo").hide();
             submitPhoneNumberAuth();
           }else if(data.response == "user not exist"){
-            $(".loginInfo").html("No hp tidak terdaftar di perusahaan manapun")
+            $(".loginInfo").html(`<b>No hp tidak terdaftar di perusahaan manapun</b> <p class="text-justify">Segeralah bergabung bersama kami dengan melaporkan diri anda ke HRD/GA terkait dan nikmati kemudahan akses pelayanan catering Kami yang lengkap</p>`)
             $(".loginInfo").show();
           }else{
             $(".loginInfo").html("Cannot acces server")

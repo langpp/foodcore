@@ -26,7 +26,6 @@ exports.getOrder = async(req, res, next) =>{
 }
 
 exports.listOrder = async(req, res, next) =>{
-  // console.log("A")
   sc.sess=req.session
   if(!(sc.sess.lng)){
     sc.sess.lng = 'en'
@@ -140,8 +139,6 @@ exports.detailOrder = async(req, res, next) =>{
       ]
     })
 
-    // console.log(data_order_item)
-
     return res.status(200).json({ status: 200, response: 'Successful', result: data_order_item})
 	}else{
 		res.redirect('/login')
@@ -156,6 +153,7 @@ exports.checkOrder = async(req, res, next) =>{
   req.setLocale(sc.sess.lng)
   if(sc.sess.phone && (sc.sess.userType == 5 || sc.sess.userType == 7)){    
     const user_id = sc.sess.user_id
+    const company_id = sc.sess.company_id
     const dateString = req.query.date
     const date = new Date(Date.UTC(
       parseInt(dateString.substring(0, 4)),
@@ -167,40 +165,26 @@ exports.checkOrder = async(req, res, next) =>{
       parseInt(0)
     ));
 
-    const data_order = await order.findOne({
+    const data_order = await jadwal_menu.findOne({
       raw: true,
-      where: { user_id, date }
+      where: { company_id, date }
     })
+
     if(data_order){
-      const order_id = data_order.id
+      const order_id = data_order.paket_id
     
-      const data_order_item = await order_item.findAll({
+      const data_order_item = await paket.findAll({
         raw: true,
         attributes: [
-          [sequelize.col('paket.id'), 'id'], [sequelize.col('paket.name'), 'name'], 'rate', [sequelize.col('paket.image1'), 'image1'], [sequelize.col('paket.image2'), 'image2'], [sequelize.col('paket.type'), 'type_paket'], [sequelize.col('qty'), 'count'], 'status', 'order_id'],
+          'id', 'name', 'rate', 'image1', 'image2', 'type', 'status'],
         where: { 
           // status: {[Op.ne]: 0}, 
-          order_id,
-          '$order.user_id$': user_id 
+          id: order_id,
         },
         order: [
           ['id', 'ASC']
         ],
-        include: [
-          {
-            model: paket,
-            as: 'paket',  
-            attributes: []
-          },
-          {
-            model: order,
-            as: 'order',  
-            attributes: []
-          },
-        ]
       })
-
-      // console.log(data_order_item)
 
       return res.status(200).json({ status: 200, response: 'Successful', result: data_order_item})
     }else{

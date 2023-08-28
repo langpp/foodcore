@@ -10848,8 +10848,8 @@ details > summary::-webkit-details-marker {
   color: var(--secondary-color);
 }
 .account__login--forgot {
-  font-weight: 600;
-  color: var(--secondary-color);
+  /* font-weight: 600; */
+  /* color: var(--secondary-color); */
   font-size: 1.5rem;
   border: 0;
   padding: 0;
@@ -12062,6 +12062,9 @@ div.dataTables_wrapper div.dataTables_filter{
   height: 100%;
   padding: 35px;
   width:100%;
+}
+.text-justify{
+  text-align: justify;
 }
 
 @media(max-width:767px){
