@@ -50,7 +50,7 @@ exports.listPaket = async(req, res, next) =>{
     }
 		const data_paket = await paket.findAll({
       raw: true,
-      attributes: ['id','status', 'name', 'keterangan', 'type', 'rate'],
+      attributes: ['id','status', 'name', 'keterangan', 'type', 'kategori', 'rate'],
       where: where_val,
       order: [
         ['type', 'DESC'],
@@ -75,6 +75,7 @@ exports.postPaket = async(req, res, next) =>{
     const name = req.body.name
     const rate = req.body.harga
     const type = req.body.type
+    const kategori = req.body.kategori
     const keterangan = req.body.keterangan
 
     var fullname_image1;
@@ -96,6 +97,7 @@ exports.postPaket = async(req, res, next) =>{
           name: name,
           rate: rate,
           type: type,
+          kategori: kategori,
           keterangan: keterangan
         }
         if(fullname_image1){
@@ -130,6 +132,7 @@ exports.putPaket = async(req, res, next) =>{
     const name = req.body.name
     const rate = req.body.harga
     const type = req.body.type
+    const kategori = req.body.kategori
     const keterangan = req.body.keterangan
 
     var fullname_image1;
@@ -150,6 +153,7 @@ exports.putPaket = async(req, res, next) =>{
           name: name,
           rate: rate,
           type: type,
+          kategori: kategori,
           keterangan: keterangan
         }
         if(fullname_image1){

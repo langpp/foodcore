@@ -41,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 1
+    },
+    kategori: {
+      type: DataTypes.STRING(),
+      allowNull: true
     }
 	}, {
 		sequelize,

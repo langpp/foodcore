@@ -44,7 +44,6 @@ exports.getInvoice = async(req, res, next) =>{
         }
       ]
     })
-    console.log(data_jadwal_menu)
     if(data_jadwal_menu){
       res.render('invoice', { 
         title: 'Invoice',

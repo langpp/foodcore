@@ -24,14 +24,24 @@ exports.getPremium = async(req, res, next) =>{
   req.setLocale(sc.sess.lng)
   if(sc.sess.phone){    
     // if(sc.sess.userType == 7){
-
+      if(req.params.kategori == 'lokal' || req.params.kategori == 'asian' || req.params.kategori == 'western'){
+        var where = { 
+          status: {[Op.ne]: 0} ,
+          type: 'Premium',
+          kategori: req.params.kategori.toUpperCase(),
+        }
+        var kat = req.params.kategori.toUpperCase()
+      }else{
+        var where = { 
+          status: {[Op.ne]: 0} ,
+          type: 'Premium',
+        }
+        var kat = ""
+      }
       const data_paket = await paket.findAll({
         raw: true,
         // attributes: ['id','status', 'name', 'rate,', 'keterangan', 'type'],
-        where: { 
-          status: {[Op.ne]: 0} ,
-          type: 'Premium'
-        },
+        where: where,
         order: [
           ['name', 'ASC']
         ]
@@ -42,6 +52,7 @@ exports.getPremium = async(req, res, next) =>{
       res.render('premium', { 
         title: 'Premium',
         session: sc.sess,
+        kategori: kat,
         data_paket: updateDataPaket
       });
     // }else{
