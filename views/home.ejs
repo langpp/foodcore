@@ -4,7 +4,7 @@
 	<body>
 		<header class="header__section header__transparent">
 			<%- include("./template/login_info.ejs") %>
-			<div class="main__header main__header2 header__sticky sticky">
+			<div class="main__header main__header2 header__sticky sticky" <% if(session.userType){ %>style="margin-top: 36px;"<% } %>>
 				<div class="container">
 					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
 						<div class="offcanvas__header--menu__open ">
@@ -283,21 +283,7 @@
             </div>
             <div class="modal-body">
               <div class="product__details--media mb-0">
-                <div class="product__media--preview  swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="product__media--preview__items">
-                                <a class="product__media--preview__items--link glightbox" data-gallery="product-media-preview" href="/img/product/<%- item2.image1 %>"><img class="product__media--preview__items--img" src="/img/product/<%- item2.image1 %>" alt="product-media-img"></a>
-                                <div class="product__media--view__icon">
-                                    <a class="product__media--view__icon--link glightbox" href="/img/product/<%- item2.image1 %>" data-gallery="product-media-preview">
-                                        <svg class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg" width="22.51" height="22.443" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"></path></svg>
-                                        <span class="visually-hidden">product view</span> 
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <img class="product__media--preview__items--img" src="/img/product/<%- item2.image1 %>" alt="product-media-img">
                 <div class="product__details--info">
                   <h3 class="product__details--info__title mt-3"><%- item2.name %></h3>
                   <div class="product__details--info__price mb-15">
@@ -325,21 +311,7 @@
             </div>
             <div class="modal-body">
               <div class="product__details--media mb-0">
-                <div class="product__media--preview  swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="product__media--preview__items">
-                                <a class="product__media--preview__items--link glightbox" data-gallery="product-media-preview" href="/img/product/<%- item3.image1 %>"><img class="product__media--preview__items--img" src="/img/product/<%- item3.image1 %>" alt="product-media-img"></a>
-                                <div class="product__media--view__icon">
-                                    <a class="product__media--view__icon--link glightbox" href="/img/product/<%- item3.image1 %>" data-gallery="product-media-preview">
-                                        <svg class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg" width="22.51" height="22.443" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"></path></svg>
-                                        <span class="visually-hidden">product view</span> 
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <img class="product__media--preview__items--img" src="/img/product/<%- item3.image1 %>" alt="product-media-img">
                 <div class="product__details--info">
                   <h3 class="product__details--info__title mt-3"><%- item3.name %></h3>
                   <div class="product__details--info__price mb-15">
@@ -358,45 +330,31 @@
     <% }) %> 
 
     <% data_jadwal_western.forEach(function (item4, index4) { %> 
-    <div class="modal fade" id="premiummodalwestern<%- item4.id %>" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Menu Premium <%- item4.name %></h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="product__details--media mb-0">
-              <div class="product__media--preview  swiper">
-                  <div class="swiper-wrapper">
-                      <div class="swiper-slide">
-                          <div class="product__media--preview__items">
-                              <a class="product__media--preview__items--link glightbox" data-gallery="product-media-preview" href="/img/product/<%- item4.image1 %>"><img class="product__media--preview__items--img" src="/img/product/<%- item4.image1 %>" alt="product-media-img"></a>
-                              <div class="product__media--view__icon">
-                                  <a class="product__media--view__icon--link glightbox" href="/img/product/<%- item4.image1 %>" data-gallery="product-media-preview">
-                                      <svg class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg" width="22.51" height="22.443" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"></path></svg>
-                                      <span class="visually-hidden">product view</span> 
-                                  </a>
-                              </div>
-                          </div>
-                      </div>
+      <div class="modal fade" id="premiummodalwestern<%- item4.id %>" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Menu Premium <%- item4.name %></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="product__details--media mb-0">
+                <img class="product__media--preview__items--img" src="/img/product/<%- item4.image1 %>" alt="product-media-img">
+                <div class="product__details--info">
+                  <h3 class="product__details--info__title mt-3"><%- item4.name %></h3>
+                  <div class="product__details--info__price mb-15">
+                    <span class="current__price">Rp <%- item4.rateThousand %></span>
                   </div>
-              </div>
-              <div class="product__details--info">
-                <h3 class="product__details--info__title mt-3"><%- item4.name %></h3>
-                <div class="product__details--info__price mb-15">
-                  <span class="current__price">Rp <%- item4.rateThousand %></span>
+                  <p class="product__details--info__desc"><%- item4.keterangan %></p>
                 </div>
-                <p class="product__details--info__desc"><%- item4.keterangan %></p>
               </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     <% }) %> 
 	</body>
 	<%- include("./template/js.ejs") %>

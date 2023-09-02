@@ -250,7 +250,6 @@
   
             </div>
             <div class="modal-footer">
-              <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
               <button type="button" class="tambahPaket saveTambahPaket btn btn-primary">Simpan</button>
               <button type="button" class="editPaket deletePaket btn btn-danger" style="background-color: red; color: white;">Delete Paket</button>
               <button type="button" class="editPaket saveEditPaket btn btn-primary">Simpan</button>
@@ -323,10 +322,7 @@
                 if(checkImage === 2){
                   postPaket();
                 }
-                // console.log(localStorage.getItem("image1"))
-                // document.getElementById("image1").setAttribute("src", localStorage.getItem("image1"))
               };
-              // console.log(localStorage.getItem("image1"))
             }else{
               localStorage.setItem("image1", null);
               $(".invalid-feedback").show();
@@ -344,10 +340,7 @@
                 if(checkImage === 2){
                   postPaket();
                 }
-                // console.log(localStorage.getItem("image2"))
-                // document.getElementById("image2").setAttribute("src", localStorage.getItem("image2"))
               };
-              // console.log(localStorage.getItem("image2"))
             }else{
               localStorage.setItem("image2", null);
               $(".invalid-feedback").show();
@@ -367,7 +360,6 @@
             var checkImage = 0;
             const file_image1 = document.querySelector('#image1Edit').files[0];
             var reader_image1 = new FileReader();
-            // localStorage.setItem("image1", null);
             if(file_image1){
               reader_image1.readAsDataURL(file_image1);
               reader_image1.onload = function () {
@@ -376,10 +368,7 @@
                 if(checkImage === 2){
                   putPaket();
                 }
-                // console.log(localStorage.getItem("image1"))
-                // document.getElementById("image1").setAttribute("src", localStorage.getItem("image1"))
               };
-              // console.log(localStorage.getItem("image1"))
             }else{
               localStorage.setItem("image1", null);
               checkImage = checkImage+1
@@ -390,7 +379,6 @@
   
             const file_image2 = document.querySelector('#image2Edit').files[0];
             var reader_image2 = new FileReader();
-            // localStorage.setItem("image2", null);
             if(file_image2){
               reader_image2.readAsDataURL(file_image2);
               reader_image2.onload = function () {
@@ -399,10 +387,7 @@
                 if(checkImage === 2){
                   putPaket();
                 }
-                // console.log(localStorage.getItem("image2"))
-                // document.getElementById("image2").setAttribute("src", localStorage.getItem("image2"))
               };
-              // console.log(localStorage.getItem("image2"))
             }else{
               localStorage.setItem("image2", null);
               checkImage = checkImage+1
@@ -462,7 +447,6 @@
                 order: [[1, 'asc']],
               });
               $('#paket tbody').on( 'click', 'tr', function () {
-                // var aData = tablePaket.fnGetData( this );
                 var aData = tablePaket.fnGetData( this );              
                 $("#idPaketEdit").val(aData[0]);
                 $("#namaPaketEdit").val(aData[2]);

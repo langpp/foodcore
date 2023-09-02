@@ -38,7 +38,6 @@
               <div class="checkout__content--step checkout__contact--information2 border-radius-5">
                 <div class="checkout__review d-flex justify-content-between align-items-center">
                   <div class="checkout__review--inner d-flex align-items-center">
-                    <!-- <label class="checkout__review--label">Tanggal</label> -->
                     <span class="checkout__review--content">Tanggal</span>
                   </div>
                   <div class="checkout__review--link">
@@ -47,7 +46,14 @@
                 </div>
                 <div class="checkout__review d-flex justify-content-between align-items-center">
                   <div class="checkout__review--inner d-flex align-items-center">
-                    <!-- <label class="checkout__review--label"> Total Harga</label> -->
+                    <span class="checkout__review--content">Jadwal Makan</span>
+                  </div>
+                  <div class="checkout__review--link">
+                    <div id="waktuOrderPay" class="checkout__review--link__text"></div>
+                  </div>
+                </div>
+                <div class="checkout__review d-flex justify-content-between align-items-center">
+                  <div class="checkout__review--inner d-flex align-items-center">
                     <span class="checkout__review--content"> Total Harga</span>
                   </div>
                   <div class="checkout__review--link">
@@ -56,7 +62,6 @@
                 </div>
                 <div class="checkout__review d-flex justify-content-between align-items-center">
                   <div class="checkout__review--inner d-flex align-items-center">
-                    <!-- <label class="checkout__review--label"> Metode Pembayran</label> -->
                     <span class="checkout__review--content"> Metode Pembayaran
                     </span>
                   </div>
@@ -129,6 +134,10 @@
       if(localStorage.getItem('tanggalOrder')){
         $("#tanggalOrderPay").html(moment(localStorage.getItem('tanggalOrder')).format('dddd, DD MMM YYYY'))
       }
+
+      if(localStorage.getItem('waktuBayar')){
+        $("#waktuOrderPay").html(localStorage.getItem('waktuBayar'))
+      }
       calculateTotal(); 
       
     });
@@ -140,6 +149,7 @@
         type: "POST",
         dataType: "json",
         data: {
+          waktu: localStorage.getItem('waktuBayar'),
           date: localStorage.getItem('tanggalOrder'),
           subtotal: subTotalOrder,
           total: totalOrder,
@@ -178,21 +188,28 @@
         type: "POST",
         dataType: "json",
         data: {
+          waktu: localStorage.getItem('waktuBayar'),
           date: localStorage.getItem('tanggalOrder'),
           subtotal: subTotalOrder,
           total: totalOrder,
           resultCard: JSON.parse(localStorage.getItem('resultCard'))
         },
         success: function(ress) {
-          $.LoadingOverlay("hide");
-          $('.detailPembayaran').hide();
-          $('.statusPembayaran').show();
-          resultCard = []
-          subTotalOrder = 0
-          totalOrder = 0
-          localStorage.removeItem('tanggalOrder')
-          localStorage.removeItem('resultCard')
-          updateCard();
+          if(ress.response == 'Successful'){
+            $.LoadingOverlay("hide");
+            $('.detailPembayaran').hide();
+            $('.statusPembayaran').show();
+            resultCard = []
+            subTotalOrder = 0
+            totalOrder = 0
+            localStorage.removeItem('tanggalOrder')
+            localStorage.removeItem('waktuBayar')
+            localStorage.removeItem('resultCard')
+            updateCard();
+          }else{
+            $.LoadingOverlay("hide");
+            alert(ress.response);
+          }
         },error: function(err, data) {
           $.LoadingOverlay("hide");
           alert('Cannot acces server');

@@ -157,10 +157,8 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
 							<button type="button" class="tambahClient saveTambahClient btn btn-primary">Simpan</button>
 							<button type="button" class="editClient deleteClient btn btn-danger" style="background-color: red; color: white;">Delete Client</button>
-							<!-- <button type="button" class="editClient halamanClient btn btn-danger">Halaman Client</button> -->
 							<button type="button" class="editClient saveEditClient btn btn-primary">Simpan</button>
 						</div>
 					</div>
@@ -247,9 +245,6 @@
 			            api.column(1, {order:'current'}).nodes().each(function(cell, i) {                  
 			              cell.innerHTML = i + 1;
 			            });
-			            // api.column(5, {order:'current'}).nodes().each(function(cell, i) {                  
-			            //   cell.innerHTML = '<a href="/admin/jadwal/htp" class="btn btn-primary btn-sm" type="button">Lihat Jadwal</a>';
-			            // });
 			          },
 			          data: dataTableClient,
 			          columnDefs: [

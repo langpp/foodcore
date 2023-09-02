@@ -302,16 +302,21 @@ exports.postJadwal = async(req, res, next) =>{
     const paket_id = req.body.paket_id
     const waktu = req.body.waktu
     const sehat = req.body.sehat
+    const qty = req.body.qty
 		if(date && company_id && paket_id){
       try{
-        const data_users = await users.findAll({
+        const getJadwal = await jadwal_menu.findOne({
           raw: true,
-          attributes: [ [sequelize.col('id'), 'user_id'], 'company_id'],
           where: {
             company_id: company_id,
-            status: {[Op.ne]: 0}
+            date: date,
+            waktu: waktu,
           }
         })
+
+        if(getJadwal){
+          return res.status(500).json({ status: 500, response: 'Sudah Ada Jadwal Pada Tanggal & Waktu Tersebut!' })
+        }
 
         const rate_paket = await paket.findOne({
           raw: true,
@@ -320,11 +325,8 @@ exports.postJadwal = async(req, res, next) =>{
             id: paket_id
           }
         })      
-        let rate = rate_paket.rate
-        let totalTagihan = 0
-        if(data_users){
-          totalTagihan = rate * data_users.length
-        }
+        var rate = rate_paket.rate
+        var totalTagihan = rate * qty
 
         // let dataOrder = data_users.map(function(obj) {
         //   return {...obj, date: date, subtotal: rate, total: 0};
@@ -347,8 +349,8 @@ exports.postJadwal = async(req, res, next) =>{
           paket_id: paket_id,
           waktu: waktu,
           sehat: sehat,
-          qty: data_users.length,
-          qty_perubahan: data_users.length,
+          qty: qty,
+          qty_perubahan: qty,
           total: totalTagihan
         }
         await jadwal_menu.create(dataJadwal)
