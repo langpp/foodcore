@@ -63,52 +63,103 @@ exports.confirmPay = async(req, res, next) =>{
     sc.sess.lng = 'en'
   }
   if(sc.sess.phone){
-    let date = req.body.date
-    let subtotal = req.body.subtotal
-    let total = req.body.total
+    let dates = req.body.date
+    // let subtotal = req.body.subtotal
+    // let total = req.body.total
     const resultCard = req.body.resultCard;
     const user_id = sc.sess.user_id
     const company_id = sc.sess.company_id
-    
-    // dataOrder= {
-    //   user_id: user_id,
-    //   company_id: company_id,
-    //   date: date,
-    //   total: total,
-    //   status: 2
-    // }
-    // const newOrder = await order.create(dataOrder)
-    console.log(resultCard)
-
-    let regulerData = resultCard.find(obj => obj.type_paket === "Reguler")
-    
-
-    const order_id = regulerData.order_id
-    // if(regulerData.count == 0){
-      let dataOrder= {
-        status: 2,
-        subtotal: subtotal,
-        total: total
+    const date = new Date(Date.UTC(
+      parseInt(dates.substring(0, 4)),
+      parseInt(dates.substring(5, 7))-1,
+      parseInt(dates.substring(8, 10)),
+      parseInt(0),
+      parseInt(0),
+      parseInt(0),
+      parseInt(0)
+    ));
+    var total = 0;
+    var subtotal = 0;
+    var updatereguler = false
+    let dataOrderloop = resultCard.map(function(obj) {
+      // console.log(obj)
+      if(obj.type === "Premium"){
+        total = total + (obj.rate*obj.count)
+        subtotal = subtotal + (obj.rate*obj.count)
+      }else{
+        if(obj.count == 0){
+          total = total - 15000
+          updatereguler = true
+        }else{
+          subtotal = subtotal + 15000
+        }
       }
-      await order.update(dataOrder, {
-        where: {id: order_id}
-      });
-      let dataOrderItemReguler= {
-        qty: regulerData.count,
-        status: 2
-      }
-      await order_item.update(dataOrderItemReguler, {
-        where: {order_id: order_id}
-      });
-      let orderPremium = resultCard.filter(obj => obj.type_paket !== "Reguler");
-      let dataOrderItemPremium = orderPremium.map((item) => ({
-        order_id: order_id,
-        paket_id: item.id,
-        qty: item.count,
-        rate: item.rate,
-        status: 2
-      }));
-      await order_item.bulkCreate(dataOrderItemPremium)
+    });
+
+    var dataOrder= {
+      user_id: user_id,
+      company_id: company_id,
+      date: dates,
+      total: total,
+      subtotal: subtotal,
+      status: 2
+    }
+    const newOrder = await order.create(dataOrder)
+    const order_id = newOrder.id
+
+    let orderPremium = resultCard.filter(obj => obj.type !== "Reguler");
+    let dataOrderItemPremium = orderPremium.map((item) => ({
+      order_id: order_id,
+      paket_id: item.id,
+      qty: item.count,
+      rate: item.rate,
+      status: 2
+    }));
+    await order_item.bulkCreate(dataOrderItemPremium)
+    if(updatereguler){
+      const data_menu = await jadwal_menu.findOne({
+        raw: true,
+        where: { company_id, date }
+      })
+
+      await jadwal_menu.update({
+          qty_perubahan : data_menu.qty_perubahan - 1,
+      }, {
+          where: {
+              id: data_menu.id,
+          },
+      })
+    }
+    
+    // // if(regulerData.count == 0){
+      // let dataOrder= {
+      //   status: 2,
+      //   subtotal: subtotal,
+      //   total: total,
+      //   user_id: user_id,
+      //   company_id: company_id,
+      //   date: regulerData.tanggal,
+      // }
+      // await order.create(dataOrder);
+
+      // let dataOrderItemReguler= {
+      //   qty: regulerData.count,
+      //   status: 2
+      // }
+      // await order_item.create(dataOrderItemReguler, {
+      //   where: {order_id: order_id}
+      // });
+    //   let orderPremium = resultCard.filter(obj => obj.type !== "Reguler");
+    //   let dataOrderItemPremium = orderPremium.map((item) => ({
+    //     order_id: order_id,
+    //     paket_id: item.id,
+    //     qty: item.count,
+    //     rate: item.rate,
+    //     status: 2
+    //   }));
+    //   await order_item.bulkCreate(dataOrderItemPremium)
+
+
     // }else{
     //   let dataOrder= {
     //     status: 2,
@@ -124,7 +175,7 @@ exports.confirmPay = async(req, res, next) =>{
     //   await order_item.update(dataOrderItemReguler, {
     //     where: {order_id: order_id}
     //   });
-    //   let orderPremium = resultCard.filter(obj => obj.type_paket !== "Reguler");
+    //   let orderPremium = resultCard.filter(obj => obj.type !== "Reguler");
     //   let dataOrderItemPremium = orderPremium.map((item) => ({
     //     order_id: order_id,
     //     paket_id: item.id,

@@ -41,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(255),
       allowNull: true
     },
+    address: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
     email: {
       type: DataTypes.STRING(255),
       allowNull: true
@@ -115,7 +119,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 1
-    }
+    },
+    foto_profile: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
 	}, {
 		sequelize,
 		tableName: 'users',

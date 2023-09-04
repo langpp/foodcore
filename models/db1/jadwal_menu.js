@@ -45,6 +45,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       defaultValue: 0
     },
+    qty_perubahan: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0
+    },
     total: {
       type: DataTypes.DECIMAL(20,2),
       allowNull: true,

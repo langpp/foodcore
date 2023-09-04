@@ -4,6 +4,7 @@ const jadwalController = require('../../controllers/admin/jadwalController.js')
 
 router.get('/', jadwalController.getJadwal)
 router.get('/listJadwal', jadwalController.listJadwal)
+router.get('/listJadwalexcel', jadwalController.listJadwalexcel)
 router.get('/:item', jadwalController.getJadwalCp)
 router.post('/postJadwal', jadwalController.postJadwal)
 router.put('/putJadwal', jadwalController.putJadwal)

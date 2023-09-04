@@ -70,9 +70,27 @@
 						<div class="col-lg-9">
               <div class="d-grid gap-2 d-md-flex justify-content-md-end d-flex justify-content-end">
                 <% if(session.userType == 1){%>  
-                  <button id="export-btn" class="btn btn-primary btn-sm" type="button">Export ke Excel</button>
+                  <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                      <input type="date" id="filterdate" class="form-control" style="height: 45px;font-size: 1.5rem;" >
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-12">
+                      <div class="checkout__input--list checkout__input--select select">
+                        <label class="checkout__select--label" for="clientJadwalfilter">Client</label>
+                        <select id="clientJadwalfilter" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                 <%}%>
-                <% if(session.userType == 4 || session.userType == 1){%>  
+                <% if(session.userType == 4 || session.userType == 1){%>
+                  <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                      <input type="date" id="filterdate" class="form-control" style="height: 45px;font-size: 1.5rem;" >
+                    </div>
+                  </div>
+                  <button id="export-btn" class="btn btn-primary btn-sm" type="button">Export ke Excel</button>
+
                   <button id="addJadwal" class="btn btn-primary btn-sm" type="button">Tambah Jadwal</button>
                 <%}%>
               </div>
@@ -91,7 +109,8 @@
                         <th>ID Paket</th>
                         <th>Paket</th>
                         <th>Status</th>
-                        <th>Qty</th>
+                        <th>Qty Awal</th>
+                        <th>Qty Akhir</th>
                         <th>Tagihan</th>
                         <th>Waktu</th>
                         <th>Sehat</th>
@@ -272,12 +291,22 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-table2excel@1.1.1/dist/jquery.table2excel.min.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
-        listJadwal();
         <% if(session.userType == 1){%>  
           listClient();
         <%}%>      
         listPaket();
-  
+        var date = new Date();
+        $("#tanggalJadwal").val(date.toISOString().substr(0, 10))
+        $("#filterdate").val(date.toISOString().substr(0, 10))
+        $("#filterdate").change(function(){
+          listJadwal();
+        });
+
+        $("#clientJadwalfilter").change(function(){
+          listJadwal();
+        });
+        listJadwal();
+
         $(".invalid-feedback").hide();  
         $(".tambahJadwal").hide();
         $(".editJadwal").hide(); 
@@ -335,10 +364,25 @@
         });
   
         $('#export-btn').click(function() {
-          window.open('/report.xlsx', '_blank');
-          // $('#jadwal').table2excel({
-          //     filename: 'myData.xlsx'
-          // });
+          $.ajax({
+            url: "/admin/jadwal/listJadwalexcel",
+            type: "GET",
+            dataType: "json",
+            data: {
+              <% if(kode){ %> 
+                kode: '<%- kode %>',
+              <% } %> 
+              tanggal: $("#filterdate").val(),
+              client: $("#clientJadwalfilter").val()
+            },
+            success: function(ress) {
+              if(ress.status == 'success'){
+                window.open(ress.path, '_blank');
+              }else{
+                swal('error', 'Error', ress.message)
+              }
+            }
+          })
         });
   
         $('.prosesPesanan').click(function() {
@@ -385,15 +429,26 @@
             <% if(kode){ %> 
               kode: '<%- kode %>',
             <% } %> 
+            tanggal: $("#filterdate").val(),
+            client: $("#clientJadwalfilter").val()
           },
           success: function(ress) {
             if(ress.response == "Successful"){
               dataTableJadwal = ress.result;
+              if ($.fn.dataTable.isDataTable('#jadwal')) {
+                $('#jadwal').DataTable().clear();
+                $('#jadwal').DataTable().destroy();
+              };
               var tableJadwal = $('#jadwal').dataTable( {
                 data: dataTableJadwal,
                 columnDefs: [
                   {
                       target: 0,
+                      visible: false,
+                      searchable: false,
+                  },
+                  {
+                      target: 1,
                       visible: false,
                       searchable: false,
                   },
@@ -415,7 +470,7 @@
                       searchable: false,
                   },
                   {
-                    targets: 9,
+                    targets: 10,
                     render: function(data, type, row, meta) {
                       if (type === 'display') {
                         let harga = 'Rp. ' + thousandSeparator(parseInt(data))
@@ -426,7 +481,7 @@
                     }
                   }
                 ],
-                order: [[1, 'asc']],
+                order: [[2, 'asc']],
               });
   
               // tableJadwal.buttons().container().appendTo( '#example_wrapper .col-md-6:eq(0)' );
@@ -437,8 +492,8 @@
                 $("#tanggalJadwalEdit").val(aData[2]);
                 $("#clientJadwalEdit").val(aData[3]);
                 $("#paketJadwalEdit").val(aData[5])
-                $("#waktuPaketEdit").val(aData[7])
-                $("#sehatPaketEdit").val(aData[8])
+                $("#waktuPaketEdit").val(aData[11])
+                $("#sehatPaketEdit").val(aData[12])
   
               // <button type="button" class="editJadwal kirimInvoice Jadwal btn btn-primary">Kirim Invoice</button>
               // <button type="button" class="editJadwal tandaiSUdahBayar Jadwal btn btn-primary">Tandai Sudah Bayar</button>
@@ -688,9 +743,11 @@
           },
           success: function(ress) {
             if(ress.response == "Successful"){
+              $("#clientJadwalfilter").append('<option value="">Semua Client</option>');
               for (let i = 0; i < ress.result.length; i++) {
                 $("#clientJadwal").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');
                 $("#clientJadwalEdit").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');
+                $("#clientJadwalfilter").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');
               }
             }else{
               // alert('Cannot database');
@@ -711,6 +768,8 @@
           },
           success: function(ress) {
             if(ress.response == "Successful"){
+              $("#paketJadwal").append("<option value='' hidden>Pilih Paket</option>");
+              $("#paketJadwalEdit").append("<option value='' hidden>Pilih Paket</option>");
               for (let i = 0; i < ress.result.length; i++) {
                 $("#paketJadwal").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');
                 $("#paketJadwalEdit").append('<option value="'+ress.result[i][0]+'">'+ress.result[i][2]+'</option>');
