@@ -10150,7 +10150,6 @@ details > summary::-webkit-details-marker {
 }
 .checkout__select--label {
   position: absolute;
-  top: 0.3rem;
   padding: 0 1.8rem;
   line-height: 2rem;
   font-size: 1.2rem;
@@ -11638,7 +11637,7 @@ ul.slides input {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 999;
+  z-index: 10;
   font-size: 100px;
   line-height: calc(100vh - 100px);
   color: #fff;

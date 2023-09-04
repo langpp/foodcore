@@ -2,6 +2,7 @@ const sc = require('../../config/session.js')
 const link = require('../../config/link.js')
 const { Op } = require("sequelize")
 const { sequelize, order, order_item, users, company, paket, paket_image, jadwal_menu } = require('../../models')
+const db = require('../../models/index.js');
 const moment = require('moment-timezone')
 moment.locale('id')
 const excelJS = require("exceljs");
@@ -23,6 +24,173 @@ exports.getJadwal = async(req, res, next) =>{
     });
 	}else{
 		res.redirect('/login')
+	}
+}
+
+exports.getJadwalDetail = async(req, res, next) =>{
+  sc.sess=req.session
+  if(!(sc.sess.lng)){
+    sc.sess.lng = 'en'
+  }
+  req.setLocale(sc.sess.lng)
+
+  if(sc.sess.phone && (sc.sess.userType == 1 || sc.sess.userType == 4)){    
+    sc.sess.home = '/'
+
+    let where_val;
+    if(sc.sess.userType == 4){
+      const company_id = sc.sess.company_id
+      where_val = {
+        id: req.params.id,
+        '$company.id$': company_id,
+        status: {[Op.ne]: 0}, 
+      }
+    }else{
+        where_val = {
+          id: req.params.id,
+          status: {[Op.ne]: 0}, 
+        }
+    }
+
+		const data_jadwal_menu = await jadwal_menu.findAll({
+      raw: true,
+      attributes: [
+        'id','status',
+        // 'date',
+        [sequelize.fn('date_format', sequelize.col('date'), '%Y-%m-%d'), 'dates'],
+        [sequelize.col('company.id'), 'id_client'],
+        [sequelize.col('company.name'), 'client'],        
+        [sequelize.col('paket.id'), 'id_paket'],
+        [sequelize.col('paket.name'), 'paket'],
+        [sequelize.literal("CASE WHEN jadwal_menu.status = 1 THEN 'Belum Diproses' WHEN jadwal_menu.status = 2 THEN 'Diproses' WHEN jadwal_menu.status = 3 THEN 'Belum Bayar' WHEN jadwal_menu.status = 4 THEN 'Sudah Bayar' END"), 'statusAlias'],
+        'qty', 'qty_perubahan', 'total',
+        'waktu', 'sehat',
+      ],
+      where: where_val,
+      order: [
+        [sequelize.col('company.name'), 'ASC'],
+        ['date', 'DESC'],
+        // [sequelize.col('paket.name'), 'ASC']
+      ],
+      include: [
+        { 
+          model: company, 
+          as: 'company',
+          attributes: []
+        },
+        { 
+          model: paket, 
+          as: 'paket',
+          attributes: [],
+        }
+      ]
+    })
+    if(!data_jadwal_menu[0]){
+      res.redirect('/')
+    }else{
+      var checkstr = 'SELECT COUNT(id) as banyak, SUM(total) as total FROM `order` WHERE date=? AND waktu=?';
+      var datesql = data_jadwal_menu[0].dates;
+      var waktusql = data_jadwal_menu[0].waktu;
+      var checkorder = await db.sequelize.query(checkstr, {
+          replacements: [datesql, waktusql],
+          type: db.sequelize.QueryTypes.SELECT,
+      });
+
+      res.render('admin/jadwaldetail', { 
+        title: 'Jadwal Detail',
+        session: sc.sess,
+        moment: moment,
+        kode: req.params.id,
+        jadwal: data_jadwal_menu[0],
+        order: checkorder[0]
+      });
+    }
+  }else{
+		res.redirect('/login')
+	}
+}
+
+exports.getJadwalDetailApi = async(req, res, next) =>{
+  sc.sess=req.session
+  if(!(sc.sess.lng)){
+    sc.sess.lng = 'en'
+  }
+  req.setLocale(sc.sess.lng)
+
+  if(sc.sess.phone && (sc.sess.userType == 1 || sc.sess.userType == 4)){    
+    sc.sess.home = '/'
+
+    let where_val;
+    if(sc.sess.userType == 4){
+      const company_id = sc.sess.company_id
+      where_val = {
+        id: req.params.id,
+        '$company.id$': company_id,
+        status: {[Op.ne]: 0}, 
+      }
+    }else{
+        where_val = {
+          id: req.params.id,
+          status: {[Op.ne]: 0}, 
+        }
+    }
+
+		const data_jadwal_menu = await jadwal_menu.findAll({
+      raw: true,
+      attributes: [
+        'id','status',
+        // 'date',
+        [sequelize.fn('date_format', sequelize.col('date'), '%Y-%m-%d'), 'date'],
+        [sequelize.col('company.id'), 'id_client'],
+        [sequelize.col('company.name'), 'client'],        
+        [sequelize.col('paket.id'), 'id_paket'],
+        [sequelize.col('paket.name'), 'paket'],
+        [sequelize.literal("CASE WHEN jadwal_menu.status = 1 THEN 'Belum Diproses' WHEN jadwal_menu.status = 2 THEN 'Diproses' WHEN jadwal_menu.status = 3 THEN 'Belum Bayar' WHEN jadwal_menu.status = 4 THEN 'Sudah Bayar' END"), 'statusAlias'],
+        'qty', 'qty_perubahan', 'total',
+        'waktu', 'sehat',
+      ],
+      where: where_val,
+      order: [
+        [sequelize.col('company.name'), 'ASC'],
+        ['date', 'DESC'],
+        // [sequelize.col('paket.name'), 'ASC']
+      ],
+      include: [
+        { 
+          model: company, 
+          as: 'company',
+          attributes: []
+        },
+        { 
+          model: paket, 
+          as: 'paket',
+          attributes: [],
+        }
+      ]
+    })
+    if(!data_jadwal_menu[0]){
+      res.redirect('/')
+    }
+
+    var checkstr = 'SELECT a.*, b.username FROM `order` as a JOIN users as b on b.id = a.user_id WHERE a.date=? AND a.waktu=?';
+
+    var checkorder = await db.sequelize.query(checkstr, {
+        replacements: [data_jadwal_menu[0].date, data_jadwal_menu[0].waktu],
+        type: db.sequelize.QueryTypes.SELECT,
+    });
+
+    let inarr = checkorder.map(({ id }) => id)
+
+    var checkstrorder = 'SELECT a.*, b.name, b.rate FROM order_item as a JOIN paket as b on b.id = a.paket_id WHERE a.order_id IN(?)';
+
+    var checkorderlist = await db.sequelize.query(checkstrorder, {
+        replacements: [inarr],
+        type: db.sequelize.QueryTypes.SELECT,
+    });
+    
+    return res.status(200).json({ status: 200, response: 'Successful', result: checkorder, resultlist: checkorderlist})
+	}else{
+		return res.redirect('/login')
 	}
 }
 

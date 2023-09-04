@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 02, 2023 at 06:57 PM
+-- Generation Time: Sep 04, 2023 at 09:11 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -90,10 +90,7 @@ CREATE TABLE `jadwal_menu` (
 --
 
 INSERT INTO `jadwal_menu` (`id`, `company_id`, `paket_id`, `date`, `status`, `createdAt`, `updatedAt`, `waktu`, `sehat`, `total`, `qty`, `qty_perubahan`) VALUES
-(69, 1, 6, '2023-08-28 00:00:00', 3, '2023-08-28 15:05:40', '2023-08-28 19:47:29', 'Pagi', 'Menu Sehat', 45000.00, 3, 1),
-(70, 1, 1, '2023-08-29 00:00:00', 1, '2023-08-28 15:11:47', '2023-08-28 15:11:47', 'Siang', 'Menu Biasa', 45000.00, 3, 3),
-(71, 1, 6, '2023-09-02 00:00:00', 1, '2023-09-02 03:31:49', '2023-09-02 03:31:49', 'Pagi', 'Menu Biasa', 150000.00, 10, 10),
-(72, 1, 6, '2023-09-02 00:00:00', 2, '2023-09-02 03:42:34', '2023-09-02 03:45:53', 'Siang', 'Menu Biasa', 150000.00, 10, 10);
+(73, 1, 6, '2023-09-04 00:00:00', 2, '2023-09-04 16:32:49', '2023-09-04 16:42:08', 'Pagi', 'Menu Biasa', 1500000.00, 100, 99);
 
 -- --------------------------------------------------------
 
@@ -135,8 +132,8 @@ CREATE TABLE `order` (
 --
 
 INSERT INTO `order` (`id`, `user_id`, `company_id`, `date`, `waktu`, `status`, `createdAt`, `updatedAt`, `total`, `subtotal`) VALUES
-(105, 24, 1, '2023-09-02 00:00:00', 'Pagi', 2, '2023-08-28 19:47:28', '2023-08-28 19:47:28', 29000.00, 44000.00),
-(106, 24, 1, '2023-09-02 00:00:00', 'Siang', 2, '2023-09-02 16:23:19', '2023-09-02 16:23:19', 27000.00, 42000.00);
+(107, 24, 1, '2023-09-04 00:00:00', 'Pagi', 2, '2023-09-04 16:37:38', '2023-09-04 16:37:38', 35000.00, 50000.00),
+(108, 26, 1, '2023-09-04 00:00:00', 'Pagi', 2, '2023-09-04 16:42:07', '2023-09-04 16:42:07', 15000.00, 30000.00);
 
 -- --------------------------------------------------------
 
@@ -160,10 +157,11 @@ CREATE TABLE `order_item` (
 --
 
 INSERT INTO `order_item` (`id`, `order_id`, `paket_id`, `qty`, `status`, `createdAt`, `updatedAt`, `rate`) VALUES
-(127, 105, 34, 2, 2, '2023-08-28 19:47:29', '2023-08-28 19:47:29', 12000.00),
-(128, 105, 40, 1, 2, '2023-08-28 19:47:29', '2023-08-28 19:47:29', 20000.00),
-(129, 106, 34, 1, 2, '2023-09-02 16:23:19', '2023-09-02 16:23:19', 15000.00),
-(130, 106, 36, 1, 2, '2023-09-02 16:23:19', '2023-09-02 16:23:19', 12000.00);
+(131, 107, 33, 1, 2, '2023-09-04 16:37:38', '2023-09-04 16:37:38', 15000.00),
+(132, 107, 35, 1, 2, '2023-09-04 16:37:38', '2023-09-04 16:37:38', 15000.00),
+(133, 107, 37, 1, 2, '2023-09-04 16:37:38', '2023-09-04 16:37:38', 5000.00),
+(134, 108, 33, 1, 2, '2023-09-04 16:42:07', '2023-09-04 16:42:07', 15000.00),
+(135, 108, 34, 1, 2, '2023-09-04 16:42:07', '2023-09-04 16:42:07', 15000.00);
 
 -- --------------------------------------------------------
 
@@ -466,7 +464,7 @@ ALTER TABLE `hari`
 -- AUTO_INCREMENT for table `jadwal_menu`
 --
 ALTER TABLE `jadwal_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `lauk`
@@ -478,13 +476,13 @@ ALTER TABLE `lauk`
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT for table `order_item`
 --
 ALTER TABLE `order_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
 
 --
 -- AUTO_INCREMENT for table `paket`
