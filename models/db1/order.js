@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: true,
     },
+    waktu: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     subtotal: {
       type: DataTypes.DECIMAL(20,2),
       allowNull: true,

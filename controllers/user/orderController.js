@@ -5,7 +5,6 @@ const { sequelize, users, company, order, order_item, paket, paket_image, jadwal
 const moment = require('moment-timezone')
 moment.locale('id')
 
-
 exports.getOrder = async(req, res, next) =>{
   sc.sess=req.session
   if(!(sc.sess.lng)){
@@ -155,6 +154,7 @@ exports.checkOrder = async(req, res, next) =>{
     const user_id = sc.sess.user_id
     const company_id = sc.sess.company_id
     const dateString = req.query.date
+    const waktu = req.query.waktu
     const date = new Date(Date.UTC(
       parseInt(dateString.substring(0, 4)),
       parseInt(dateString.substring(5, 7))-1,
@@ -167,8 +167,22 @@ exports.checkOrder = async(req, res, next) =>{
 
     const data_order = await jadwal_menu.findOne({
       raw: true,
-      where: { company_id, date }
+      where: { company_id: company_id, date: date, status: 2, waktu: waktu }
     })
+
+    const find_exist_order = await order.findOne({
+      raw: true,
+      where: { user_id: user_id, company_id: company_id, date: date, status: 2, waktu: waktu }
+    })
+
+    const find_exist_order_date = await order.findAll({
+      raw: true,
+      where: { user_id: user_id, company_id: company_id, date: date, status: 2 }
+    })
+
+    if(find_exist_order){
+      return res.status(200).json({ status: 200, response: 'Successful', result: [], complateorder: find_exist_order_date})
+    }
 
     if(data_order){
       const order_id = data_order.paket_id
@@ -186,9 +200,9 @@ exports.checkOrder = async(req, res, next) =>{
         ],
       })
 
-      return res.status(200).json({ status: 200, response: 'Successful', result: data_order_item})
+      return res.status(200).json({ status: 200, response: 'Successful', result: data_order_item, complateorder: find_exist_order_date})
     }else{
-      return res.status(200).json({ status: 200, response: 'Successful', result: []})
+      return res.status(200).json({ status: 200, response: 'Successful', result: [], complateorder: find_exist_order_date})
     }
     
 	}else{

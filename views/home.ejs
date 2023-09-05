@@ -4,7 +4,7 @@
 	<body>
 		<header class="header__section header__transparent">
 			<%- include("./template/login_info.ejs") %>
-			<div class="main__header main__header2 header__sticky sticky">
+			<div class="main__header main__header2 header__sticky sticky" <% if(session.userType){ %>style="margin-top: 36px;"<% } %>>
 				<div class="container">
 					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
 						<div class="offcanvas__header--menu__open ">
@@ -136,38 +136,24 @@
 					</div>
           <div class="product__section--inner">
             <div class="row owl-carousel owl-menu">
+              <% data_jadwal_menu.forEach(function (item, index) { %> 
               <div class="col-lg-12">
                 <div class="product__items ">
                   <div class="product__items--thumbnail">
                     <a class="product__items--link modal-description" href="/reguler">
-                    <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/daging-serundeng.jpg" alt="product-img">
-                    <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/daging-serundeng-2.jpg" alt="product-img">
+                    <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/<%- item.image1 %>" alt="product-img">
+                    <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/<%- item.image2 %>" alt="product-img">
                     </a>
-                    <span class="product__love bottom-10"><i class="far fa-heart"></i></span>
+                    <span class="product__love bottom-10" onclick="like('<%- item.id %>')" id="like<%- item.id %>"><i class="far fa-heart"></i></span>
                   </div>
                   <div class="product__items--content">
                     <h3 class="product__items--content__title text-overflow h4">
-                      <a class="modal-description" href="/reguler">Soto Ayam</a>
+                      <a class="modal-description" href="/reguler"><%- item.name %></a>
                     </h3>
                   </div>
                 </div>
               </div>
-              <div class="col-lg-12">
-                <div class="product__items ">
-                  <div class="product__items--thumbnail">
-                    <a class="product__items--link modal-description" href="/reguler">
-                    <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/nasi-kebuli.jpg" alt="product-img">
-                    <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/nasi-kebuli-2.jpg" alt="product-img">
-                    </a>
-                    <span class="product__love bottom-10"><i class="fas fa-heart"></i></span>
-                  </div>
-                  <div class="product__items--content">
-                    <h3 class="product__items--content__title text-overflow h4">
-                      <a class="modal-description" href="/reguler">Daging Rendang</a>
-                    </h3>
-                  </div>
-                </div>
-              </div>
+              <% }) %> 
             </div>
           </div>
 				</div>
@@ -180,48 +166,31 @@
               <!-- <span class="section__heading--subtitle text-left">Menu Enak Dengan Kualitas Terbaik</span> -->
 						  <h2 class="section__heading--maintitle f-20-media text-left">Menu Premium Western</h2>
             </div>
-            <a href="/premium" class="text-success">Lihat Semua</a>  
+            <a href="/premium/western" class="text-success">Lihat Semua</a>  
 					</div>
           <div class="product__section--inner">
             <div class="row owl-carousel owl-menu">
+              <% data_jadwal_western.forEach(function (item2, index2) { %> 
               <div class="col-lg-12">
                 <div class="product__items ">
                   <div class="product__items--thumbnail">
-                    <a class="product__items--link modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">
-                    <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/daging-serundeng.jpg" alt="product-img">
-                    <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/daging-serundeng-2.jpg" alt="product-img">
+                    <a class="product__items--link modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodalwestern<%- item2.id %>">
+                    <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/<%- item2.image1 %>" alt="product-img">
+                    <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/<%- item2.image2 %>" alt="product-img">
                     </a>
                     <div class="product__badge">
-                      <span class="product__badge--items sale">Rp 15.000</span>
+                      <span class="product__badge--items sale">Rp <%- item2.rateThousand %></span>
                     </div>
-                    <span class="product__love bottom-10"><i class="far fa-heart"></i></span>
+                    <span class="product__love bottom-10" onclick="like('<%- item2.id %>')" id="like<%- item2.id %>"><i class="far fa-heart"></i></span>
                   </div>
                   <div class="product__items--content">
                     <h3 class="product__items--content__title text-overflow h4">
-                      <a class="modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">Burger</a>
+                      <a class="modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodalwestern<%- item2.id %>"><%- item2.name %></a>
                     </h3>
                   </div>
                 </div>
               </div>
-              <div class="col-lg-12">
-                <div class="product__items ">
-                  <div class="product__items--thumbnail">
-                    <a class="product__items--link modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">
-                    <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/nasi-kebuli.jpg" alt="product-img">
-                    <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/nasi-kebuli-2.jpg" alt="product-img">
-                    </a>
-                    <div class="product__badge">
-                      <span class="product__badge--items sale">Rp 12.000</span>
-                    </div>
-                    <span class="product__love bottom-10"><i class="fas fa-heart"></i></span>
-                  </div>
-                  <div class="product__items--content">
-                    <h3 class="product__items--content__title text-overflow h4">
-                      <a class="modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">Ratatouille</a>
-                    </h3>
-                  </div>
-                </div>
-              </div>
+              <% }) %> 
             </div>
           </div>
 				</div>
@@ -234,48 +203,33 @@
               <!-- <span class="section__heading--subtitle text-left">Menu Enak Dengan Kualitas Terbaik</span> -->
 						  <h2 class="section__heading--maintitle f-20-media text-left">Menu Premium Asian</h2>
             </div>
-            <a href="/premium" class="text-success">Lihat Semua</a>  
+            <a href="/premium/asian" class="text-success">Lihat Semua</a>  
 					</div>
           <div class="product__section--inner">
             <div class="row owl-carousel owl-menu">
-              <div class="col-lg-12">
-                <div class="product__items ">
-                  <div class="product__items--thumbnail">
-                    <a class="product__items--link modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">
-                    <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/daging-serundeng.jpg" alt="product-img">
-                    <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/daging-serundeng-2.jpg" alt="product-img">
-                    </a>
-                    <div class="product__badge">
-                      <span class="product__badge--items sale">Rp 15.000</span>
+              
+              <% data_jadwal_asian.forEach(function (item3, index3) { %> 
+                <div class="col-lg-12">
+                  <div class="product__items ">
+                    <div class="product__items--thumbnail">
+                      <a class="product__items--link modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodalasian<%- item3.id %>">
+                      <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/<%- item3.image1 %>" alt="product-img">
+                      <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/<%- item3.image2 %>" alt="product-img">
+                      </a>
+                      <div class="product__badge">
+                        <span class="product__badge--items sale">Rp <%- item3.rateThousand %></span>
+                      </div>
+                      <span class="product__love bottom-10" onclick="like('<%- item3.id %>')" id="like<%- item3.id %>"><i class="far fa-heart"></i></span>
                     </div>
-                    <span class="product__love bottom-10"><i class="far fa-heart"></i></span>
-                  </div>
-                  <div class="product__items--content">
-                    <h3 class="product__items--content__title text-overflow h4">
-                      <a class="modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">Beef Black Pepper</a>
-                    </h3>
+                    <div class="product__items--content">
+                      <h3 class="product__items--content__title text-overflow h4">
+                        <a class="modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodalasian<%- item3.id %>"><%- item3.name %></a>
+                      </h3>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="product__items ">
-                  <div class="product__items--thumbnail">
-                    <a class="product__items--link modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">
-                    <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/nasi-kebuli.jpg" alt="product-img">
-                    <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/nasi-kebuli-2.jpg" alt="product-img">
-                    </a>
-                    <div class="product__badge">
-                      <span class="product__badge--items sale">Rp 12.000</span>
-                    </div>
-                    <span class="product__love bottom-10"><i class="fas fa-heart"></i></span>
-                  </div>
-                  <div class="product__items--content">
-                    <h3 class="product__items--content__title text-overflow h4">
-                      <a class="modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">Sashimi</a>
-                    </h3>
-                  </div>
-                </div>
-              </div>
+              <% }) %> 
+              
             </div>
           </div>
 				</div>
@@ -287,120 +241,173 @@
             <div>
 						  <h2 class="section__heading--maintitle f-20-media text-left">Menu Premium Lokal</h2>
             </div>
-            <a href="/premium" class="text-success">Lihat Semua</a>  
+            <a href="/premium/lokal" class="text-success">Lihat Semua</a>  
 					</div>
           <div class="product__section--inner">
             <div class="row owl-carousel owl-menu">
-              <div class="col-lg-12">
-                <div class="product__items ">
-                  <div class="product__items--thumbnail">
-                    <a class="product__items--link modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">
-                    <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/daging-serundeng.jpg" alt="product-img">
-                    <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/daging-serundeng-2.jpg" alt="product-img">
-                    </a>
-                    <div class="product__badge">
-                      <span class="product__badge--items sale">Rp 15.000</span>
+              
+              <% data_jadwal_lokal.forEach(function (item4, index4) { %> 
+                <div class="col-lg-12">
+                  <div class="product__items ">
+                    <div class="product__items--thumbnail">
+                      <a class="product__items--link modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodallokal<%- item4.id %>">
+                      <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/<%- item4.image1 %>" alt="product-img">
+                      <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/<%- item4.image2 %>" alt="product-img">
+                      </a>
+                      <div class="product__badge">
+                        <span class="product__badge--items sale">Rp <%- item4.rateThousand %></span>
+                      </div>
+                      <span class="product__love bottom-10" onclick="like('<%- item4.id %>')" id="like<%- item4.id %>"><i class="far fa-heart"></i></span>
                     </div>
-                    <span class="product__love bottom-10"><i class="far fa-heart"></i></span>
-                  </div>
-                  <div class="product__items--content">
-                    <h3 class="product__items--content__title text-overflow h4">
-                      <a class="modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">Daging Teriyaki</a>
-                    </h3>
+                    <div class="product__items--content">
+                      <h3 class="product__items--content__title text-overflow h4">
+                        <a class="modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodallokal<%- item4.id %>"><%- item4.name %></a>
+                      </h3>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="product__items ">
-                  <div class="product__items--thumbnail">
-                    <a class="product__items--link modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">
-                    <img class="product__items--img owl-media-3 product__primary--img" src="/img/product/nasi-kebuli.jpg" alt="product-img">
-                    <img class="product__items--img owl-media-3 product__secondary--img" src="/img/product/nasi-kebuli-2.jpg" alt="product-img">
-                    </a>
-                    <div class="product__badge">
-                      <span class="product__badge--items sale">Rp 12.000</span>
-                    </div>
-                    <span class="product__love bottom-10"><i class="fas fa-heart"></i></span>
-                  </div>
-                  <div class="product__items--content">
-                    <h3 class="product__items--content__title text-overflow h4">
-                      <a class="modal-description" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#premiummodal">Ayam Krispi</a>
-                    </h3>
-                  </div>
-                </div>
-              </div>
+              <% }) %> 
+              
             </div>
           </div>
 				</div>
 			</section>
 		</main>
 		<%- include("./template/footer.ejs") %>
-    <div class="modal fade" id="premiummodal" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Menu Premium</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="product__details--media mb-0">
-              <div class="product__media--preview  swiper">
-                  <div class="swiper-wrapper">
-                      <div class="swiper-slide">
-                          <div class="product__media--preview__items">
-                              <a class="product__media--preview__items--link glightbox" data-gallery="product-media-preview" href="/img/product/nasi-kebuli.jpg"><img class="product__media--preview__items--img" src="/img/product/nasi-kebuli.jpg" alt="product-media-img"></a>
-                              <div class="product__media--view__icon">
-                                  <a class="product__media--view__icon--link glightbox" href="/img/product/nasi-kebuli.jpg" data-gallery="product-media-preview">
-                                      <svg class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg" width="22.51" height="22.443" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"></path></svg>
-                                      <span class="visually-hidden">product view</span> 
-                                  </a>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="swiper-slide">
-                          <div class="product__media--preview__items">
-                              <a class="product__media--preview__items--link glightbox" data-gallery="product-media-preview" href="/img/product/nasi-kebuli-2.jpg"><img class="product__media--preview__items--img" src="/img/product/nasi-kebuli-2.jpg" alt="product-media-img"></a>
-                              <div class="product__media--view__icon">
-                                  <a class="product__media--view__icon--link glightbox" href="/img/product/nasi-kebuli-2.jpg" data-gallery="product-media-preview">
-                                      <svg class="product__items--action__btn--svg" xmlns="http://www.w3.org/2000/svg" width="22.51" height="22.443" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"></path></svg>
-                                      <span class="visually-hidden">product view</span>
-                                  </a>
-                              </div>
-                          </div>
-                      </div>
+    
+    <% data_jadwal_lokal.forEach(function (item2, index2) { %> 
+      <div class="modal fade" id="premiummodallokal<%- item2.id %>" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Menu Premium <%- item2.name %></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="product__details--media mb-0">
+                <img class="product__media--preview__items--img" src="/img/product/<%- item2.image1 %>" alt="product-media-img">
+                <div class="product__details--info">
+                  <h3 class="product__details--info__title mt-3"><%- item2.name %></h3>
+                  <div class="product__details--info__price mb-15">
+                    <span class="current__price">Rp <%- item2.rateThousand %></span>
                   </div>
-              </div>
-              <div class="product__media--nav swiper">
-                  <div class="swiper-wrapper">
-                      <div class="swiper-slide">
-                          <div class="product__media--nav__items">
-                              <img class="product__media--nav__items--img" src="/img/product/nasi-kebuli.jpg" alt="product-nav-img">
-                          </div>
-                      </div>
-                      <div class="swiper-slide">
-                          <div class="product__media--nav__items">
-                              <img class="product__media--nav__items--img" src="/img/product/nasi-kebuli-2.jpg" alt="product-nav-img">
-                          </div>
-                      </div>
-                  </div>
-                  <div class="swiper__nav--btn swiper-button-next"></div>
-                  <div class="swiper__nav--btn swiper-button-prev"></div>
-              </div>
-              <div class="product__details--info">
-                <h3 class="product__details--info__title mt-3">Nasi Kebuli</h3>
-                <div class="product__details--info__price mb-15">
-                  <span class="current__price">Rp 15.000</span>
+                  <p class="product__details--info__desc"><%- item2.keterangan %></p>
                 </div>
-                <p class="product__details--info__desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut numquam ullam is recusandae laborum explicabo id sequi quisquam, ab sunt deleniti quidem ea animi facilis quod nostrum odit! Repellendus voluptas suscipit cum harum dolor sciunt.</p>
               </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    <% }) %> 
+
+    <% data_jadwal_asian.forEach(function (item3, index3) { %> 
+      <div class="modal fade" id="premiummodalasian<%- item3.id %>" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Menu Premium <%- item3.name %></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="product__details--media mb-0">
+                <img class="product__media--preview__items--img" src="/img/product/<%- item3.image1 %>" alt="product-media-img">
+                <div class="product__details--info">
+                  <h3 class="product__details--info__title mt-3"><%- item3.name %></h3>
+                  <div class="product__details--info__price mb-15">
+                    <span class="current__price">Rp <%- item3.rateThousand %></span>
+                  </div>
+                  <p class="product__details--info__desc"><%- item3.keterangan %></p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% }) %> 
+
+    <% data_jadwal_western.forEach(function (item4, index4) { %> 
+      <div class="modal fade" id="premiummodalwestern<%- item4.id %>" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Menu Premium <%- item4.name %></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="product__details--media mb-0">
+                <img class="product__media--preview__items--img" src="/img/product/<%- item4.image1 %>" alt="product-media-img">
+                <div class="product__details--info">
+                  <h3 class="product__details--info__title mt-3"><%- item4.name %></h3>
+                  <div class="product__details--info__price mb-15">
+                    <span class="current__price">Rp <%- item4.rateThousand %></span>
+                  </div>
+                  <p class="product__details--info__desc"><%- item4.keterangan %></p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% }) %> 
 	</body>
 	<%- include("./template/js.ejs") %>
+  <% if(session.userType){ %>
+    <script>
+      $(document).ready(function(){
+        $.ajax({
+          url: "/like",
+          type: "GET",
+          dataType: "json",
+          data: {
+          },
+          success: function(ress) {
+            if(ress.response == "Successful"){
+              $.each(ress.result, function(index, val){
+                $("#like"+val.paket_id).find('i').removeClass("far")
+                $("#like"+val.paket_id).find('i').addClass("fas")
+              })
+            }
+          }
+        });
+      });
+
+      function like(id){
+        if($("#like"+id).find('i').hasClass("far")){
+          var typeParam = 'like'
+        }else{
+          var typeParam = 'unlike'
+        }
+
+        $.ajax({
+          url: "/like/change",
+          type: "POST",
+          dataType: "json",
+          data: {
+            typeParam: typeParam,
+            paket_id: id
+          },
+          success: function(ress) {
+            if(ress.response == "Successful"){
+              if(typeParam == 'like'){
+                $("#like"+id).find('i').removeClass("far")
+                $("#like"+id).find('i').addClass("fas")
+              }else{
+                $("#like"+id).find('i').removeClass("fas")
+                $("#like"+id).find('i').addClass("far")
+              }
+            }
+          }
+        });
+      }
+    </script>
+  <% } %>
 </html>

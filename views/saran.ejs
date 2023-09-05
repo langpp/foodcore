@@ -4,7 +4,7 @@
 	<body>
 		<header class="header__section">
 			<%- include("./template/login_info.ejs") %>
-			<div class="main__header main__header2 header__sticky sticky" style="margin-top: 36px;">
+			<div class="main__header main__header2 header__sticky sticky" <% if(session.userType){ %>style="margin-top: 36px;"<% } %>>
 				<div class="container">
 					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
 						<div class="offcanvas__header--menu__open ">

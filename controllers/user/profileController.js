@@ -1,7 +1,7 @@
 const sc = require('../../config/session.js')
 const link = require('../../config/link.js')
 const { Op } = require("sequelize")
-const { sequelize, users, company, order, order_item, paket, paket_image, jadwal_menu } = require('../../models')
+const { sequelize, users, company, order, order_item, paket, paket_image, jadwal_menu, paket_like } = require('../../models')
 const moment = require('moment-timezone')
 moment.locale('id')
 const path = require("path");
@@ -151,20 +151,31 @@ exports.getFavorite = async(req, res, next) =>{
     }
     req.setLocale(sc.sess.lng)
     if(sc.sess.phone && (sc.sess.userType == 5 || sc.sess.userType == 7)){  
-      
-      const data_paket = await paket.findAll({
-        raw: true,
-        // attributes: ['id','status', 'name', 'rate,', 'keterangan', 'type'],
+      const user_id = sc.sess.user_id
+      const data_paket = await paket_like.findAll({
         where: { 
-          status: {[Op.ne]: 0} ,
-          type: 'Premium'
+          user_id: user_id,
         },
-        order: [
-          ['name', 'ASC']
+        attributes: [
+          [sequelize.col('paket_like.id'), 'like'],
+          [sequelize.col('paket_like.user_id'), 'user_id'],
+          [sequelize.col('paket.id'), 'paket_id'],
+          [sequelize.col('paket.name'), 'name'],
+          [sequelize.col('paket.keterangan'), 'keterangan'],
+          [sequelize.col('paket.image1'), 'image1'],
+          [sequelize.col('paket.rate'), 'rate'],
+          [sequelize.col('paket.image2'), 'image2'],
+        ],
+        include: [
+          { 
+            model: paket, 
+            as: 'paket',
+          },
         ]
       })
-      const updateDataPaket = data_paket.map(obj => ({ ...obj, rateThousand: thousandSeparator(Math.floor(obj.rate)) }));
+      
 
+      const updateDataPaket = data_paket.map(obj => ({ ...obj.dataValues, rateThousand: thousandSeparator(Math.floor(obj.dataValues.rate)) }));
       sc.sess.home = '/'
       res.render('user/favorite', { 
         title: 'Favorite',

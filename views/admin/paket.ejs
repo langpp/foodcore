@@ -82,7 +82,8 @@
                         <th>No.</th>
                         <th>Nama</th>
                         <th>Keterangan</th>
-                        <th>type</th>
+                        <th>Type</th>
+                        <th>Kategori</th>
                         <th>Harga</th>
                       </tr>
                     </thead>
@@ -133,6 +134,19 @@
                       </select>
                       <div class="invalid-feedback">
                         Isikan Tipe Paket!
+                      </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 mb-12" id="kategorishowhide">
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="kategoriPaket">Kategori</label>
+                      <select id="kategoriPaket" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                        <option value="Western">Western</option>
+                        <option value="Asian">Asian</option>
+                        <option value="Lokal">Lokal</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Kategori!
                       </div>
                     </div>
                 </div>
@@ -195,6 +209,19 @@
                       </div>
                     </div>
                 </div>
+                <div class="col-lg-12 mb-12" id="kategorishowhideedit">
+                  <div class="checkout__input--list checkout__input--select select">
+                      <label class="checkout__select--label" for="kategoriPaketEdit">Kategori</label>
+                      <select id="kategoriPaketEdit" class="checkout__input--select__field border-radius-5" aria-label="Client">
+                        <option value="Western">Western</option>
+                        <option value="Asian">Asian</option>
+                        <option value="Lokal">Lokal</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Isikan Kategori!
+                      </div>
+                    </div>
+                </div>
                 <div class="col-lg-12 mb-12">
                   <div class="checkout__input--list ">
                     <label class="contact__form--label" for="image1">Foto 1: <span class="contact__form--label__star">*</span></label>
@@ -223,7 +250,6 @@
   
             </div>
             <div class="modal-footer">
-              <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
               <button type="button" class="tambahPaket saveTambahPaket btn btn-primary">Simpan</button>
               <button type="button" class="editPaket deletePaket btn btn-danger" style="background-color: red; color: white;">Delete Paket</button>
               <button type="button" class="editPaket saveEditPaket btn btn-primary">Simpan</button>
@@ -241,7 +267,21 @@
         $(".invalid-feedback").hide();  
         $(".tambahPaket").hide();
         $(".editPaket").hide();  
-  
+        $("#typePaket").change(function(){
+          if($(this).val() == 'Premium'){
+            $("#kategorishowhide").show()
+          }else{
+            $("#kategorishowhide").hide()
+          }
+        })
+
+        $("#typePaketEdit").change(function(){
+          if($(this).val() == 'Premium'){
+            $("#kategorishowhideedit").show()
+          }else{
+            $("#kategorishowhideedit").hide()
+          }
+        })
         tinymce.init({
           selector: '#keteranganPaket',
           skin: 'bootstrap',
@@ -282,10 +322,7 @@
                 if(checkImage === 2){
                   postPaket();
                 }
-                // console.log(localStorage.getItem("image1"))
-                // document.getElementById("image1").setAttribute("src", localStorage.getItem("image1"))
               };
-              // console.log(localStorage.getItem("image1"))
             }else{
               localStorage.setItem("image1", null);
               $(".invalid-feedback").show();
@@ -303,10 +340,7 @@
                 if(checkImage === 2){
                   postPaket();
                 }
-                // console.log(localStorage.getItem("image2"))
-                // document.getElementById("image2").setAttribute("src", localStorage.getItem("image2"))
               };
-              // console.log(localStorage.getItem("image2"))
             }else{
               localStorage.setItem("image2", null);
               $(".invalid-feedback").show();
@@ -326,7 +360,6 @@
             var checkImage = 0;
             const file_image1 = document.querySelector('#image1Edit').files[0];
             var reader_image1 = new FileReader();
-            // localStorage.setItem("image1", null);
             if(file_image1){
               reader_image1.readAsDataURL(file_image1);
               reader_image1.onload = function () {
@@ -335,10 +368,7 @@
                 if(checkImage === 2){
                   putPaket();
                 }
-                // console.log(localStorage.getItem("image1"))
-                // document.getElementById("image1").setAttribute("src", localStorage.getItem("image1"))
               };
-              // console.log(localStorage.getItem("image1"))
             }else{
               localStorage.setItem("image1", null);
               checkImage = checkImage+1
@@ -349,7 +379,6 @@
   
             const file_image2 = document.querySelector('#image2Edit').files[0];
             var reader_image2 = new FileReader();
-            // localStorage.setItem("image2", null);
             if(file_image2){
               reader_image2.readAsDataURL(file_image2);
               reader_image2.onload = function () {
@@ -358,10 +387,7 @@
                 if(checkImage === 2){
                   putPaket();
                 }
-                // console.log(localStorage.getItem("image2"))
-                // document.getElementById("image2").setAttribute("src", localStorage.getItem("image2"))
               };
-              // console.log(localStorage.getItem("image2"))
             }else{
               localStorage.setItem("image2", null);
               checkImage = checkImage+1
@@ -407,7 +433,7 @@
                       searchable: false,
                   },                
                   {
-                    targets: 5,
+                    targets: 6,
                     render: function(data, type, row, meta) {
                       if (type === 'display') {
                         let harga = 'Rp. ' + thousandSeparator(parseInt(data))
@@ -421,12 +447,17 @@
                 order: [[1, 'asc']],
               });
               $('#paket tbody').on( 'click', 'tr', function () {
-                // var aData = tablePaket.fnGetData( this );
                 var aData = tablePaket.fnGetData( this );              
                 $("#idPaketEdit").val(aData[0]);
                 $("#namaPaketEdit").val(aData[2]);
-                $("#hargaPaketEdit").val(aData[5]);
-                $("#typePaketEdit").val(aData[4]);
+                $("#hargaPaketEdit").val(aData[6]);
+                $("#typePaketEdit").val(aData[4]).trigger('change');
+                if(aData[4] == 'Premium'){
+                  $("#kategorishowhideedit").show();
+                  $("#kategoriPaketEdit").val(aData[5]).trigger('change');
+                }else{
+                  $("#kategorishowhideedit").hide();
+                }
                 tinyMCE.get('keteranganPaketEdit').setContent(aData[3])
                 // console.log(aData[0])
                 $("#paketModal").modal("show");
@@ -451,6 +482,7 @@
             name: $("#namaPaket").val(),
             harga: $("#hargaPaket").val(),
             type: $("#typePaket").val(),
+            kategori: $("#typePaket").val() == 'Premium' ? $("#kategoriPaket").val() : '-',
             keterangan: tinyMCE.get('keteranganPaket').getContent(),
             image1 : localStorage.getItem("image1"),
             image2 : localStorage.getItem("image2"),
@@ -479,6 +511,7 @@
             name: $("#namaPaketEdit").val(),
             harga: $("#hargaPaketEdit").val(),
             type: $("#typePaketEdit").val(),
+            kategori: $("#typePaketEdit").val() == 'Premium' ? $("#kategoriPaketEdit").val() : '-',
             keterangan: tinyMCE.get('keteranganPaketEdit').getContent(),
             image1 : localStorage.getItem("image1Edit"),
             image2 : localStorage.getItem("image2Edit")

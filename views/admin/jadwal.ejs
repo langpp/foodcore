@@ -192,8 +192,14 @@
                     </div>
                 </div>
                 <div class="col-lg-12 mb-12">
-                  <label class="label" for="jumlahKaryawan">Jumlah: <span class="jumlahKaryawan">0</span> Karyawan</label>
-              </div>
+                  <div class="checkout__input--list">
+                    <label class="checkout__select--label" for="sehatPaket">Jumlah Karyawan</label>
+                    <input id="jumlahKaryawan" class="checkout__input--field border-radius-5" placeholder="Jumlah Karyawan"  type="number">
+                    <div class="invalid-feedback">
+                      Isikan Jumlah Karyawan!
+                    </div>
+                  </div>
+                </div>
               </div>
   
               <div class="row editJadwal">              
@@ -322,9 +328,9 @@
           $(".editJadwal").hide();
           $(".buktiBayar").hide(); 
   
-          <% if(session.userType == 4){%>  
-            jumlahKaryawan(1);
-          <%}%>        
+          // <% if(session.userType == 4){%>  
+            // jumlahKaryawan(1);
+          // <%}%>        
         });
   
         $(".saveTambahJadwal").click(function(){
@@ -357,11 +363,11 @@
           deleteJadwal();
         });
   
-        $('#clientJadwal').change(function() {
-          <% if(session.userType == 1){%>  
-            jumlahKaryawan($('#clientJadwal').val());
-          <%}%>
-        });
+        // $('#clientJadwal').change(function() {
+        //   <% if(session.userType == 1){%>  
+        //     jumlahKaryawan($('#clientJadwal').val());
+        //   <%}%>
+        // });
   
         $('#export-btn').click(function() {
           $.ajax({
@@ -642,7 +648,8 @@
             <%}%>          
             paket_id: $("#paketJadwal").val(),
             waktu: $("#waktuPaket").val(),
-            sehat: $("#sehatPaket").val()
+            sehat: $("#sehatPaket").val(),
+            qty: $("#jumlahKaryawan").val()
           },
           success: function(ress) {
             $.LoadingOverlay("hide");
@@ -653,7 +660,7 @@
             }
           },error: function(err, data) {
             $.LoadingOverlay("hide");
-            alert('Cannot acces server');
+            alert(err.responseJSON.response);
           }
         });
       }
@@ -783,25 +790,25 @@
         });
       }
   
-      function jumlahKaryawan(company_id){
-        $.ajax({
-          url: "/admin/user/jumlahKaryawan",
-          type: "GET",
-          dataType: "json",
-          data: {
-            company_id: company_id
-          },
-          success: function(ress) {
-            if(ress.response == "Successful"){            
-              $(".jumlahKaryawan").text(ress.result);
-            }else{
-              // alert('Cannot database');
-            }
-          },error: function(err, data) {
-            // alert('Cannot acces server');
-          }
-        });
-      }
+      // function jumlahKaryawan(company_id){
+        // $.ajax({
+        //   url: "/admin/user/jumlahKaryawan",
+        //   type: "GET",
+        //   dataType: "json",
+        //   data: {
+        //     company_id: company_id
+        //   },
+        //   success: function(ress) {
+        //     if(ress.response == "Successful"){            
+        //       $(".jumlahKaryawan").text(ress.result);
+        //     }else{
+        //       // alert('Cannot database');
+        //     }
+        //   },error: function(err, data) {
+        //     // alert('Cannot acces server');
+        //   }
+        // });
+      // }
     </script>
 	</body>
 </html>

@@ -36,15 +36,6 @@ function TopOffset(el) {
 		top: rect.top + scrollTop
 	}
 }
-// const headerStickyWrapper = document.querySelector("header"),
-// 	headerStickyTarget = document.querySelector(".header__sticky");
-// if (headerStickyTarget) {
-// 	let headerHeight = headerStickyWrapper.clientHeight;
-// 	window.addEventListener("scroll", (function() {
-// 		let StickyTargetElement, TargetElementTopOffset = TopOffset(headerStickyWrapper).top;
-// 		window.scrollY > TargetElementTopOffset ? headerStickyTarget.classList.add("sticky") : headerStickyTarget.classList.remove("sticky")
-// 	}))
-// }
 
 $('.owl-menu').owlCarousel({
     loop: true,
@@ -479,27 +470,7 @@ document.addEventListener("click", e => {
 	"Escape" == e.key && document.querySelector(".modal.is-visible") && document.querySelector(".modal.is-visible").classList.remove(isVisible)
 }), customAccordion(".accordion__container", ".accordion__items", ".accordion__items--body"), customAccordion(".widget__categories--menu", ".widget__categories--menu__list", ".widget__categories--sub__menu");
 let accordion = !0;
-// const footerWidgetAccordion = function() {
-// 	let footerWidgetContainer;
-// 	accordion = !1, document.querySelector(".main__footer--wrapper").addEventListener("click", (function(evt) {
-// 		let singleItemTarget = evt.target;
-// 		if (singleItemTarget.classList.contains("footer__widget--button")) {
-// 			const footerWidget = singleItemTarget.closest(".footer__widget"),
-// 				footerWidgetInner = footerWidget.querySelector(".footer__widget--inner");
-// 			footerWidget.classList.contains("active") ? (footerWidget.classList.remove("active"), slideUp(footerWidgetInner)) : (footerWidget.classList.add("active"), slideDown(footerWidgetInner), getSiblings(footerWidget).forEach((function(item) {
-// 				const footerWidgetInner = item.querySelector(".footer__widget--inner");
-// 				item.classList.remove("active"), slideUp(footerWidgetInner)
-// 			})))
-// 		}
-// 	}))
-// };
-// window.addEventListener("load", (function() {
-// 	accordion && footerWidgetAccordion()
-// })), window.addEventListener("resize", (function() {
-// 	document.querySelectorAll(".footer__widget").forEach((function(item) {
-// 		window.outerWidth >= 768 && (item.classList.remove("active"), item.querySelector(".footer__widget--inner").style.display = "")
-// 	})), accordion && footerWidgetAccordion()
-// }));
+
 const customLightboxHTML = '<div id="glightbox-body" class="glightbox-container">\n    <div class="gloader visible"></div>\n    <div class="goverlay"></div>\n    <div class="gcontainer">\n    <div id="glightbox-slider" class="gslider"></div>\n    <button class="gnext gbtn" tabindex="0" aria-label="Next" data-customattribute="example">{nextSVG}</button>\n    <button class="gprev gbtn" tabindex="1" aria-label="Previous">{prevSVG}</button>\n    <button class="gclose gbtn" tabindex="2" aria-label="Close">{closeSVG}</button>\n    </div>\n    </div>',
 	lightbox = GLightbox({
 		touchNavigation: !0,
@@ -598,12 +569,6 @@ const newsletterPopup = function() {
 };
 // newsletterPopup();
 
-
-
-
-
-
-
 ////////////////IBe
     let resultCard = []    
     let subTotalOrder = 0
@@ -616,10 +581,20 @@ const newsletterPopup = function() {
     $(document).ready(function(){
       if(localStorage.getItem('tanggalOrder')){
         $('#tanggalOrder').val(localStorage.getItem('tanggalOrder'))
+		checkOrder(localStorage.getItem('tanggalOrder'), localStorage.getItem('jadwalwaktu') ? localStorage.getItem('jadwalwaktu') : "Pagi")
       }
+
       $('#tanggalOrder').change(function() {
         localStorage.setItem('tanggalOrder', $("#tanggalOrder").val());
       });
+
+	  if(localStorage.getItem('jadwalwaktu')){
+		$('#jadwalwaktu').val(localStorage.getItem('jadwalwaktu')).trigger('change')
+	  }
+
+	  $("#lanjutBayar").click(function(){
+		localStorage.setItem('waktuBayar', $('#jadwalwaktu').val())
+	  })
 
       $(".addPaket").click(function(){
         if($('#tanggalOrder').val()){
@@ -679,20 +654,24 @@ const newsletterPopup = function() {
         updateCard();
       });
 
-
-
       $('#tanggalOrder').change(function() {
-        checkOrder($('#tanggalOrder').val())
+        checkOrder($('#tanggalOrder').val(), $("#jadwalwaktu").val())
+      });
+
+	  $('#jadwalwaktu').change(function() {
+        checkOrder($('#tanggalOrder').val(), $("#jadwalwaktu").val())
+		localStorage.setItem('jadwalwaktu', $('#jadwalwaktu').val())
       });
     });
 
-    function checkOrder(date){
+    function checkOrder(date, jadwalwaktu){
       $.ajax({
         url: "/user/order/checkOrder",
         type: "GET",
         dataType: "json",
         data: {
-          date: date
+          date: date,
+		  waktu: jadwalwaktu
         },
         success: function(ress) {
           if(ress.response == "Successful"){            
@@ -708,6 +687,28 @@ const newsletterPopup = function() {
             })
             const hasRegulerStatus1 = orderItem.some(item => item.type === 'Reguler');
             let orderItemReguler = orderItem.find(obj => obj.type === "Reguler");
+			
+			if(ress.complateorder.length > 0){
+				var htmlorder = '';
+				$.each(ress.complateorder, function(index, val){
+					htmlorder += `<li class="widget__categories--menu__list cart-red mb-2">
+						<label class="widget__categories--menu__label d-flex align-items-center justify-content-between">
+						<div class="d-flex align-items-center">
+							<i class="fas fa-check i-cart"></i>
+							<div class="ml-2">
+							<span class="product__description--variant text-black">Tanggal Pembayaran : ${val.date.substring(0, 10)}</span>
+							<span class="product__description--variant text-black">${val.waktu} - Rp ${thousandSeparator(parseFloat(val.total))}</span>
+							</div>
+						</div>
+						<span> Paid</span>
+						</label>
+					</li>`
+				})
+				$("#riwayatOrder").html(htmlorder)
+			}else{
+				$("#riwayatOrder").html(`<li></li>`)
+			}
+
             if (hasRegulerStatus1) {      
               if(orderItemReguler.status == 1){
                 resultCard = resultCard.filter(obj => obj.type !== 'Reguler');
