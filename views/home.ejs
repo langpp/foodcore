@@ -295,6 +295,9 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <% if(session.userType == '7'){ %>
+                <button class="addPaket btn btn-primary btn-sm minicart__open--btn w-100-media" href="javascript:void(0)" paketID="<%- item2.id %>" paketName="<%- item2.name %>" paketRate="<%- item2.rate %>" paketRateThousand="<%- item2.rateThousand %>" image1="<%- item2.image1 %>" image2="<%- item2.image2 %>" data-offcanvas>+</button>
+              <% } %>
             </div>
           </div>
         </div>
@@ -323,6 +326,9 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <% if(session.userType == '7'){ %>
+              <button class="addPaket btn btn-primary btn-sm minicart__open--btn w-100-media" href="javascript:void(0)" paketID="<%- item3.id %>" paketName="<%- item3.name %>" paketRate="<%- item3.rate %>" paketRateThousand="<%- item3.rateThousand %>" image1="<%- item3.image1 %>" image2="<%- item3.image2 %>" data-offcanvas>+</button>
+              <% } %>
             </div>
           </div>
         </div>
@@ -351,6 +357,9 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <% if(session.userType == '7'){ %>
+                <button class="addPaket btn btn-primary btn-sm minicart__open--btn w-100-media" href="javascript:void(0)" paketID="<%- item4.id %>" paketName="<%- item4.name %>" paketRate="<%- item4.rate %>" paketRateThousand="<%- item4.rateThousand %>" image1="<%- item4.image1 %>" image2="<%- item4.image2 %>" data-offcanvas>+</button>
+              <% } %>
             </div>
           </div>
         </div>

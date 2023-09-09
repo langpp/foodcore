@@ -64,7 +64,55 @@ exports.listPaket = async(req, res, next) =>{
 	}
 }
 
+exports.listPaketuser = async(req, res, next) =>{
+  sc.sess=req.session
+  if(!(sc.sess.lng)){
+    sc.sess.lng = 'en'
+  }
+  req.setLocale(sc.sess.lng)
 
+  if(sc.sess.phone && (sc.sess.userType == 7)){
+    const type = req.query.type
+    const id = req.query.id
+
+    if(type && id){
+      where_val = { 
+        id,
+        type,
+        status: {[Op.ne]: 0},
+       }
+    }else if(!type && id){
+      where_val = { 
+        id,
+        status: {[Op.ne]: 0},
+       }
+    }else if(type && !id){
+      where_val = { 
+        type,
+        status: {[Op.ne]: 0},
+       }
+    }else{
+      where_val = { 
+        status: {[Op.ne]: 0},
+       }
+    }
+
+		const data_paket = await paket.findAll({
+      raw: true,
+      attributes: ['id','status', 'name', 'keterangan', 'type', 'kategori', 'rate', 'image1', 'image2'],
+      where: where_val,
+      order: [
+        ['type', 'DESC'],
+        ['name', 'ASC']
+      ]
+    })
+    const updateDataPaket = data_paket.map(obj => ({ ...obj, rateThousand: thousandSeparator(Math.floor(obj.rate)) }));
+
+    return res.status(200).json({ status: 200, response: 'Successful', result: updateDataPaket})
+	}else{
+		res.redirect('/login')
+	}
+}
 
 exports.postPaket = async(req, res, next) =>{
   sc.sess=req.session
@@ -223,4 +271,15 @@ async function uploadFoto(string){
 function randomNumber(){
   var value = Math.floor(Math.random() * 9000000000) + 1000000000;
   return value;
+}
+
+function thousandSeparator(value){
+  const options = { 
+    // style: 'currency', 
+    // currency: 'IDR', 
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  };
+  const formattedNumber = value.toLocaleString('de-DE', options);
+  return formattedNumber;
 }
