@@ -24,7 +24,7 @@ exports.getReguler = async(req, res, next) =>{
 
     if(sc.sess.company_id){
       whereValue = {
-        status: {[Op.ne]: 0},
+        status: {[Op.ne]: 1},
         company_id: sc.sess.company_id,
         '$company.status$': {[Op.ne]: 0},
         date: {
@@ -32,7 +32,7 @@ exports.getReguler = async(req, res, next) =>{
         }        
       }
       whereValue2 = {
-        status: {[Op.ne]: 0},
+        status: {[Op.ne]: 1},
         company_id: sc.sess.company_id,
         '$company.status$': {[Op.ne]: 0},
         date: {
@@ -41,14 +41,14 @@ exports.getReguler = async(req, res, next) =>{
       }
     }else{
       whereValue = {
-        status: {[Op.ne]: 0},
+        status: {[Op.ne]: 1},
         '$company.status$': {[Op.ne]: 0},
         date: {
           [Op.gte]: today
         }        
       }
       whereValue2 = {
-        status: {[Op.ne]: 0},
+        status: {[Op.ne]: 1},
         '$company.status$': {[Op.ne]: 0},
         date: {
           [Op.gte]: today
@@ -120,7 +120,6 @@ exports.getReguler = async(req, res, next) =>{
     // console.log(jadwal_detail[0])
     // let data_jadwal_detail = jadwal_detail.map(obj => ({ ...obj, date: moment(obj.date).format('YYYY-MM-DD') }));
     // console.log(data_jadwal_detail[0])
-
     if(data_jadwal_menu){
       res.render('reguler', { 
         title: 'Menu Reguler',

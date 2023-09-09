@@ -44,7 +44,7 @@
                             <% data_jadwal_detail.forEach(function (item2, index) { %> 
                             <% if(moment(item.date).format('YYYYMMDD') == moment(item2.date).format('YYYYMMDD')){ %>
                               <li class="mb-2">
-                                <img class="product__items--img owl-media-3 product__primary--img border-7 mb-3" src="/img/product/daging-serundeng.jpg" alt="product-img">
+                                <img class="product__items--img owl-media-3 product__primary--img border-7 mb-3" src="/img/product/<%- item2.image1 %>" alt="product-img">
                                   <div class="d-flex align-items-center">
                                       <span>
                                           <i class="bg-light-info rounded-circle p-2 me-3 fas fa-check text-warning fs-7"></i>
@@ -140,10 +140,11 @@
             })
             
           }else{
-            alert('Cannot database');
+            swal("Notifikasi!", 'Cannot acces server', "error");
+
           }
         },error: function(err, data) {
-          alert('Cannot acces server');
+          swal("Notifikasi!", 'Cannot acces server', "error");
         }
 			});
     }

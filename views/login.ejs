@@ -146,12 +146,11 @@
           }else{
             $(".loginInfo").html("Cannot acces server")
             $(".loginInfo").show();
-            // alert("Cannot acces server");
           }          
         },
         error: function(err, data) {
           // $.LoadingOverlay("hide");
-          alert(err);
+          swal("Notifikasi!", err, "error");
         },
 
       })

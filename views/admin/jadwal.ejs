@@ -513,8 +513,7 @@
               // <button type="button" class="editJadwal kirimBuktiBayar Jadwal btn btn-primary">Kirim Bukti Bayar</button>
   
                 if(aData[7] == 'Belum Diproses'){
-                  <% if(session.userType == 1){%>
-                    $(".editDS").prop("disabled", true);
+                    $(".editDS").prop("disabled", false);
                     $("#jadwalModal").modal("show");
                     $(".tambahJadwal").hide();
                     $(".editJadwal").show();
@@ -533,26 +532,6 @@
                     
                     $(".editJadwalTitle").show();
                     $(".jadwalTitle").hide();
-                  <%}else{%>
-                    $(".editDS").prop("disabled", false);
-                    $("#jadwalModal").modal("show");
-                    $(".tambahJadwal").hide();
-                    $(".editJadwal").show();
-  
-                    $(".deleteJadwal").show();
-                    $(".saveEditJadwal").show();
-  
-                    $(".prosesPesanan").hide();
-                    
-                    $(".kirimInvoice").hide();
-                    $(".tandaiSUdahBayar").hide();
-                    $(".lihatBuktiBayar").hide();
-                    $(".lihatInvoice").hide();
-                    $(".kirimBuktiBayar").hide();
-                    
-                    $(".editJadwalTitle").show();
-                    $(".jadwalTitle").hide();
-                  <%}%>
                 }else if(aData[7] == 'Diproses'){
                   $(".editDS").prop("disabled", true);
                   $("#jadwalModal").modal("show");
@@ -634,10 +613,10 @@
               }
               });
             }else{
-              alert('Cannot database');
+              swal("Notifikasi!", 'Cannot acces server', "error");
             }
           },error: function(err, data) {
-            alert('Cannot acces server');
+            swal("Notifikasi!", 'Cannot acces server', "error");
           }
         });
       }
@@ -663,11 +642,11 @@
             if(ress.response == "Successful"){
               window.location.reload();
             }else{
-              alert('Cannot database');
+              swal("Notifikasi!", 'Cannot acces server', "error");
             }
           },error: function(err, data) {
             $.LoadingOverlay("hide");
-            alert(err.responseJSON.response);
+              swal("Notifikasi!", err.responseJSON.response, "error");
           }
         });
       }
@@ -691,11 +670,11 @@
             if(ress.response == "Successful"){
               window.location.reload();
             }else{
-              alert('Cannot database');
+              swal("Notifikasi!", 'Cannot acces server', "error");
             }
           },error: function(err, data) {
             $.LoadingOverlay("hide");
-            alert('Cannot acces server');
+            swal("Notifikasi!", 'Cannot acces server', "error");
           }
         });
       }
@@ -714,11 +693,11 @@
             if(ress.response == "Successful"){
               window.location.reload();
             }else{
-              alert('Cannot database');
+              swal("Notifikasi!", 'Cannot acces server', "error");
             }
           },error: function(err, data) {
             $.LoadingOverlay("hide");
-            alert('Cannot acces server');
+            swal("Notifikasi!", 'Cannot acces server', "error");
           }
         });
       }
@@ -738,11 +717,11 @@
             if(ress.response == "Successful"){
               window.location.reload();
             }else{
-              alert('Cannot database');
+              swal("Notifikasi!", 'Cannot acces server', "error");
             }
           },error: function(err, data) {
             $.LoadingOverlay("hide");
-            alert('Cannot acces server');
+            swal("Notifikasi!", 'Cannot acces server', "error");
           }
         });
       }

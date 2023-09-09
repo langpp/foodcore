@@ -626,15 +626,29 @@ const newsletterPopup = function() {
       
       $(".isiCard").on("click", ".increase", function(e) {
         let input = e.target.previousElementSibling.children[0];
-        if (null != input.dataset.counter) {
-          let value = parseInt(input.value, 10);
-          value = isNaN(value) ? 0 : value, value++, input.value = value
+		if($(this).attr("jenis")=='Premium'){
+			if (null != input.dataset.counter) {
+			let value = parseInt(input.value, 10);
+			value = isNaN(value) ? 0 : value, value++, input.value = value
 
-          let found = resultCard.find(item => item.id === $(this).attr("paketID"));
-          if (found) { found.count = value }
-          localResultCard();
-          calculateTotal()
-        }
+			let found = resultCard.find(item => item.id === $(this).attr("paketID"));
+			if (found) { found.count = value }
+			localResultCard();
+			calculateTotal()
+			}
+		}else{
+			if(input.value == 0){
+				if (null != input.dataset.counter) {
+					let value = parseInt(input.value, 10);
+					value = isNaN(value) ? 0 : value, value++, input.value = value
+		
+					let found = resultCard.find(item => item.id === $(this).attr("paketID"));
+					if (found) { found.count = value }
+					localResultCard();
+					calculateTotal()
+				}
+			}
+		}
       });
       $(".isiCard").on("click", ".decrease", function(e) {
         let input = e.target.nextElementSibling.children[0];
@@ -662,6 +676,12 @@ const newsletterPopup = function() {
         checkOrder($('#tanggalOrder').val(), $("#jadwalwaktu").val())
 		localStorage.setItem('jadwalwaktu', $('#jadwalwaktu').val())
       });
+	  var new_date = moment(new Date(), "DD-MM-YYYY").add('days', 3);
+	  var day = new_date.format('DD');
+	  var month = new_date.format('MM');
+	  var year = new_date.format('YYYY');
+
+	  $("#tanggalOrder").attr('max', year + '-' + month + '-' + day)
     });
 
     function checkOrder(date, jadwalwaktu){
@@ -691,7 +711,7 @@ const newsletterPopup = function() {
 			if(ress.complateorder.length > 0){
 				var htmlorder = '';
 				$.each(ress.complateorder, function(index, val){
-					htmlorder += `<li class="widget__categories--menu__list cart-red mb-2">
+					htmlorder += `<li class="widget__categories--menu__list cart-red mb-2" onclick="detailOrder('${val.id}')">
 						<label class="widget__categories--menu__label d-flex align-items-center justify-content-between">
 						<div class="d-flex align-items-center">
 							<i class="fas fa-check i-cart"></i>
@@ -734,12 +754,12 @@ const newsletterPopup = function() {
               localResultCard();
             }
           }else{
-            // alert('Cannot database');
+            swal("Notifikasi!", 'Cannot acces server', "error");
           }
         },error: function(err, data) {
-          // alert('Cannot acces server');
+            swal("Notifikasi!", 'Cannot acces server', "error");
         }
-			});
+	});
     }
 
     function changeEmptyState(){
@@ -798,12 +818,12 @@ const newsletterPopup = function() {
         if(orderItemReguler){
           if(orderItemReguler.status == 1){
             if(item.type == 'Reguler'){
-              $('.isiCard').append(`<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="product-details.html"> <img src="/img/product/${item.image1}" alt="prduct-img"> </a> </div> <div class="minicart__text"> <span class="current__price"><b>Menu Reguler</b></span> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">${item.name}</a> </h4> <div class="minicart__price"> <span class="current__price">${item.rateThousand}</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="${item.id}" aria-label="quantity value" value="Decrease Value">-</button> <label> <input type="number" class="quantity__number" value="${item.count ? item.count : '1'}" data-counter /> </label> <button type="button" class="quantity__value increase" paketID="${item.id}" aria-label="quantity value" value="Increase Value">+</button> </div>  </div> </div> </div>`)
+              $('.isiCard').append(`<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="product-details.html"> <img src="/img/product/${item.image1}" alt="prduct-img"> </a> </div> <div class="minicart__text"> <span class="current__price"><b>Menu Reguler</b></span> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">${item.name}</a> </h4> <div class="minicart__price"> <span class="current__price">${item.rateThousand}</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="${item.id}" aria-label="quantity value" jenis="Reguler" value="Decrease Value">-</button> <label> <input type="number" class="quantity__number" value="${item.count ? item.count : '1'}" data-counter /> </label> <button type="button" class="quantity__value increase" paketID="${item.id}" aria-label="quantity value" value="Increase Value" jenis="Reguler">+</button> </div>  </div> </div> </div>`)
             }else{
-              $('.isiCard').append('<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="product-details.html"> <img src="/img/product/'+item.image1+'" alt="prduct-img"> </a> </div> <div class="minicart__text"> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">'+item.name+'</a> </h4> <div class="minicart__price"> <span class="current__price">'+item.rateThousand+'</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="'+item.id+'" aria-label="quantity value" value="Decrease Value">-</button> <label> <input type="number" class="quantity__number" value="'+item.count+'" data-counter /> </label> <button type="button" class="quantity__value increase" paketID="'+item.id+'" aria-label="quantity value" value="Increase Value">+</button> </div> <button class="minicart__product--remove removeProduct" paketID="'+item.id+'" type="button">Remove</button> </div> </div> </div>')
+              $('.isiCard').append('<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="product-details.html"> <img src="/img/product/'+item.image1+'" alt="prduct-img"> </a> </div> <div class="minicart__text"> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">'+item.name+'</a> </h4> <div class="minicart__price"> <span class="current__price">'+item.rateThousand+'</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="'+item.id+'" aria-label="quantity value" value="Decrease Value" jenis="Reguler">-</button> <label> <input type="number" class="quantity__number" value="'+item.count+'" data-counter /> </label> <button type="button" class="quantity__value increase" paketID="'+item.id+'" aria-label="quantity value" value="Increase Value">+</button> </div> <button class="minicart__product--remove removeProduct" paketID="'+item.id+'" type="button" jenis="Reguler">Remove</button> </div> </div> </div>')
             }
           }else if(orderItemReguler.status == 2){
-            $('.isiCard').append(`<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="product-details.html"> <img src="/img/product/${item.image1}" alt="prduct-img"> </a> </div> <div class="minicart__text"> <span class="current__price"><b>Menu Reguler</b></span> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">${item.name}</a> </h4> <div class="minicart__price"> <span class="current__price">${item.rateThousand}</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="${item.id}" aria-label="quantity value" value="Decrease Value" disabled>-</button> <label> <input type="number" class="quantity__number" value="${item.count ? item.count : 1}" data-counter disabled/> </label> <button type="button" class="quantity__value increase" paketID="${item.id}" aria-label="quantity value" value="Increase Value" disabled>+</button> </div>  </div> </div> </div>`)
+            $('.isiCard').append(`<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="product-details.html"> <img src="/img/product/${item.image1}" alt="prduct-img"> </a> </div> <div class="minicart__text"> <span class="current__price"><b>Menu Reguler</b></span> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">${item.name}</a> </h4> <div class="minicart__price"> <span class="current__price">${item.rateThousand}</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="${item.id}" aria-label="quantity value" value="Decrease Value" disabled jenis="Reguler">-</button> <label> <input type="number" class="quantity__number" value="${item.count ? item.count : 1}" data-counter disabled/> </label> <button type="button" class="quantity__value increase" paketID="${item.id}" aria-label="quantity value" value="Increase Value" disabled jenis="Reguler">+</button> </div>  </div> </div> </div>`)
           }
         }else{
           
@@ -858,3 +878,29 @@ const newsletterPopup = function() {
       const formattedNumber = value.toLocaleString('de-DE', options);
       return formattedNumber;
     }
+
+	function detailOrder(order_id){
+		$('.listHistoryOrder').html("");
+		$.ajax({
+		  url: "/user/order/detailOrder",
+		  type: "GET",
+		  dataType: "json",
+		  data: {
+			order_id: order_id
+		  },
+		  success: function(ress) {
+			if(ress.response == "Successful"){
+			  ress.result.forEach(function (item, index) {
+				$('.listHistoryOrder').append('<div class="minicart__product"><div class="minicart__product--items d-flex"><div class="minicart__thumb"><div><img src="/img/product/'+item.image1+'" alt="prduct-img"></div></div><div class="minicart__text"><h4 class="minicart__subtitle">'+item.paket+'</h4><div class="minicart__price"><span class="current__price">Rp. '+thousandSeparator(parseInt(item.rate))+'</span></div><div class="minicart__text--footer d-flex align-items-center"><p class="minicart__header--desc">Jumlah: '+item.qty+'</p></div></div></div></div>')
+				$(".detailorder").html(moment(item.date).format('DD MMMM YYYY'))
+			  })
+			  $('.totalHistoryOrder').html(thousandSeparator(parseInt(ress.result[0].total))) 
+			  $("#orderModal").modal("show");
+			}else{
+			  swal("Notifikasi!", 'Cannot acces server', "error");
+			}
+		  },error: function(err, data) {
+			swal("Notifikasi!", 'Cannot acces server', "error");
+		  }
+			  });
+	}

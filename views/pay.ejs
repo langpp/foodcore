@@ -158,25 +158,19 @@
         success: function(ress) {
           $.LoadingOverlay("hide");
           snap.pay(ress.result, {
-            // Optional
             onSuccess: function(result){
               confirmPay();
             },
-            // Optional
             onPending: function(result){
-              //catat transaksi yang pending
-              console.log(result);
-            // Optional
+                swal("Notifikasi!", result.response, "error");
             },
             onError: function(result){
-              swal("Notifikasi!", "Transaksi Gagal!", "error");
-              // catat transaksi yang gagal
-              console.log(result);
+              swal("Notifikasi!", result.response, "error");
             }
           })
         },error: function(err, data) {
           $.LoadingOverlay("hide");
-          alert('Cannot acces server');
+          swal('Notifikasi', 'Cannot acces server', 'error');
         }
       });
     }
@@ -208,11 +202,11 @@
             updateCard();
           }else{
             $.LoadingOverlay("hide");
-            alert(ress.response);
+            swal("Notifikasi!", ress.response, "error");
           }
         },error: function(err, data) {
           $.LoadingOverlay("hide");
-          alert('Cannot acces server');
+            swal("Notifikasi!", "Cannot acces server", "error");
         }
       });
     }
