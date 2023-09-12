@@ -465,10 +465,10 @@
                 $(".editPaket").show();
               });
             }else{
-              alert('Cannot database');
+              swal("Notifikasi!", 'Cannot acces server', "error");
             }
           },error: function(err, data) {
-            alert('Cannot acces server');
+              swal("Notifikasi!", 'Cannot acces server', "error");
           }
         });
       }
@@ -492,11 +492,11 @@
             if(ress.response == "Successful"){
               window.location.reload();
             }else{
-              alert('Cannot database');
+              swal("Notifikasi!", 'Cannot acces server', "error");
             }
           },error: function(err, data) {
             $.LoadingOverlay("hide");
-            alert('Cannot acces server');
+              swal("Notifikasi!", 'Cannot acces server', "error");
           }
         });
       }
@@ -521,11 +521,11 @@
             if(ress.response == "Successful"){
               window.location.reload();
             }else{
-              alert('Cannot database');
+              swal("Notifikasi!", 'Cannot acces server', "error");
             }
           },error: function(err, data) {
             $.LoadingOverlay("hide");
-            alert('Cannot acces server');
+            swal("Notifikasi!", 'Cannot acces server', "error");
           }
         });
       }
@@ -544,11 +544,11 @@
             if(ress.response == "Successful"){
               window.location.reload();
             }else{
-              alert('Cannot database');
+              swal("Notifikasi!", 'Cannot acces server', "error");
             }
           },error: function(err, data) {
             $.LoadingOverlay("hide");
-            alert('Cannot acces server');
+            swal("Notifikasi!", 'Cannot acces server', "error");
           }
         });
       }

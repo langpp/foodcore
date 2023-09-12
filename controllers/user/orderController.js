@@ -32,13 +32,21 @@ exports.listOrder = async(req, res, next) =>{
   req.setLocale(sc.sess.lng)
   if(sc.sess.phone && (sc.sess.userType == 5 || sc.sess.userType == 7)){    
     const user_id = sc.sess.user_id
+    const tanggal = req.query.tanggal
+    var datemin3 = new Date(new Date().setDate(new Date(tanggal).getDate() - 4));
+    var dateadd3 = new Date(new Date().setDate(new Date(tanggal).getDate() + 4));
+    if(tanggal){
+      var where = { status: {[Op.ne]: 0, [Op.ne]: 1}, user_id, date: {[Op.between]: [datemin3, dateadd3] }}
+    }else{
+      var where = { status: {[Op.ne]: 0, [Op.ne]: 1}, user_id }
+    }
 		const data_order = await order.findAll({
       raw: true,
       attributes: ['id', 'status', 'createdAt', 
       'date', 
       // [sequelize.fn('date_format', sequelize.col('date'), '%d-%m-%Y'), 'date'],
-      'total'],
-      where: { status: {[Op.ne]: 0, [Op.ne]: 1}, user_id },
+      'total', 'waktu'],
+      where: where,
       order: [
         ['id', 'ASC']
       ]
@@ -177,7 +185,7 @@ exports.checkOrder = async(req, res, next) =>{
 
     const find_exist_order_date = await order.findAll({
       raw: true,
-      where: { user_id: user_id, company_id: company_id, date: date, status: 2 }
+      where: { user_id: user_id, company_id: company_id, date: date, status: 2, waktu: waktu }
     })
 
     if(find_exist_order){

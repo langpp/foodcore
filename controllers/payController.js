@@ -38,13 +38,17 @@ exports.snapPay = async(req, res, next) =>{
     let subtotal = req.body.subtotal
     let total = req.body.total
 
+    if(total < 1){
+      return res.status(500).json({ status: 200, response: 'Transaksi Harus Lebih Dari Rp 0'})
+    }
+    var id = "Transaksi-"+ Math.random() * 100;
+    
     let parameter = {
       "transaction_details": {
-          "order_id": "Transaksi Tanggal "+ Math.random() * 10,
+          "order_id": id,
           "gross_amount": total
-      }, "credit_card":{
-          "secure" : true
-      }
+      }, 
+      "enabled_payments": ["other_qris"],
     };
 
     snap.createTransaction(parameter)

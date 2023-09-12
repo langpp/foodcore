@@ -4,6 +4,7 @@ const paketController = require('../../controllers/admin/paketController.js')
 
 router.get('/', paketController.getPaket)
 router.get('/listPaket', paketController.listPaket)
+router.get('/listPaket/user', paketController.listPaketuser)
 router.post('/postPaket', paketController.postPaket)
 router.put('/putPaket', paketController.putPaket)
 router.delete('/deletePaket', paketController.deletePaket)

@@ -1,3 +1,61 @@
+<div class="modal fade" id="orderModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title tambahClient" id="exampleModalLabel">Detail order (<span class="detailorder"></span>)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="minicart__header ">
+          <p class="minicart__header--desc">Tanggal Pengiriman: <span class="detailorder"></span></p>
+        </div>
+        <div class="listHistoryOrder">
+        </div>            
+        <div class="minicart__amount">
+          <div class="minicart__amount_list d-flex justify-content-between">
+            <span>Total:</span>
+            <b>Rp. 
+              <span class="totalHistoryOrder">
+                
+              </span>
+            </b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="premiummodalsearch" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Menu Premium <span class="searchname"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="product__details--media mb-0">
+          <img class="product__media--preview__items--img" src="" alt="product-media-img" id="searchimage">
+          <div class="product__details--info">
+            <h3 class="product__details--info__title mt-3 searchname"></h3>
+            <div class="product__details--info__price mb-15">
+              <span class="current__price" id="searchrate"></span>
+            </div>
+            <p class="product__details--info__desc" id="searchdescription"></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <% if(session.userType == '7'){ %>
+          <div id="searchbtn"></div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
 <a href="https://api.whatsapp.com/send?phone=6281267666999&text=Halo%2C%20saya%20ingin%20menanyakan%20terkait%20perubahan%20jadwal" class="float" target="_blank">
   <i class="fab fa-whatsapp my-float"></i>
 </a>

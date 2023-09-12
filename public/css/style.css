@@ -10609,6 +10609,9 @@ details > summary::-webkit-details-marker {
   .account__table--header {
     display: none;
   }
+  .mt-120{
+    margin-top:100px !important
+  }
 }
 .account__table--header__child--items {
   text-align: left;
@@ -11880,7 +11883,7 @@ input:checked + .slide-container .nav label { display: block; }
   padding: 0;
   opacity: 0;
   pointer-events: none;
-  max-height: 280px;
+  max-height: 200px;
   overflow-y: auto;
 }
 
@@ -12067,13 +12070,17 @@ div.dataTables_wrapper div.dataTables_filter{
   text-align: justify;
 }
 
+.predictive__search--box_active::before{
+  height:0px !important;
+}
+
 @media(max-width:767px){
   .carousel{
     height:150px
   }
 
   .slide-image img{
-    height:160px;
+    height:210px;
   }
 
   .carousel-controls{

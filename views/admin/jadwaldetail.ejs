@@ -178,14 +178,20 @@
 									Rp <%- parseInt(jadwal.total)%>
 								</td>
 							</tr>
-							<tr class="cart__table--body__items">
-								<td class="cart__table--body__list">
-									Total Tagihan
-								</td>
-								<td class="cart__table--body__list text-right">
-									Rp <%- parseInt(jadwal.total) + parseInt(order.total)%>
-								</td>
+						</tbody>
+					</table>
+					<br>
+					<table id="menu" class="display table table-striped">
+						<thead>
+							<tr>
+								<th>No.</th>
+								<th>Menu</th>
+								<th>Jenis</th>
+								<th>Total</th>
 							</tr>
+						</thead>
+						<tbody>
+
 						</tbody>
 					</table>
 					<br>
@@ -231,11 +237,34 @@
 							}
 						})
 						html2+= "</ol>"
-						html += `<tr><td>${no++}</td><td>${val.username ? val.username : 'Nama Tidak Ditemukan'}</td><td>${html2}</td><td>Rp ${val.total}</td></tr>`;
+						html += `<tr><td>${no++}</td><td>${val.name ? val.name : '-'} - ${val.phone}</td><td>${html2}</td><td>Rp ${val.total}</td></tr>`;
 						html2 = '';
 					})
 					$("#jadwal").find('tbody').html(html)
 					$("#jadwal").dataTable( {
+						dom: 'Bfrtip',
+						buttons: [
+							'copy', 'csv', 'excel', 'pdf', 'print'
+						]
+					} )
+				}
+            }
+		})
+
+		$.ajax({
+            url: "/admin/jadwal/detail/sum/<%- kode %>",
+            type: "GET",
+            dataType: "json",
+            success: function(ress) {
+              	if(ress.response == 'Successful'){
+					var html = ""
+					var no = 1;
+					html += `<tr><td>${no++}</td><td>${ress.resultjadwal.name ? ress.resultjadwal.name : '-'}</td><td>Reguler</td><td>${ress.resultjadwal.total}</td></tr>`;
+					$.each(ress.result, function(index, val){
+						html += `<tr><td>${no++}</td><td>${val.name ? val.name : '-'}</td><td>Premium</td><td>${val.total}</td></tr>`;
+					})
+					$("#menu").find('tbody').html(html)
+					$("#menu").dataTable( {
 						dom: 'Bfrtip',
 						buttons: [
 							'copy', 'csv', 'excel', 'pdf', 'print'

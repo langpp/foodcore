@@ -20,62 +20,61 @@
 <!-- <script src="/js/app.js"></script> -->
 <script>
     $(document).ready(function() {
-        $('.inputsearch').blur(function() {
-            $(".searchInput").removeClass('active')
+        let suggestions = [];
+        $.ajax({
+            url: "/admin/paket/listPaket/user?type=Premium",
+            type: "GET",
+            dataType: "json",
+            data: {},
+            async:false,
+            success: function(ress) {
+                if(ress.response == 'Successful'){
+                    $.each(ress.result, function(index, val){
+                        suggestions.push(val)
+                        $(".resultBox").append(`<li onclick="detailmodalsearch('${val.id}')">${val.name} - Rp ${val.rateThousand}</li>`)
+                    })
+                }
+            }
         })
-        .focus(function() {
-            $(".searchInput").addClass('active')
-        });
+        $(".resultBox").find('li').hide()
+        $(".inputsearch").keyup(function (e) {
+            if($(this).val()){
+                var val = $.trim(this.value).toUpperCase();
+                $(".resultBox li").each(function() {
+                    var parent = $(this).closest('li'),
+                        length = $(this).text().length > 0;
+                    if (length && $(this).text().toUpperCase().search(new RegExp(val, "i")) < 0) {
+                        parent.hide();
+                    } else {
+                        parent.show();
+                    }
+                });
+            }else{
+                $(".resultBox").find('li').hide()
+            }
+        })
     })
-    let suggestions = [
-      "Ayam Rica Rica - Rp 12.000",
-      "Ayam Penyet - Rp 12.000",
-      "Nasi Goreng - Rp 12.000",
-      "Dendeng Balado - Rp 12.000",
-      "Cumi Asam Manis - Rp 12.000",
-  ];
 
-  // getting all required elements
-  const searchInput = document.querySelector(".searchInput");
-  const input = searchInput.querySelector(".inputsearch");
-  const resultBox = searchInput.querySelector(".resultBox");
-  const icon = searchInput.querySelector(".icon");
-  let linkTag = searchInput.querySelector("a");
-  let webLink;
-
-  // if user press any key and release
-  input.onkeyup = (e)=>{
-      let userData = e.target.value; //user enetered data
-      let emptyArray = [];
-      if(userData){
-          emptyArray = suggestions.filter((data)=>{
-              //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
-              return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase()); 
-          });
-          emptyArray = emptyArray.map((data)=>{
-              // passing return data inside li tag
-              return data = '<li>'+ data +'</li>';
-          });
-          searchInput.classList.add("active"); //show autocomplete box
-          showSuggestions(emptyArray);
-          let allList = resultBox.querySelectorAll("li");
-          for (let i = 0; i < allList.length; i++) {
-              //adding onclick attribute in all li tag
-              allList[i].setAttribute("onclick", "select(this)");
-          }
-      }else{
-          searchInput.classList.remove("active"); //hide autocomplete box
-      }
-  }
-
-  function showSuggestions(list){
-      let listData;
-      if(!list.length){
-          userValue = input.value;
-          listData = '<li>'+ userValue +'</li>';
-      }else{
-          listData = list.join('');
-      }
-      resultBox.innerHTML = listData;
+    function detailmodalsearch(id){
+        $.ajax({
+        url: "/admin/paket/listPaket/user?type=Premium&id="+id,
+        type: "GET",
+        dataType: "json",
+        data: {},
+        async:false,
+        success: function(ress) {
+            if(ress.response == 'Successful'){
+                $(".searchname").html(ress.result[0].name)
+                $("#searchimage").attr('src', '/img/product/'+ress.result[0].image1)
+                $("#searchrate").html(`Rp ${ress.result[0].rateThousand}`)
+                $("#searchdescription").html(ress.result[0].keterangan)
+                $("#searchbtn").html(`<button class="addPaket btn btn-primary btn-sm minicart__open--btn w-100-media" href="javascript:void(0)" paketID="${ress.result[0].id}" paketName="${ress.result[0].name}" paketRate="${ress.result[0].rate}" paketRateThousand="${ress.result[0].rateThousand}" image1="${ress.result[0].image1}" image2="${ress.result[0].image2}" data-offcanvas>+</button>`)
+                $(".predictive__search--close__btn").trigger('click');
+                $(".inputsearch").val('');
+                $(".resultBox").find('li').hide()
+                $("#premiummodalsearch").modal('show');
+            }
+        }
+    })
   }
 </script>

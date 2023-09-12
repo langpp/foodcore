@@ -12,5 +12,6 @@ router.delete('/deleteJadwal', jadwalController.deleteJadwal)
 router.put('/changeStatus', jadwalController.changeStatus)
 router.get('/detail/:id', jadwalController.getJadwalDetail)
 router.get('/detail/get/:id', jadwalController.getJadwalDetailApi)
+router.get('/detail/sum/:id', jadwalController.getJadwalSumApi)
 
 module.exports = router
