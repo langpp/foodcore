@@ -169,7 +169,7 @@ exports.postLogin = async(req, res, next) =>{
       }
     })
     .catch((error) => {
-        console.log(error)
+        // console.log(error)
         return res.status(500).json({ status: 500, message: 'gagal verifikasi firebase' })
     });
   

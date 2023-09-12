@@ -109,7 +109,7 @@ exports.postUser = async(req, res, next) =>{
         await users.create(dataUser)
         return res.status(200).json({ status: 200, response: 'Successful'})
       } catch(err){
-        console.log(err.message == 'Validation error')
+        // console.log(err.message == 'Validation error')
         if(err.message == 'Validation error'){
           return res.status(200).json({ status: 200, response: 'Duplicate phone' })
         }else{
@@ -173,7 +173,7 @@ exports.deleteUser = async(req, res, next) =>{
         });
         return res.status(200).json({ status: 200, response: 'Successful'})
       } catch(err){
-        console.log(err.message)
+        // console.log(err.message)
         return res.status(500).json({ status: 500, response: 'Cannot connect to database' })
       }
     }else{
@@ -274,7 +274,7 @@ exports.jumlahKaryawan = async(req, res, next) =>{
   
       return res.status(200).json({ status: 200, response: 'Successful', result:data_users.length })
     } catch(err){
-      console.log(err.message)
+      // console.log(err.message)
       return res.status(500).json({ status: 500, response: 'Cannot connect to database' })
     }
 	}else{

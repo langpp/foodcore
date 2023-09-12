@@ -343,7 +343,8 @@ exports.listJadwal = async(req, res, next) =>{
         [sequelize.col('paket.name'), 'paket'],
         [sequelize.literal("CASE WHEN jadwal_menu.status = 1 THEN 'Belum Diproses' WHEN jadwal_menu.status = 2 THEN 'Diproses' WHEN jadwal_menu.status = 3 THEN 'Belum Bayar' WHEN jadwal_menu.status = 4 THEN 'Sudah Bayar' END"), 'statusAlias'],
         'qty', 'qty_perubahan', 'total',
-        'waktu', 'sehat',
+        'waktu', 'sehat', 
+        [sequelize.col('paket.rate'), 'rate'],
       ],
       where: where_val,
       order: [
@@ -608,7 +609,7 @@ exports.postJadwal = async(req, res, next) =>{
         
         return res.status(200).json({ status: 200, response: 'Successful'})
       } catch(err){
-        console.log(err.message)
+        // console.log(err.message)
         return res.status(500).json({ status: 500, response: 'Cannot connect to database' })
       }
     }else{
@@ -631,21 +632,30 @@ exports.putJadwal = async(req, res, next) =>{
     const paket_id = req.body.paket_id
     const waktu = req.body.waktu
     const sehat = req.body.sehat
+    const jumlah = req.body.jumlah
+    const qty = req.body.qty
+    const qtyperubahan = req.body.qtyperubahan
+    const harga = req.body.harga
 		if(date && company_id && paket_id){
       try{
+        var totalharga = jumlah * harga;
+        var qty_s = qty - qtyperubahan;
         dataJadwal= {
           date: date,
           company_id: company_id,
           paket_id: paket_id,
           waktu: waktu,
-          sehat: sehat
+          sehat: sehat,
+          qty: jumlah,
+          qty_perubahan: jumlah-qty_s,
+          total: totalharga
         }
         await jadwal_menu.update(dataJadwal, {
           where: {id}
         });
         return res.status(200).json({ status: 200, response: 'Successful'})
       } catch(err){
-        console.log(err.message)
+        // console.log(err.message)
         return res.status(500).json({ status: 500, response: 'Cannot connect to database' })
       }
     }else{
@@ -670,7 +680,7 @@ exports.deleteJadwal = async(req, res, next) =>{
         });
         return res.status(200).json({ status: 200, response: 'Successful'})
       } catch(err){
-        console.log(err.message)
+        // console.log(err.message)
         return res.status(500).json({ status: 500, response: 'Cannot connect to database' })
       }
     }else{
@@ -699,7 +709,7 @@ exports.changeStatus = async(req, res, next) =>{
         });
         return res.status(200).json({ status: 200, response: 'Successful'})
       } catch(err){
-        console.log(err.message)
+        // console.log(err.message)
         return res.status(500).json({ status: 500, response: 'Cannot connect to database' })
       }
     }else{
