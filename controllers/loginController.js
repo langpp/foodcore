@@ -105,7 +105,7 @@ async function lala(){
     // console.log(data_categories.length)
     // console.log(sha1(md5('123456')))
 	}else{
-		console.log('No Data')
+		// console.log('No Data')
 	}
 }
 

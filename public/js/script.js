@@ -566,9 +566,7 @@ const newsletterPopup = function () {
 		}), 3e3)
 	})
 };
-// newsletterPopup();
 
-////////////////IBe
 let resultCard = []
 let subTotalOrder = 0
 let totalOrder = 0
@@ -721,13 +719,14 @@ function checkOrder(date, jadwalwaktu) {
 							id: item.id.toString(),
 							rateThousand: thousandSeparator(parseFloat(item.rate)),
 							free: true,
-							tanggal: date
+							tanggal: date,
+							count: JSON.parse(localStorage.getItem('resultCard')).length > 0 ? JSON.parse(localStorage.getItem('resultCard'))[0].count : 1
 						}
 					})
 					var hasRegulerStatus1 = orderItem.some(item => item.type === 'Reguler');
 					var orderItemReguler = orderItem.find(obj => obj.type === "Reguler");
 				} else if (ress.response == "Existing") {
-					var orderItem = []
+					var orderItem = JSON.parse(localStorage.getItem('resultCard')).length > 0 ? JSON.parse(localStorage.getItem('resultCard')) : [];
 					var hasRegulerStatus1 = 'existing';
 					var orderItemReguler = 'existing';
 				}else{
@@ -881,7 +880,7 @@ function updateCard() {
 					if($("#stat").val() == 'kosong'){
 						return $('.isiCard').html('')
 					}
-					$('.isiCard').append(`<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="#"> <img src="/img/product/${item.image1}" alt="prduct-img"> </a> </div> <div class="minicart__text"> <span class="current__price"><b>Menu Reguler</b></span> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">${item.name}</a> </h4> <div class="minicart__price"> <span class="current__price">${item.rateThousand}</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="${item.id}" aria-label="quantity value" jenis="Reguler" value="Decrease Value">-</button> <label> <input type="number" class="quantity__number" value="${item.count ? item.count : '1'}" data-counter /> </label> <button type="button" class="quantity__value increase" paketID="${item.id}" aria-label="quantity value" value="Increase Value" jenis="Reguler">+</button> </div>  </div> </div> </div>`)
+					$('.isiCard').append(`<div class="minicart__product--items d-flex"> <div class="minicart__thumb"> <a href="#"> <img src="/img/product/${item.image1}" alt="prduct-img"> </a> </div> <div class="minicart__text"> <span class="current__price"><b>Menu Reguler</b></span> <h4 class="minicart__subtitle"> <a href="javascript:void(0)">${item.name}</a> </h4> <div class="minicart__price"> <span class="current__price">${item.rateThousand}</span> </div> <div class="minicart__text--footer d-flex align-items-center"> <div class="quantity__box minicart__quantity"> <button type="button" class="quantity__value decrease" paketID="${item.id}" aria-label="quantity value" jenis="Reguler" value="Decrease Value">-</button> <label> <input type="number" class="quantity__number" value="${item.count}" data-counter /> </label> <button type="button" class="quantity__value increase" paketID="${item.id}" aria-label="quantity value" value="Increase Value" jenis="Reguler">+</button> </div>  </div> </div> </div>`)
 				} else {
 					if($("#stat").val() == 'kosong'){
 						return $('.isiCard').html('')
@@ -906,13 +905,10 @@ function updateCard() {
 }
 
 function calculateTotal() {
-	///////////////hitung potongan kantor/////////
 	let menuReguler = resultCard.find(obj => obj.type === 'Reguler');
 	if (menuReguler) {
 		$('.potonganKantor').html(thousandSeparator(parseInt(menuReguler.rate)))
 	}
-
-	////////////////////////////////////////////////
 
 	let subtotal = 0;
 	if (resultCard.length > 0) {

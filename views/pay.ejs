@@ -165,6 +165,7 @@
             $.LoadingOverlay("hide");
             snap.pay(ress.result, {
               onSuccess: function(result){
+                $.LoadingOverlay("hide");
                 confirmPay();
               },
               onPending: function(result){
