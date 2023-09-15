@@ -647,6 +647,8 @@ const newsletterPopup = function() {
 					localResultCard();
 					calculateTotal()
 				}
+			}else{
+				swal('Notifikasi', 'Menu Reguler Tidak Boleh Lebih Dari 1!', 'error')
 			}
 		}
       });
@@ -676,12 +678,12 @@ const newsletterPopup = function() {
         checkOrder($('#tanggalOrder').val(), $("#jadwalwaktu").val())
 		localStorage.setItem('jadwalwaktu', $('#jadwalwaktu').val())
       });
-	  var new_date = moment(new Date(), "DD-MM-YYYY").add('days', 3);
+	  var new_date = moment(new Date(), "DD-MM-YYYY").add('days', 4);
 	  var day = new_date.format('DD');
 	  var month = new_date.format('MM');
 	  var year = new_date.format('YYYY');
 
-	  $("#tanggalOrder").attr('max', year + '-' + month + '-' + day)
+	  $("#tanggalOrder").attr('min', year + '-' + month + '-' + day)
     });
 
     function checkOrder(date, jadwalwaktu){
@@ -757,7 +759,7 @@ const newsletterPopup = function() {
             swal("Notifikasi!", 'Cannot acces server', "error");
           }
         },error: function(err, data) {
-            swal("Notifikasi!", 'Cannot acces server', "error");
+            // swal("Notifikasi!", 'Cannot acces server', "error");
         }
 	});
     }

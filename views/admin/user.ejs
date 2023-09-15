@@ -439,7 +439,6 @@
           },
           success: function(ress) {
             $.LoadingOverlay("hide");
-            console.log(ress)
             if(ress.response == "Successful"){
               window.location.reload();
             }else if(ress.response == "Duplicate phone"){

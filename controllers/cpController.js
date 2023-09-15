@@ -97,7 +97,7 @@ exports.postCp = async(req, res, next) =>{
 			return res.status(200).json({ status: 200, response: 'Paket not found'})
 		}        
 	} catch(err){
-		console.log(err.message)
+		// console.log(err.message)
 		return res.status(500).json({ status: 500, response: 'Cannot connect to database' })
 	}
 }
