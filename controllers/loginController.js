@@ -142,8 +142,7 @@ async function lala(){
 
 exports.getLogin = async(req, res, next) =>{
   sc.sess=req.session
-	if(sc.sess.email){
-		// console.log(sc.sess.email)
+  if(sc.sess.user_id){
 		res.redirect('/')
 	}else{
 		res.render('login', { 

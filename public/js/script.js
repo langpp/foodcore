@@ -692,7 +692,7 @@ $(document).ready(function () {
 		checkOrder($('#tanggalOrder').val(), $("#jadwalwaktu").val())
 		localStorage.setItem('jadwalwaktu', $('#jadwalwaktu').val())
 	});
-	var new_date = moment(new Date(), "DD-MM-YYYY").add('days', 4);
+	var new_date = moment(new Date(), "DD-MM-YYYY").add('days', 3);
 	var day = new_date.format('DD');
 	var month = new_date.format('MM');
 	var year = new_date.format('YYYY');
@@ -720,13 +720,19 @@ function checkOrder(date, jadwalwaktu) {
 							rateThousand: thousandSeparator(parseFloat(item.rate)),
 							free: true,
 							tanggal: date,
-							count: JSON.parse(localStorage.getItem('resultCard')).length > 0 ? JSON.parse(localStorage.getItem('resultCard'))[0].count : 1
+							count: JSON.parse(localStorage.getItem('resultCard')) ? JSON.parse(localStorage.getItem('resultCard')).length > 0 ? JSON.parse(localStorage.getItem('resultCard'))[0].count : 1 : 1
 						}
 					})
 					var hasRegulerStatus1 = orderItem.some(item => item.type === 'Reguler');
 					var orderItemReguler = orderItem.find(obj => obj.type === "Reguler");
 				} else if (ress.response == "Existing") {
-					var orderItem = JSON.parse(localStorage.getItem('resultCard')).length > 0 ? JSON.parse(localStorage.getItem('resultCard')) : [];
+					if(JSON.parse(localStorage.getItem('resultCard'))){
+						if(JSON.parse(localStorage.getItem('resultCard'))[0].type=='Reguler'){
+							localStorage.removeItem('resultCard')
+						}
+					}
+					
+					var orderItem = JSON.parse(localStorage.getItem('resultCard')) ? JSON.parse(localStorage.getItem('resultCard')).length > 0 ? JSON.parse(localStorage.getItem('resultCard')) : [] : [];
 					var hasRegulerStatus1 = 'existing';
 					var orderItemReguler = 'existing';
 				}else{

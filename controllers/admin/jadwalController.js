@@ -88,11 +88,11 @@ exports.getJadwalDetail = async(req, res, next) =>{
     if(!data_jadwal_menu[0]){
       res.redirect('/')
     }else{
-      var checkstr = 'SELECT COUNT(id) as banyak, SUM(total) as total FROM `order` WHERE date=? AND waktu=?';
+      var checkstr = 'SELECT COUNT(id) as banyak, SUM(total) as total FROM `order` WHERE date=? AND waktu=? AND status=?';
       var datesql = data_jadwal_menu[0].dates;
       var waktusql = data_jadwal_menu[0].waktu;
       var checkorder = await db.sequelize.query(checkstr, {
-          replacements: [datesql, waktusql],
+          replacements: [datesql, waktusql, 2],
           type: db.sequelize.QueryTypes.SELECT,
       });
 
@@ -172,21 +172,25 @@ exports.getJadwalDetailApi = async(req, res, next) =>{
       res.redirect('/')
     }
 
-    var checkstr = 'SELECT a.*, b.name, b.phone FROM `order` as a JOIN users as b on b.id = a.user_id WHERE a.date=? AND a.waktu=? AND a.company_id=?';
+    var checkstr = 'SELECT a.*, b.name, b.phone FROM `order` as a JOIN users as b on b.id = a.user_id WHERE a.date=? AND a.waktu=? AND a.company_id=? AND a.status=?';
 
     var checkorder = await db.sequelize.query(checkstr, {
-        replacements: [data_jadwal_menu[0].date, data_jadwal_menu[0].waktu, data_jadwal_menu[0].id_client],
+        replacements: [data_jadwal_menu[0].date, data_jadwal_menu[0].waktu, data_jadwal_menu[0].id_client, 2],
         type: db.sequelize.QueryTypes.SELECT,
     });
 
     let inarr = checkorder.map(({ id }) => id)
 
-    var checkstrorder = 'SELECT a.*, b.name, b.rate FROM order_item as a JOIN paket as b on b.id = a.paket_id WHERE a.order_id IN(?)';
+    if(inarr.length > 0){
+      var checkstrorder = 'SELECT a.*, b.name, b.rate FROM order_item as a JOIN paket as b on b.id = a.paket_id WHERE a.order_id IN(?) AND a.status=?';
 
-    var checkorderlist = await db.sequelize.query(checkstrorder, {
-        replacements: [inarr],
-        type: db.sequelize.QueryTypes.SELECT,
-    });
+      var checkorderlist = await db.sequelize.query(checkstrorder, {
+          replacements: [inarr, 2],
+          type: db.sequelize.QueryTypes.SELECT,
+      });
+    }else{
+      var checkorderlist = [];
+    }
     
     return res.status(200).json({ status: 200, response: 'Successful', result: checkorder, resultlist: checkorderlist})
 	}else{
@@ -210,12 +214,12 @@ exports.getJadwalSumApi = async(req, res, next) =>{
       where_val = {
         id: req.params.id,
         '$company.id$': company_id,
-        status: {[Op.ne]: 0}, 
+        status: 2, 
       }
     }else{
         where_val = {
           id: req.params.id,
-          status: {[Op.ne]: 0}, 
+          status: 2, 
         }
     }
 
@@ -256,18 +260,17 @@ exports.getJadwalSumApi = async(req, res, next) =>{
       res.redirect('/')
     }
 
-    var checkstr = 'SELECT sum(b.qty) as total, c.name FROM `order` as a JOIN order_item as b on b.order_id = a.id JOIN paket as c on c.id = b.paket_id WHERE a.date=? AND a.waktu=? AND a.company_id=? GROUP BY b.paket_id;';
+    var checkstr = 'SELECT sum(b.qty) as total, c.name FROM `order` as a JOIN order_item as b on b.order_id = a.id JOIN paket as c on c.id = b.paket_id WHERE a.date=? AND a.waktu=? AND a.company_id=? AND a.status=? GROUP BY b.paket_id';
 
     var sumorder = await db.sequelize.query(checkstr, {
-        replacements: [data_jadwal_menu[0].date, data_jadwal_menu[0].waktu, data_jadwal_menu[0].id_client],
+        replacements: [data_jadwal_menu[0].date, data_jadwal_menu[0].waktu, data_jadwal_menu[0].id_client, 2],
         type: db.sequelize.QueryTypes.SELECT,
     });
 
-
-    var checkstrjadwal = 'SELECT a.qty_perubahan as total, c.name FROM `jadwal_menu` as a JOIN paket as c on c.id = a.paket_id WHERE a.date=? AND a.waktu=? AND a.company_id=? GROUP BY a.paket_id;';
+    var checkstrjadwal = 'SELECT a.qty_perubahan as total, c.name FROM `jadwal_menu` as a JOIN paket as c on c.id = a.paket_id WHERE a.date=? AND a.waktu=? AND a.company_id=? AND a.status=? GROUP BY a.paket_id;';
 
     var checkjadwal = await db.sequelize.query(checkstrjadwal, {
-        replacements: [data_jadwal_menu[0].date, data_jadwal_menu[0].waktu, data_jadwal_menu[0].id_client],
+        replacements: [data_jadwal_menu[0].date, data_jadwal_menu[0].waktu, data_jadwal_menu[0].id_client, 2],
         type: db.sequelize.QueryTypes.SELECT,
     });
     
@@ -718,4 +721,33 @@ exports.changeStatus = async(req, res, next) =>{
 	}else{
 		res.redirect('/login')
 	}
+}
+
+exports.deleteExpired = async(req, res, next) =>{
+  var checkstr = 'SELECT * FROM `order` WHERE status!=? AND DATE(`date`) > CURDATE()';
+
+  var checkorder = await db.sequelize.query(checkstr, {
+    replacements: [2],
+    type: db.sequelize.QueryTypes.SELECT,
+  });
+
+  if(checkorder[0]){
+    let inarr = checkorder.map(({ id }) => id)
+    await order_item.destroy({
+      where: {
+        [Op.and]: {
+          order_id: inarr,
+        }
+      } 
+    })
+
+    await order.destroy({
+      where: {
+        [Op.and]: {
+          id: inarr,
+        }
+      } 
+    })
+  }
+  return res.status(200).json({ status: 200, response: 'Successful'})
 }

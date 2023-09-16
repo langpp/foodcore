@@ -166,7 +166,7 @@
             snap.pay(ress.result, {
               onSuccess: function(result){
                 $.LoadingOverlay("hide");
-                confirmPay();
+                ChangeStatus(ress.result, ress.uid);
               },
               onPending: function(result){
                   swal("Notifikasi!", result.response, "error");
@@ -198,6 +198,38 @@
           total: totalOrder,
           resultCard: JSON.parse(localStorage.getItem('resultCard'))
         },
+        success: function(ress) {
+          $.LoadingOverlay("hide");
+          $.LoadingOverlay("hide");
+          if(ress.response == 'Successful'){
+            $('.detailPembayaran').hide();
+            $('.statusPembayaran').show();
+            resultCard = []
+            subTotalOrder = 0
+            totalOrder = 0
+            localStorage.removeItem('tanggalOrder')
+            localStorage.removeItem('waktuBayar')
+            localStorage.removeItem('resultCard')
+            updateCard();
+          }else{
+            $.LoadingOverlay("hide");
+            $.LoadingOverlay("hide");
+            swal("Notifikasi!", ress.response, "error");
+          }
+        },error: function(err, data) {
+          $.LoadingOverlay("hide");
+          $.LoadingOverlay("hide");
+          swal("Notifikasi!", "Cannot acces server", "error");
+        }
+      });
+    }
+
+    function ChangeStatus(midtrans, uid){
+      $.LoadingOverlay("show");
+      $.ajax({
+        url: `/pay/changeStatus?uid_midtrans=${midtrans}&uid=${uid}`,
+        type: "GET",
+        dataType: "json",
         success: function(ress) {
           $.LoadingOverlay("hide");
           if(ress.response == 'Successful'){

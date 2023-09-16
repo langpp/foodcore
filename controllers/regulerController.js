@@ -59,7 +59,7 @@ exports.getReguler = async(req, res, next) =>{
     const data_jadwal_menu = await jadwal_menu.findAll({
       raw: true,
       attributes: [
-        'date',
+        'date', 'waktu',
         [sequelize.col('company.name'), 'company'],
         [sequelize.col('paket.id'), 'paket_id'],
         [sequelize.col('paket.name'), 'paket'],
@@ -67,11 +67,11 @@ exports.getReguler = async(req, res, next) =>{
         [sequelize.col('paket.image1'), 'image1'],
         [sequelize.col('paket.image2'), 'image2'],
       ],
-      // limit: 7,
+      limit: 10,
       where: whereValue,
-      group: 'date',
+      group: ['date','waktu'],
       order: [
-        ['date', 'ASC'],
+        ['date', 'DESC'],
       ],
       include: [
         { 
@@ -98,11 +98,9 @@ exports.getReguler = async(req, res, next) =>{
         [sequelize.col('paket.image1'), 'image1'],
         [sequelize.col('paket.image2'), 'image2'],
       ],
-      limit: 7,
       where: whereValue,
       order: [
-        ['waktu', 'ASC'],
-        ['sehat', 'ASC'],
+        ['date', 'DESC'],
       ],
       include: [
         { 
@@ -117,7 +115,6 @@ exports.getReguler = async(req, res, next) =>{
         }
       ]
     })
-    // console.log(jadwal_detail[0])
     // let data_jadwal_detail = jadwal_detail.map(obj => ({ ...obj, date: moment(obj.date).format('YYYY-MM-DD') }));
     // console.log(data_jadwal_detail[0])
     if(data_jadwal_menu){

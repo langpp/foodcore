@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 04, 2023 at 09:11 PM
+-- Generation Time: Sep 16, 2023 at 09:48 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -90,7 +90,9 @@ CREATE TABLE `jadwal_menu` (
 --
 
 INSERT INTO `jadwal_menu` (`id`, `company_id`, `paket_id`, `date`, `status`, `createdAt`, `updatedAt`, `waktu`, `sehat`, `total`, `qty`, `qty_perubahan`) VALUES
-(73, 1, 6, '2023-09-04 00:00:00', 2, '2023-09-04 16:32:49', '2023-09-04 16:42:08', 'Pagi', 'Menu Biasa', 1500000.00, 100, 99);
+(73, 1, 6, '2023-09-20 00:00:00', 2, '2023-09-04 16:32:49', '2023-09-04 16:42:08', 'Pagi', 'Menu Biasa', 1500000.00, 100, 99),
+(74, 1, 6, '2023-09-19 00:00:00', 2, '2023-09-09 01:52:03', '2023-09-16 07:33:07', 'Pagi', 'Menu Biasa', 150000.00, 10, 8),
+(75, 1, 1, '2023-09-19 00:00:00', 2, '2023-09-09 02:02:43', '2023-09-12 14:30:45', 'Siang', 'Menu Biasa', 150000.00, 10, 10);
 
 -- --------------------------------------------------------
 
@@ -116,6 +118,8 @@ CREATE TABLE `lauk` (
 
 CREATE TABLE `order` (
   `id` int(11) NOT NULL,
+  `uid` text NOT NULL,
+  `uid_midtrans` text NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `company_id` int(11) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
@@ -124,16 +128,18 @@ CREATE TABLE `order` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `total` decimal(20,2) DEFAULT 0.00,
-  `subtotal` decimal(20,2) DEFAULT 0.00
+  `subtotal` decimal(20,2) DEFAULT 0.00,
+  `update_reguler` varchar(10) NOT NULL,
+  `waktu_bayar` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `order`
 --
 
-INSERT INTO `order` (`id`, `user_id`, `company_id`, `date`, `waktu`, `status`, `createdAt`, `updatedAt`, `total`, `subtotal`) VALUES
-(107, 24, 1, '2023-09-04 00:00:00', 'Pagi', 2, '2023-09-04 16:37:38', '2023-09-04 16:37:38', 35000.00, 50000.00),
-(108, 26, 1, '2023-09-04 00:00:00', 'Pagi', 2, '2023-09-04 16:42:07', '2023-09-04 16:42:07', 15000.00, 30000.00);
+INSERT INTO `order` (`id`, `uid`, `uid_midtrans`, `user_id`, `company_id`, `date`, `waktu`, `status`, `createdAt`, `updatedAt`, `total`, `subtotal`, `update_reguler`, `waktu_bayar`) VALUES
+(131, '', '', 24, 1, '2023-09-19 00:00:00', 'Pagi', 2, '2023-09-16 07:33:07', '2023-09-16 07:33:07', -3000.00, 12000.00, 'Y', '2023-09-19 07:00:00'),
+(132, 'b3b64211-81e3-444f-866a-6d0ccb861d3c', '2b0b93ac-0266-4cad-9ffc-3f8603ae339f', 24, 1, '2023-09-19 00:00:00', 'Pagi', 2, '2023-09-16 07:34:43', '2023-09-16 07:35:23', 27000.00, 27000.00, 'N', '2023-09-16 14:35:23');
 
 -- --------------------------------------------------------
 
@@ -157,11 +163,9 @@ CREATE TABLE `order_item` (
 --
 
 INSERT INTO `order_item` (`id`, `order_id`, `paket_id`, `qty`, `status`, `createdAt`, `updatedAt`, `rate`) VALUES
-(131, 107, 33, 1, 2, '2023-09-04 16:37:38', '2023-09-04 16:37:38', 15000.00),
-(132, 107, 35, 1, 2, '2023-09-04 16:37:38', '2023-09-04 16:37:38', 15000.00),
-(133, 107, 37, 1, 2, '2023-09-04 16:37:38', '2023-09-04 16:37:38', 5000.00),
-(134, 108, 33, 1, 2, '2023-09-04 16:42:07', '2023-09-04 16:42:07', 15000.00),
-(135, 108, 34, 1, 2, '2023-09-04 16:42:07', '2023-09-04 16:42:07', 15000.00);
+(173, 131, 36, 1, 2, '2023-09-16 07:33:07', '2023-09-16 07:33:07', 12000.00),
+(174, 132, 36, 1, 2, '2023-09-16 07:34:43', '2023-09-16 07:35:23', 12000.00),
+(175, 132, 33, 1, 2, '2023-09-16 07:34:43', '2023-09-16 07:35:23', 15000.00);
 
 -- --------------------------------------------------------
 
@@ -188,7 +192,7 @@ CREATE TABLE `paket` (
 --
 
 INSERT INTO `paket` (`id`, `name`, `rate`, `status`, `createdAt`, `updatedAt`, `keterangan`, `image1`, `image2`, `type`, `kategori`) VALUES
-(1, 'Daging Lada Hitam', 15000.00, 1, '2023-02-23 06:51:52', '2023-02-23 06:51:52', '<p>Berikut merupkan isi paket:</p>\r\n<p><span class=\"fontstyle0\">1. Nasi Putih<br />2. Daging Lada Hitam<br />3. Sapo Tahu<br />4. Capcay<br />5. Kerupuk<br />6. Sambal<br />7. Buah</span></p>', 'daging-lada-hitam.jpg', 'daging-lada-hitam-2.jpg', 'Reguler', ''),
+(1, 'Daging Lada Hitam', 15000.00, 1, '2023-02-23 06:51:52', '2023-02-23 06:51:52', '<p>Berikut merupkan isi paket:</p>\n<p><span class=\"fontstyle0\">1. Nasi Putih<br />2. Daging Lada Hitam<br />3. Sapo Tahu<br />4. Capcay<br />5. Kerupuk<br />6. Sambal<br />7. Buah</span></p>', 'daging-lada-hitam.jpg', 'daging-lada-hitam-2.jpg', 'Reguler', ''),
 (2, 'Daging Serundeng', 15000.00, 1, '2023-02-23 06:51:52', '2023-02-23 06:51:52', '<p>Berikut merupkan isi paket:</p>\r\n<p>1. Nasi Putih<br />2. Daging Serundeng<br />3. Kwe+aw Goreng<br />4. Tahu Cabe Hijau<br />5. Tumis Daun Singkong<br />6. Kerupuk<br />7. Sambal<br />8. Buah</p>', 'daging-serundeng.jpg', 'daging-serundeng-2.jpg', 'Reguler', ''),
 (3, 'Ikan Fillet Pesmol', 15000.00, 1, '2023-02-23 06:51:52', '2023-02-23 06:51:52', '<p>Berikut merupkan isi paket:</p>\r\n<p><span class=\"fontstyle0\">1. Nasi Puih<br />2. Ikan Fillet Pesmol<br />3. Telur Ceplok Bumbu Kecap<br />4. Tahu Bacem<br />5. Sayur Lodeh<br />6. Kerupuk<br />7. Sambal<br />8. Buah</span> </p>', 'ikan-fillet-pesmol.jpg', 'ikan-fillet-pesmol-2.jpg', 'Reguler', ''),
 (4, 'Sate Lilit', 15000.00, 1, '2023-02-23 06:51:52', '2023-02-23 06:51:52', '<p>Berikut merupkan isi paket:</p>\r\n<p><span class=\"fontstyle0\">1. Nasi Puih<br />2. Sate Lilit<br />3. Ayam Siur Cabe Merah<br />4. Tempe Tepung<br />5. Urap Sayuran<br />6. Kerupuk<br />7. Sambal<br />8. Buah</span></p>', 'sate-lilit.jpg', 'sate-lilit-2.jpg', 'Reguler', ''),
@@ -279,7 +283,8 @@ INSERT INTO `paket_like` (`id`, `user_id`, `paket_id`, `createdAt`, `updatedAt`)
 (7, 1, 5, '2023-08-30 16:27:06', '2023-08-30 16:27:06'),
 (8, 1, 6, '2023-08-30 16:27:32', '2023-08-30 16:27:32'),
 (11, 24, 3, '2023-08-30 17:06:06', '2023-08-30 17:06:06'),
-(12, 24, 36, '2023-09-02 04:09:30', '2023-09-02 04:09:30');
+(14, 24, 36, '2023-09-09 07:13:14', '2023-09-09 07:13:14'),
+(15, 24, 33, '2023-09-09 07:13:24', '2023-09-09 07:13:24');
 
 -- --------------------------------------------------------
 
@@ -464,7 +469,7 @@ ALTER TABLE `hari`
 -- AUTO_INCREMENT for table `jadwal_menu`
 --
 ALTER TABLE `jadwal_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `lauk`
@@ -476,13 +481,13 @@ ALTER TABLE `lauk`
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 
 --
 -- AUTO_INCREMENT for table `order_item`
 --
 ALTER TABLE `order_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
 
 --
 -- AUTO_INCREMENT for table `paket`
@@ -506,7 +511,7 @@ ALTER TABLE `paket_isi`
 -- AUTO_INCREMENT for table `paket_like`
 --
 ALTER TABLE `paket_like`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `saran`
