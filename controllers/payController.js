@@ -86,14 +86,14 @@ exports.confirmPay = async(req, res, next) =>{
     var total = 0;
     var subtotal = 0;
     var updatereguler = false
-    const find_exist_order = await order.findOne({
-      raw: true,
-      where: { user_id: user_id, company_id: company_id, date: date, status: 2, waktu: waktu }
-    })
+    // const find_exist_order = await order.findOne({
+    //   raw: true,
+    //   where: { user_id: user_id, company_id: company_id, date: date, status: 2, waktu: waktu }
+    // })
     
-    if(find_exist_order){
-      return res.status(200).json({ status: 200, response: 'Data Order Pada Tanggal Dan Waktu Tersebut Sudah Ada! Silahkan Pilih Tanggal & Waktu Lain!'})
-    }
+    // if(find_exist_order){
+    //   return res.status(200).json({ status: 200, response: 'Data Order Pada Tanggal Dan Waktu Tersebut Sudah Ada! Silahkan Pilih Tanggal & Waktu Lain!'})
+    // }
 
     let dataOrderloop = resultCard.map(function(obj) {
       // console.log(obj)

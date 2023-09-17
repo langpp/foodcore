@@ -56,7 +56,6 @@ exports.postClient = async(req, res, next) =>{
     const name = req.body.name
     const kode = req.body.kode
     const keterangan = req.body.keterangan
-    console.log(keterangan)
 		if(name.trim() !== '' && kode.trim() !== ''){
       try{
         dataClient= {
@@ -67,7 +66,6 @@ exports.postClient = async(req, res, next) =>{
         await company.create(dataClient)
         return res.status(200).json({ status: 200, response: 'Successful'})
       } catch(err){
-        console.log(err.message)
         return res.status(500).json({ status: 500, response: 'Cannot connect to database' })
       }
     }else{
@@ -100,7 +98,6 @@ exports.putClient = async(req, res, next) =>{
         });
         return res.status(200).json({ status: 200, response: 'Successful'})
       } catch(err){
-        console.log(err.message)
         return res.status(500).json({ status: 500, response: 'Cannot connect to database' })
       }
     }else{
@@ -125,7 +122,6 @@ exports.deleteClient = async(req, res, next) =>{
         });
         return res.status(200).json({ status: 200, response: 'Successful'})
       } catch(err){
-        console.log(err.message)
         return res.status(500).json({ status: 500, response: 'Cannot connect to database' })
       }
     }else{

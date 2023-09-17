@@ -71,6 +71,7 @@
                 </div>
               </div>
             </form>
+            <small>* Apabila total harga tidak sesuai, periksa kembali keranjang makanan anda atau <a href="javascript:void(0)" class="minicart__open--btn openCard" data-offcanvas>Klik Disini</a></small>
             <!-- <br><br> -->
 
             <div class="text-right">
@@ -131,6 +132,10 @@
         // $('.statusPembayaran').show();
       });
 
+      if(!localStorage.getItem('waktuBayar') && !localStorage.getItem('tanggalOrder')){
+        return window.location.href="/"
+      }
+
       if(localStorage.getItem('tanggalOrder')){
         $("#tanggalOrderPay").html(moment(localStorage.getItem('tanggalOrder')).format('dddd, DD MMM YYYY'))
       }
@@ -144,35 +149,40 @@
 
     function snapPay(){
       $.LoadingOverlay("show");
-      $.ajax({
-        url: "/pay/snapPay",
-        type: "POST",
-        dataType: "json",
-        data: {
-          waktu: localStorage.getItem('waktuBayar'),
-          date: localStorage.getItem('tanggalOrder'),
-          subtotal: subTotalOrder,
-          total: totalOrder,
-          resultCard: JSON.parse(localStorage.getItem('resultCard'))
-        },
-        success: function(ress) {
-          $.LoadingOverlay("hide");
-          snap.pay(ress.result, {
-            onSuccess: function(result){
-              confirmPay();
-            },
-            onPending: function(result){
+      if(totalOrder > 0){
+        $.ajax({
+          url: "/pay/snapPay",
+          type: "POST",
+          dataType: "json",
+          data: {
+            waktu: localStorage.getItem('waktuBayar'),
+            date: localStorage.getItem('tanggalOrder'),
+            subtotal: subTotalOrder,
+            total: totalOrder,
+            resultCard: JSON.parse(localStorage.getItem('resultCard'))
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            snap.pay(ress.result, {
+              onSuccess: function(result){
+                $.LoadingOverlay("hide");
+                confirmPay();
+              },
+              onPending: function(result){
+                  swal("Notifikasi!", result.response, "error");
+              },
+              onError: function(result){
                 swal("Notifikasi!", result.response, "error");
-            },
-            onError: function(result){
-              swal("Notifikasi!", result.response, "error");
-            }
-          })
-        },error: function(err, data) {
-          $.LoadingOverlay("hide");
-          swal('Notifikasi', 'Cannot acces server', 'error');
-        }
-      });
+              }
+            })
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            swal('Notifikasi', err.responseJSON.response, 'error');
+          }
+        });
+      }else{
+        confirmPay()
+      }
     }
 
     function confirmPay(){
@@ -189,8 +199,8 @@
           resultCard: JSON.parse(localStorage.getItem('resultCard'))
         },
         success: function(ress) {
+          $.LoadingOverlay("hide");
           if(ress.response == 'Successful'){
-            $.LoadingOverlay("hide");
             $('.detailPembayaran').hide();
             $('.statusPembayaran').show();
             resultCard = []
@@ -206,7 +216,7 @@
           }
         },error: function(err, data) {
           $.LoadingOverlay("hide");
-            swal("Notifikasi!", "Cannot acces server", "error");
+          swal("Notifikasi!", "Cannot acces server", "error");
         }
       });
     }

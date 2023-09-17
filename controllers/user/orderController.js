@@ -188,10 +188,6 @@ exports.checkOrder = async(req, res, next) =>{
       where: { user_id: user_id, company_id: company_id, date: date, status: 2, waktu: waktu }
     })
 
-    if(find_exist_order){
-      return res.status(200).json({ status: 200, response: 'Successful', result: [], complateorder: find_exist_order_date})
-    }
-
     if(data_order){
       const order_id = data_order.paket_id
     
@@ -208,9 +204,13 @@ exports.checkOrder = async(req, res, next) =>{
         ],
       })
 
+      if(find_exist_order){
+        return res.status(200).json({ status: 200, response: 'Existing', result: data_order_item, complateorder: find_exist_order_date})
+      }
+
       return res.status(200).json({ status: 200, response: 'Successful', result: data_order_item, complateorder: find_exist_order_date})
     }else{
-      return res.status(200).json({ status: 200, response: 'Successful', result: [], complateorder: find_exist_order_date})
+      return res.status(200).json({ status: 200, response: 'Not Found', result: [], complateorder: find_exist_order_date})
     }
     
 	}else{
