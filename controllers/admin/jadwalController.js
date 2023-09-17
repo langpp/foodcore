@@ -689,6 +689,21 @@ exports.deleteJadwal = async(req, res, next) =>{
     }else{
       return res.status(500).json({ status: 500, response: 'Pilih Jadwal yang akan dihapus' })
     }
+	}else if(sc.sess.phone && sc.sess.userType == 4){
+    const id = req.body.id
+		if(id){
+      try{
+        await jadwal_menu.update({status: 0}, {
+          where: {id, status: 1}
+        });
+        return res.status(200).json({ status: 200, response: 'Successful'})
+      } catch(err){
+        // console.log(err.message)
+        return res.status(500).json({ status: 500, response: 'Cannot connect to database' })
+      }
+    }else{
+      return res.status(500).json({ status: 500, response: 'Pilih Jadwal yang akan dihapus' })
+    }
 	}else{
 		res.redirect('/login')
 	}
