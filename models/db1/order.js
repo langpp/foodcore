@@ -18,6 +18,22 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true
     },   
+    uid: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    uid_midtrans: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    update_reguler: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    waktu_bayar: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: true

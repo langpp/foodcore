@@ -464,7 +464,9 @@
             phone: $("#phoneEdit").val(),
             <% if(session.userType == 1){%> 
               company_id: $("#companyEdit").val(),
-            <%}%>          
+            <%}else if(session.userType == 4){%>
+              company_id: <%- session.company_id %>,
+            <%}%>
             userType: $("#userTypeEdit").val()
           },
           success: function(ress) {

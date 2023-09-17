@@ -22,11 +22,8 @@ const admin_paket = require('./admin/paket')
 const admin_jadwal = require('./admin/jadwal')
 const admin_user = require('./admin/user')
 
-
 const user_order = require('./user/order')
 const user_profile = require('./user/profile')
-
-
 
 router.use('/', home)
 router.use('/login', login)

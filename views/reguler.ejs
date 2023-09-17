@@ -42,12 +42,12 @@
                           <h4 class="fs-7 border-bottom mb-3"><%- moment(item.date).format('dddd, DD MMM YYYY');  %></h4>
                           <ul class="list-unstyled mb-4">
                             <% data_jadwal_detail.forEach(function (item2, index) { %> 
-                            <% if(moment(item.date).format('YYYYMMDD') == moment(item2.date).format('YYYYMMDD')){ %>
+                            <% if(moment(item.date).format('YYYYMMDD') == moment(item2.date).format('YYYYMMDD') && item.waktu == item2.waktu){ %>
                               <li class="mb-2">
                                 <img class="product__items--img owl-media-3 product__primary--img border-7 mb-3" src="/img/product/<%- item2.image1 %>" alt="product-img">
                                   <div class="d-flex align-items-center">
                                       <span>
-                                          <i class="bg-light-info rounded-circle p-2 me-3 fas fa-check text-warning fs-7"></i>
+                                          <i class="bg-light-info rounded-circle p-2 me-3 fas fa-clock text-warning fs-7"></i>
                                       </span>
                                       <span><%- item2.waktu %> <% if(item2.sehat == 'Menu Sehat'){ %> - Menu Sehat<% } %></span>
                                   </div>
@@ -61,11 +61,11 @@
                                   </div>
                               </li>
                               <hr>
-                              <div class="modal fade" id="regulermodal<%- item.index %>" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal fade" id="regulermodal<%- index %>" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
                                     <div class="modal-header">
-                                      <h5 class="modal-title" id="exampleModalLabel">Detail Menu</h5>
+                                      <h5 class="modal-title" id="exampleModalLabel">Detail Menu <%- item2.paket %></h5>
                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -85,7 +85,7 @@
                             <% }) %> 
                             </ul>
                           <div class="d-grid">
-                              <button type="button" class="btn btn-primary btn-absolute-card" data-bs-toggle="modal" data-bs-target="#regulermodal<%- item.index %>">Lihat Selengkapnya</button>
+                              <button type="button" class="btn btn-primary btn-absolute-card" data-bs-toggle="modal" data-bs-target="#regulermodal<%- index %>">Lihat Selengkapnya</button>
                           </div>
                       </div>
                   </div>

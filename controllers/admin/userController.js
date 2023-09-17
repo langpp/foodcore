@@ -133,15 +133,15 @@ exports.putUser = async(req, res, next) =>{
     const id = req.body.id
     const name = req.body.name
     const phone = validatePhone(req.body.phone)
-    const company_id = req.body.company_id
-    const userType = req.body.userType
+    const company_id = sc.sess.company_id
+    const userType = sc.sess.userType
 		if(phone && company_id && userType){
       try{
         dataUser= {
           name, phone, company_id, userType
         }
         await users.update(dataUser, {
-          where: {id}
+          where: {id, company_id}
         });
         return res.status(200).json({ status: 200, response: 'Successful'})
       } catch(err){
