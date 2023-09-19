@@ -6,6 +6,11 @@ const db = require('../../models/index.js');
 const moment = require('moment-timezone')
 moment.locale('id')
 const excelJS = require("exceljs");
+const path = require("path");
+var root = path.dirname(require.main.filename || process.mainModule.filename);
+const fs = require("fs");
+var mv = require('mv');
+var formidable = require('formidable');
 
 exports.getJadwal = async(req, res, next) =>{
   sc.sess=req.session
@@ -733,6 +738,59 @@ exports.changeStatus = async(req, res, next) =>{
     }else{
       return res.status(500).json({ status: 500, response: 'Lengkapi Form!' })
     }
+	}else{
+		res.redirect('/login')
+	}
+}
+
+exports.kirimBuktiBayar = async(req, res, next) =>{
+  sc.sess=req.session
+  if(!(sc.sess.lng)){
+    sc.sess.lng = 'en'
+  }
+  if(sc.sess.phone && (sc.sess.userType == 4)){
+    var filename = ''
+    var form = new formidable.IncomingForm();
+    form.parse(req, async function(err, fields, files) {
+      if (files) {
+        foto = files.files != null ? files.files : null;
+          if (foto) {
+              if (foto[0].mimetype == "image/png" || foto[0].mimetype == "image/jpg" || foto[0].mimetype == "image/jpeg") {
+                  var id = fields.id[0]
+                  filename = id+".png";
+                  fs.stat(root + "/public/invoice/" + filename, function (err, stats) {
+                    fs.unlink(root + "/public/invoice/" + filename,function(err){
+                    });  
+                  });
+                  var oldpath = files.files[0].filepath;
+                  var newpath = root + "/public/invoice/" + filename;
+                  mv(oldpath, newpath, function (err) {
+
+                  });
+
+                  return res.status(200).json({
+                      error: false,
+                      response: "Success",
+                  })
+              }else{
+                  return res.status(200).json({
+                      error: true,
+                      response: "File Type Not Accept!",
+                  });
+              }
+          }else{
+              return res.status(200).json({
+                  error: true,
+                  response: "File Cannot Empty!",
+              });     
+          }
+      }else{
+          return res.status(200).json({
+              error: true,
+              response: "File Cannot Empty!",
+          });      
+      }
+    })
 	}else{
 		res.redirect('/login')
 	}

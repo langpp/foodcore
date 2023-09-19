@@ -281,6 +281,7 @@
                       Isikan bukti transfer!
                     </div>
                   </div>
+                  <small>*Setelah mengisi bukti transfer, silahkan tunggu dan admin akan memverifikasi pembayaran dan mengubah status pesanan</small>
                 </div>
               </div>
   
@@ -418,7 +419,7 @@
   
         
         $(".lihatBuktiBayar").click(function() {
-          window.open('/bukti_transfer.jpg', '_blank');
+          window.open('/invoice/'+$("#idJadwalEdit").val()+'.png', '_blank');
         });
   
         $('.tandaiSUdahBayar').click(function() {
@@ -426,22 +427,42 @@
         });
         
         $('.lihatInvoice').click(function() {
-          window.open('/invoice/'+$("#idJadwalEdit").val(), '_blank');
+          window.open('/invoice/'+$("#idJadwalEdit").val()+'.png', '_blank');
         });
   
         $('.kirimBuktiBayar').click(function() {
-          const file_image1 = document.querySelector('#bukti_bayar').files[0];
-          var reader_image1 = new FileReader();
-          if(file_image1){
-            window.location.reload();
+          $.LoadingOverlay("show");
+          var form = new FormData();
+
+          form.append('id', $("#idJadwalEdit").val());
+          if ($('input[id="imageadd"]').val() != "") {
+              form.append('files', $('input[id="bukti_bayar"]')[0].files[0]);
           }else{
-            $(".invalid-bukti-bayar").show();
             $.LoadingOverlay("hide");
+            $.LoadingOverlay("hide");
+            return swal('Error', 'File Harus Dimasukan!', 'danger');
           }
-          
+          $.ajax({
+            method: 'PUT',
+            url: "/admin/jadwal/kirim-bukti-bayar",
+            data:form,
+            contentType: false,
+            processData: false,
+            cache: false,
+            datatype : "JSON",
+            success: function(res) {
+              $.LoadingOverlay("hide");
+              $.LoadingOverlay("hide");
+              if(res.error == false){
+                  swal("Notification", "Berhasil Mengirim Bukti Bayar!", "success")
+                  window.location.reload();
+              }else{
+                  swal("Notification", res.response, "error")
+              }
+            }
         });
-  
       });
+    });
   
       function listJadwal(){
         $.ajax({
@@ -626,7 +647,7 @@
                   <%}%>                
                   $(".kirimBuktiBayar").hide();
                   $(".tandaiSUdahBayar").hide();  
-                  $(".lihatBuktiBayar").hide();
+                  $(".lihatBuktiBayar").show();
                   
                   $(".editJadwalTitle").hide();
                   $(".jadwalTitle").show();

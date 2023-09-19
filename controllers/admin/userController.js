@@ -9,9 +9,9 @@ const { sequelize, users, company, paket, paket_image, jadwal_menu } = require('
 const moment = require('moment-timezone')
 moment.locale('id')
 const XLSX = require('xlsx')
-
-
-
+const { v4: uuidv4 } = require('uuid');
+const md5 = require('md5')
+var sha1 = require('sha1')
 
 exports.getUser = async(req, res, next) =>{
   sc.sess=req.session
@@ -214,9 +214,10 @@ exports.importUser = async(req, res, next) =>{
     const workbook = XLSX.readFile('excel/'+filename);
     const sheetName = workbook.SheetNames[0]
     const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-    const arrayData = sheetData.map(obj => ({ ...obj, company_id: company_id }));
+    const arrayData = sheetData.map(obj => ({ phone: validatePhone(`${obj.phone}`), name: obj.name, username: obj.name, address: obj.address, company_id: company_id, uid: uuidv4()}));
+    // , password: sha1(md5('foodcore')) 
     if(arrayData){
-      if(arrayData[0].phone){
+      if(validatePhone(arrayData[0].phone)){
         await users.bulkCreate(arrayData)
         return res.status(200).json({ status: 200, response: 'Successful'})
       }else{

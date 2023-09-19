@@ -14,5 +14,6 @@ router.post('/postJadwal', jadwalController.postJadwal)
 router.put('/putJadwal', jadwalController.putJadwal)
 router.put('/changeStatus', jadwalController.changeStatus)
 router.delete('/deleteJadwal', jadwalController.deleteJadwal)
+router.put('/kirim-bukti-bayar', jadwalController.kirimBuktiBayar)
 
 module.exports = router

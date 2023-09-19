@@ -58,8 +58,8 @@ exports.snapPay = async(req, res, next) =>{
 
     let snap = new midtransClient.Snap({
       isProduction : false,
-      serverKey : 'SB-Mid-server-VWyX4wAPyn8j4PZhsHgGuB_k',
-      clientKey : 'SB-Mid-client-DcCuq4OcwlgozvHl'
+      serverKey : 'SB-Mid-server-b7W016a-E1AB8b8u4YZ7dQ2N',
+      clientKey : 'SB-Mid-client-QuiowPCdcJj1f322'
     });
 
     let dates = req.body.date
