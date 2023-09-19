@@ -175,17 +175,17 @@ exports.checkOrder = async(req, res, next) =>{
 
     const data_order = await jadwal_menu.findOne({
       raw: true,
-      where: { company_id: company_id, date: date, status: 2, waktu: waktu }
+      where: { company_id: company_id, date: date, status: {[Op.not]:1}, waktu: waktu }
     })
 
     const find_exist_order = await order.findOne({
       raw: true,
-      where: { user_id: user_id, company_id: company_id, date: date, status: 2, waktu: waktu }
+      where: { user_id: user_id, company_id: company_id, date: date, status: {[Op.not]:1}, waktu: waktu }
     })
 
     const find_exist_order_date = await order.findAll({
       raw: true,
-      where: { user_id: user_id, company_id: company_id, date: date, status: 2, waktu: waktu }
+      where: { user_id: user_id, company_id: company_id, date: date, status: {[Op.not]:1}, waktu: waktu }
     })
 
     if(data_order){
