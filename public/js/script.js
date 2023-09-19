@@ -809,12 +809,16 @@ function changeEmptyState() {
 					$('.emptyCard').hide();
 					$('.badDate').hide();
 					$('.closeChange').hide();
+					$("#potonganKantor").removeClass('d-none');
+					$("#potonganKantor").addClass('d-flex');
 				} else if (orderItemReguler.status == 2) {
 					$('.notEmptyCard').show();
 					$('.lanjutBayar').hide();
 					$('.emptyCard').hide();
 					$('.badDate').hide();
 					$('.closeChange').show();
+					$("#potonganKantor").removeClass('d-none');
+					$("#potonganKantor").addClass('d-flex');
 				}
 			}else if($("#stat").val() == 'kosong'){
 				localStorage.setItem('resultCard', JSON.stringify([]));
@@ -823,6 +827,8 @@ function changeEmptyState() {
 				$('.emptyCard').hide();
 				$('.badDate').show();
 				$('.closeChange').hide();
+				$("#potonganKantor").removeClass('d-flex');
+				$("#potonganKantor").addClass('d-none');
 			}
 		} else {
 			if ($("#stat").val() == 'existing') {
@@ -831,12 +837,16 @@ function changeEmptyState() {
 				$('.emptyCard').hide();
 				$('.badDate').hide();
 				$('.closeChange').hide();
+				$("#potonganKantor").removeClass('d-flex');
+				$("#potonganKantor").addClass('d-none');
 			}else{
 				$('.notEmptyCard').hide();
 				$('.lanjutBayar').hide();
 				$('.emptyCard').hide();
 				$('.badDate').show();
 				$('.closeChange').hide();
+				$("#potonganKantor").removeClass('d-flex');
+				$("#potonganKantor").addClass('d-none');
 			}
 		}
 	} else {
@@ -846,6 +856,8 @@ function changeEmptyState() {
 			$('.emptyCard').hide();
 			$('.badDate').hide();
 			$('.closeChange').hide();
+			$("#potonganKantor").removeClass('d-flex');
+			$("#potonganKantor").addClass('d-none');
 		} else {
 			localStorage.setItem('resultCard', JSON.stringify([]));
 			$('.notEmptyCard').hide();
@@ -853,6 +865,8 @@ function changeEmptyState() {
 			$('.emptyCard').hide();
 			$('.badDate').show();
 			$('.closeChange').hide();
+			$("#potonganKantor").removeClass('d-flex');
+			$("#potonganKantor").addClass('d-none');
 		}
 	}
 }
