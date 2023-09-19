@@ -713,6 +713,7 @@ function checkOrder(date, jadwalwaktu) {
 			if (ress.response == "Successful" || ress.response == "Existing" || ress.response == "Not Found") {
 				let orderItemServer = ress.result
 				if (ress.response == "Successful") {
+					$("#stat").val('new')
 					var orderItem = orderItemServer.map(item => {
 						return {
 							...item,
@@ -726,6 +727,7 @@ function checkOrder(date, jadwalwaktu) {
 					var hasRegulerStatus1 = orderItem.some(item => item.type === 'Reguler');
 					var orderItemReguler = orderItem.find(obj => obj.type === "Reguler");
 				} else if (ress.response == "Existing") {
+					$("#stat").val('existing')
 					if(JSON.parse(localStorage.getItem('resultCard')).length > 0){
 						if(JSON.parse(localStorage.getItem('resultCard'))[0].type=='Reguler'){
 							localStorage.removeItem('resultCard')
@@ -737,6 +739,7 @@ function checkOrder(date, jadwalwaktu) {
 					var orderItemReguler = 'existing';
 					$('.badDate').hide();
 				}else{
+					$("#stat").val('kosong')
 					var orderItem = []
 					var hasRegulerStatus1 = 'kosong';
 					var orderItemReguler = 'kosong';
@@ -764,27 +767,23 @@ function checkOrder(date, jadwalwaktu) {
 				}
 				if (hasRegulerStatus1 == true || hasRegulerStatus1 == 'existing') {
 					if (orderItemReguler.status == 1) {
-						$("#stat").val('new')
 						resultCard = resultCard.filter(obj => obj.type !== 'Reguler');
 						resultCard = resultCard.concat(orderItem);
 						updateCard();
 						localResultCard();
 						changeEmptyState();
 					} else if (orderItemReguler.status == 2) {
-						$("#stat").val('new')
 						resultCard = orderItem
 						updateCard();
 						localResultCard();
 						changeEmptyState();
 					} else {
-						$("#stat").val('existing')
 						resultCard = orderItem
 						updateCard();
 						localResultCard();
 						changeEmptyState();
 					}
 				} else {
-					$("#stat").val('kosong')
 					updateCard();
 					localResultCard();
 					changeEmptyState();
@@ -841,7 +840,7 @@ function changeEmptyState() {
 			}
 		}
 	} else {
-		if (stat == 'existing') {
+		if ($("#stat").val() == 'existing') {
 			$('.notEmptyCard').show();
 			$('.lanjutBayar').show();
 			$('.emptyCard').hide();
