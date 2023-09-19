@@ -726,7 +726,7 @@ function checkOrder(date, jadwalwaktu) {
 					var hasRegulerStatus1 = orderItem.some(item => item.type === 'Reguler');
 					var orderItemReguler = orderItem.find(obj => obj.type === "Reguler");
 				} else if (ress.response == "Existing") {
-					if(JSON.parse(localStorage.getItem('resultCard'))){
+					if(JSON.parse(localStorage.getItem('resultCard')).length > 0){
 						if(JSON.parse(localStorage.getItem('resultCard'))[0].type=='Reguler'){
 							localStorage.removeItem('resultCard')
 						}
@@ -735,6 +735,7 @@ function checkOrder(date, jadwalwaktu) {
 					var orderItem = JSON.parse(localStorage.getItem('resultCard')) ? JSON.parse(localStorage.getItem('resultCard')).length > 0 ? JSON.parse(localStorage.getItem('resultCard')) : [] : [];
 					var hasRegulerStatus1 = 'existing';
 					var orderItemReguler = 'existing';
+					$('.badDate').hide();
 				}else{
 					var orderItem = []
 					var hasRegulerStatus1 = 'kosong';

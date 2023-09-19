@@ -58,9 +58,16 @@ exports.snapPay = async(req, res, next) =>{
 
     let snap = new midtransClient.Snap({
       isProduction : false,
-      serverKey : 'SB-Mid-server-b7W016a-E1AB8b8u4YZ7dQ2N',
-      clientKey : 'SB-Mid-client-QuiowPCdcJj1f322'
+      serverKey : 'SB-Mid-server-8p1RZRep2WhxcysOmseZBVIt',
+      clientKey : 'SB-Mid-client-WLTPJwopisQQ3Uku',
+      MerchantID: 'G417036988'
     });
+    // ID Merchant	
+    // G268481961
+    // Client Key	
+    // SB-Mid-client-QuiowPCdcJj1f322
+    // Server Key	
+    // SB-Mid-server-b7W016a-E1AB8b8u4YZ7dQ2N
 
     let dates = req.body.date
     let waktu = req.body.waktu
