@@ -58,8 +58,8 @@ exports.snapPay = async(req, res, next) =>{
 
     let snap = new midtransClient.Snap({
       isProduction : false,
-      serverKey : 'SB-Mid-server-8p1RZRep2WhxcysOmseZBVIt',
-      clientKey : 'SB-Mid-client-WLTPJwopisQQ3Uku',
+      serverKey : 'SB-Mid-server-b7W016a-E1AB8b8u4YZ7dQ2N',
+      clientKey : 'SB-Mid-client-QuiowPCdcJj1f322',
       MerchantID: 'G417036988'
     });
     // ID Merchant	
@@ -127,7 +127,8 @@ exports.snapPay = async(req, res, next) =>{
         date: dates,
         total: totalorder,
         subtotal: subtotalorder,
-        waktu: waktu,
+        waktu: waktu,        
+        waktu_bayar: sequelize.literal('CURRENT_TIMESTAMP'),
         status: 1,
         uid: uid,
         uid_midtrans: transactionToken,
