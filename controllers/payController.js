@@ -1,5 +1,6 @@
 const sc = require('../config/session.js')
 const link = require('../config/link.js')
+var secret = require('../config/secret.js');
 const { Op } = require("sequelize")
 const midtransClient = require('midtrans-client');
 const { sequelize, users, order, order_item, company, paket, paket_image, jadwal_menu } = require('../models')
@@ -18,7 +19,8 @@ exports.getPay = async(req, res, next) =>{
   if(sc.sess.phone){        
     res.render('pay', { 
       title: 'Pembayaran',
-      session: sc.sess
+      session: sc.sess,
+      clientID: secret.clientID
     });
 	}else{
 		res.redirect('/login')
@@ -41,7 +43,6 @@ exports.snapPay = async(req, res, next) =>{
       replacements: [2, sc.sess.user_id, dates, waktu, total],
       type: db.sequelize.QueryTypes.SELECT,
     });
-
     if(checkorder[0]){
       let inarr = checkorder.map(({ id }) => id)
       await order_item.destroy({
@@ -68,105 +69,140 @@ exports.snapPay = async(req, res, next) =>{
       type: db.sequelize.QueryTypes.SELECT,
     });
     
-    if(checkorderexist[0]){
-      return res.status(200).json({ status: 200, response: 'Successful', result:checkorderexist[0].uid_midtrans, uid: checkorderexist[0].uid})
-    }else{
-      let snap = new midtransClient.Snap({
-        isProduction : false,
-        serverKey : 'SB-Mid-server-8p1RZRep2WhxcysOmseZBVIt',
-        clientKey : 'SB-Mid-client-WLTPJwopisQQ3Uku',
-        MerchantID: 'G268481961'
-      });
-      // let snap = new midtransClient.Snap({
-      //   isProduction : false,
-      //   serverKey : 'SB-Mid-server-b7W016a-E1AB8b8u4YZ7dQ2N',
-      //   clientKey : 'SB-Mid-client-QuiowPCdcJj1f322',
-      //   MerchantID: 'G268481961'
-      // });
-
-      // let subtotal = req.body.subtotal
-
-      if(total < 1){
-        return res.status(500).json({ status: 200, response: 'Transaksi Harus Lebih Dari Rp 0'})
-      }
-        var uid = uuidv4();
-        let parameter = {
-          "transaction_details": {
-              "order_id": uid,
-              "gross_amount": total
-          }, 
-          "customer_details": {
-            first_name: sc.sess.name,
-            last_name: '',
-            phone: sc.sess.phone,
-          },
-          "enabled_payments": ["other_qris"],
-        };
-
-        await snap.createTransaction(parameter)
-        .then(async(transaction)=>{
-          const resultCard = req.body.resultCard;
-          const user_id = sc.sess.user_id
-          const company_id = sc.sess.company_id
-          const date = new Date(Date.UTC(
-            parseInt(dates.substring(0, 4)),
-            parseInt(dates.substring(5, 7))-1,
-            parseInt(dates.substring(8, 10)),
-            parseInt(0),
-            parseInt(0),
-            parseInt(0),
-            parseInt(0)
-          ));
-          var totalorder = 0;
-          var subtotalorder = 0;
-          let transactionToken = transaction.token;
-          var updatereguler = 'N'
-
-          resultCard.map(function(obj) {
-            if(obj.type === "Premium"){
-              totalorder = totalorder + (obj.rate*obj.count)
-              subtotalorder = subtotalorder + (obj.rate*obj.count)
-            }else{
-              if(obj.count == 0){
-                totalorder = totalorder - 15000
-                updatereguler = 'Y'
-              }else{
-                subtotalorder = subtotalorder + 15000
-              }
+    var now = moment(new Date()); //todays date
+    var end = checkorderexist[0].createdAt; // another date
+    var diffMs = (end - now);
+    var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+    if(checkorderexist[0].createdAt){
+      if(diffMins < 15){
+        return res.status(200).json({ status: 200, response: 'Successful', result:checkorderexist[0].uid_midtrans, uid: checkorderexist[0].uid})
+      }else{
+        let inarr = checkorderexist.map(({ id }) => id)
+        await order_item.destroy({
+          where: {
+            [Op.and]: {
+              order_id: inarr,
             }
-          });
-      
-          var dataOrder= {
-            user_id: user_id,
-            company_id: company_id,
-            date: dates,
-            total: totalorder,
-            subtotal: subtotalorder,
-            waktu: waktu,        
-            waktu_bayar: sequelize.literal('CURRENT_TIMESTAMP'),
-            status: 1,
-            uid: uid,
-            uid_midtrans: transactionToken,
-            update_reguler: updatereguler
-          }
-          const newOrder = await order.create(dataOrder)
-          const order_id = newOrder.id
-      
-          let orderPremium = resultCard.filter(obj => obj.type !== "Reguler");
-          let dataOrderItemPremium = orderPremium.map((item) => ({
-            order_id: order_id,
-            paket_id: item.id,
-            qty: item.count,
-            rate: item.rate,
-            status: 1,
-          }));
-          await order_item.bulkCreate(dataOrderItemPremium)
+          } 
+        })
 
-          return res.status(200).json({ status: 200, response: 'Successful', result:transactionToken, uid: uid})
-      }).catch(err => {
-        res.status(500).json({ status: 500, response: 'Cannot create transaction!'})
-      });
+        await order.destroy({
+          where: {
+            [Op.and]: {
+              id: inarr,
+            }
+          } 
+        })
+      }
     }
+
+    let snap = new midtransClient.Snap({
+      isProduction : false,
+      serverKey : secret.serverKey,
+      clientKey : secret.clientID,
+      MerchantID: secret.merchantID
+    });
+
+    // let subtotal = req.body.subtotal
+
+    if(total < 1){
+      return res.status(500).json({ status: 200, response: 'Transaksi Harus Lebih Dari Rp 0'})
+    }
+      var uid = uuidv4();
+      const resultCard = req.body.resultCard;
+      var totalorder = 0;
+      var subtotalorder = 0;
+      var updatereguler = 'N'
+      var arr_items = [];
+      resultCard.map(function(obj) {
+        if(obj.type === "Premium"){
+          totalorder = totalorder + (obj.rate*obj.count)
+          subtotalorder = subtotalorder + (obj.rate*obj.count)
+          arr_items.push({
+            "name": obj.name,
+            "price": parseFloat(obj.rate),
+            "quantity": obj.count,
+            "id": obj.id
+          })
+        }else{
+          if(obj.count == 0){
+            totalorder = totalorder - 15000
+            updatereguler = 'Y'
+          }else{
+            subtotalorder = subtotalorder + 15000
+            arr_items.push({
+              "name": obj.name,
+              "price": 0,
+              "quantity": obj.count,
+              "id": obj.id
+            })
+          }
+        }
+      });
+      let parameter = {
+        "transaction_details": {
+            "order_id": uid,
+            "gross_amount": total
+        }, 
+        "customer_details": {
+          first_name: sc.sess.name,
+          last_name: '',
+          phone: sc.sess.phone,
+        },
+        "item_details": arr_items,
+        "enabled_payments": ["other_qris", "gopay"],
+        "gopay": {
+          "enable_callback": true,
+          "callback_url": "http://localhost:3000/pay/callback"
+        }
+      };
+
+      await snap.createTransaction(parameter)
+      .then(async(transaction)=>{
+        const user_id = sc.sess.user_id
+        const company_id = sc.sess.company_id
+        const date = new Date(Date.UTC(
+          parseInt(dates.substring(0, 4)),
+          parseInt(dates.substring(5, 7))-1,
+          parseInt(dates.substring(8, 10)),
+          parseInt(0),
+          parseInt(0),
+          parseInt(0),
+          parseInt(0)
+        ));
+      
+        let transactionToken = transaction.token;
+    
+        var dataOrder= {
+          user_id: user_id,
+          company_id: company_id,
+          date: dates,
+          total: totalorder,
+          subtotal: subtotalorder,
+          waktu: waktu,        
+          waktu_bayar: '1990-01-01 00:00:00',
+          status: 1,
+          uid: uid,
+          uid_midtrans: transactionToken,
+          update_reguler: updatereguler
+        }
+        const newOrder = await order.create(dataOrder)
+        const order_id = newOrder.id
+    
+        let orderPremium = resultCard.filter(obj => obj.type !== "Reguler");
+        let dataOrderItemPremium = orderPremium.map((item) => ({
+          order_id: order_id,
+          paket_id: item.id,
+          qty: item.count,
+          rate: item.rate,
+          status: 1,
+        }));
+        await order_item.bulkCreate(dataOrderItemPremium)
+
+        return res.status(200).json({ status: 200, response: 'Successful', result:transactionToken, uid: uid})
+    }).catch(err => {
+      res.status(500).json({ status: 500, response: 'Cannot create transaction!'})
+    });
   }
 }
 
@@ -265,7 +301,7 @@ exports.changeStatus = async(req, res, next) =>{
   });
   if(checkorder[0]){
     const url = `https://api.sandbox.midtrans.com/v2/${uid}/status`;
-    const options = {method: 'GET', headers: {accept: 'application/json', 'Authorization': `Basic ${btoa('SB-Mid-server-8p1RZRep2WhxcysOmseZBVIt:')}`}};
+    const options = {method: 'GET', headers: {accept: 'application/json', 'Authorization': `Basic ${btoa(secret.serverKey+':')}`}};
 
     await fetch(url, options)
       .then(res => res.json())
@@ -317,5 +353,36 @@ exports.changeStatus = async(req, res, next) =>{
   }else{
     return res.status(500).json({ status: 500, response: 'Data Not Found!'})
   }
+}
 
+exports.getPayFinish = async(req, res, next) =>{
+  sc.sess=req.session
+  if(!(sc.sess.lng)){
+    sc.sess.lng = 'en'
+  }
+  req.setLocale(sc.sess.lng)
+  if(sc.sess.phone){        
+    res.render('payFinish', { 
+      title: 'Pembayaran Berhasil',
+      session: sc.sess,
+    });
+	}else{
+		res.redirect('/login')
+	}  
+}
+
+exports.getPayUnfinish = async(req, res, next) =>{
+  sc.sess=req.session
+  if(!(sc.sess.lng)){
+    sc.sess.lng = 'en'
+  }
+  req.setLocale(sc.sess.lng)
+  if(sc.sess.phone){        
+    res.render('payUnfinish', { 
+      title: 'Pembayaran Tertunda',
+      session: sc.sess,
+    });
+	}else{
+		res.redirect('/login')
+	}  
 }
