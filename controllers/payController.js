@@ -4,6 +4,7 @@ const { Op } = require("sequelize")
 const midtransClient = require('midtrans-client');
 const { sequelize, users, order, order_item, company, paket, paket_image, jadwal_menu } = require('../models')
 const moment = require('moment-timezone')
+const fetch = require('node-fetch');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../models/index.js');
 moment.locale('id')
@@ -55,19 +56,13 @@ exports.snapPay = async(req, res, next) =>{
         } 
       })
     }
-
+    
     let snap = new midtransClient.Snap({
       isProduction : false,
       serverKey : 'SB-Mid-server-b7W016a-E1AB8b8u4YZ7dQ2N',
       clientKey : 'SB-Mid-client-QuiowPCdcJj1f322',
-      MerchantID: 'G417036988'
+      MerchantID: 'G268481961'
     });
-    // ID Merchant	
-    // G268481961
-    // Client Key	
-    // SB-Mid-client-QuiowPCdcJj1f322
-    // Server Key	
-    // SB-Mid-server-b7W016a-E1AB8b8u4YZ7dQ2N
 
     let dates = req.body.date
     let waktu = req.body.waktu
@@ -84,12 +79,16 @@ exports.snapPay = async(req, res, next) =>{
           "order_id": uid,
           "gross_amount": total
       }, 
+      "customer_details": {
+        first_name: sc.sess.name,
+        last_name: '',
+        phone: sc.sess.phone,
+      },
       "enabled_payments": ["other_qris"],
     };
 
-    snap.createTransaction(parameter)
+    await snap.createTransaction(parameter)
     .then(async(transaction)=>{
-      
       const resultCard = req.body.resultCard;
       const user_id = sc.sess.user_id
       const company_id = sc.sess.company_id
@@ -148,7 +147,9 @@ exports.snapPay = async(req, res, next) =>{
       await order_item.bulkCreate(dataOrderItemPremium)
 
       return res.status(200).json({ status: 200, response: 'Successful', result:transactionToken, uid: uid})
-    })
+    }).catch(err => {
+      res.status(500).json({ status: 500, response: 'Cannot create transaction!'})
+    });
   }
 }
 
@@ -246,44 +247,56 @@ exports.changeStatus = async(req, res, next) =>{
     type: db.sequelize.QueryTypes.SELECT,
   });
   if(checkorder[0]){
-    if(checkorder[0].update_reguler == 'Y'){
-      var checkpaket = 'SELECT * FROM jadwal_menu WHERE date(`date`)=? AND waktu=? AND company_id=? AND status=?';
-      var getpaket = await db.sequelize.query(checkpaket, {
-        replacements: [moment(checkorder[0].date).format('YYYY-MM-DD'), checkorder[0].waktu, checkorder[0].company_id, 2],
-        type: db.sequelize.QueryTypes.SELECT,
-      });
+    const url = `https://api.sandbox.midtrans.com/v2/${uid}/status`;
+    const options = {method: 'GET', headers: {accept: 'application/json', 'Authorization': `Basic ${btoa('SB-Mid-server-8p1RZRep2WhxcysOmseZBVIt:')}`}};
 
-      dataJadwal= {
-        qty_perubahan: getpaket[0].qty_perubahan - 1,
-      }
-      await jadwal_menu.update(dataJadwal, {
-        where: {
-          id: getpaket[0].id
+    await fetch(url, options)
+      .then(res => res.json())
+      .then(async(json) => {
+        if(json.transaction_status == 'settlement'){
+          if(checkorder[0].update_reguler == 'Y' && fraud_status == 'accept'){
+            var checkpaket = 'SELECT * FROM jadwal_menu WHERE date(`date`)=? AND waktu=? AND company_id=? AND status=?';
+            var getpaket = await db.sequelize.query(checkpaket, {
+              replacements: [moment(checkorder[0].date).format('YYYY-MM-DD'), checkorder[0].waktu, checkorder[0].company_id, 2],
+              type: db.sequelize.QueryTypes.SELECT,
+            });
+
+            dataJadwal= {
+              qty_perubahan: getpaket[0].qty_perubahan - 1,
+            }
+            await jadwal_menu.update(dataJadwal, {
+              where: {
+                id: getpaket[0].id
+              }
+            });
+          }
+          
+          var date = new Date();
+          dataOrder= {
+            waktu_bayar: moment(date).format('YYYY-MM-DD HH:mm:ss'),
+            status: 2
+          }
+
+          await order.update(dataOrder, {
+            where: {
+              id: checkorder[0].id
+            }
+          });
+
+          dataOrderdetail= {
+            status: 2
+          }
+
+          await order_item.update(dataOrderdetail, {
+            where: {
+              order_id: checkorder[0].id
+            }
+          });
+          return res.status(200).json({ status: 200, response: 'Successful'})
         }
-      });
-    }
-    var date = new Date();
-    dataOrder= {
-      waktu_bayar: moment(date).format('YYYY-MM-DD HH:mm:ss'),
-      status: 2
-    }
-
-    await order.update(dataOrder, {
-      where: {
-        id: checkorder[0].id
-      }
-    });
-
-    dataOrderdetail= {
-      status: 2
-    }
-
-    await order_item.update(dataOrderdetail, {
-      where: {
-        order_id: checkorder[0].id
-      }
-    });
-    return res.status(200).json({ status: 200, response: 'Successful'})
+      })
+      .catch(err => res.status(500).json({ status: 500, response: 'Transaction not paid!'}));
+    
   }else{
     return res.status(500).json({ status: 500, response: 'Data Not Found!'})
   }

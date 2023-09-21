@@ -72,6 +72,7 @@
               </div>
             </form>
             <small>* Apabila total harga tidak sesuai, periksa kembali keranjang makanan anda atau <a href="javascript:void(0)" class="minicart__open--btn openCard" data-offcanvas>Klik Disini</a></small>
+            <small>* Setelah melakukan pembayaran, silahkan kembali ke halaman ini dan tunggu sampai transaksi sukses</small>
             <!-- <br><br> -->
 
             <div class="text-right">
@@ -118,7 +119,7 @@
   </main>
   <%- include("./template/footer.ejs") %>
   <%- include("./template/js.ejs") %>
-  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-DcCuq4OcwlgozvHl"></script>
+  <script src="https://app.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-DcCuq4OcwlgozvHl"></script>
   <script>
     $(document).ready(function(){     
       moment.locale('id');
@@ -128,8 +129,6 @@
 
       $(".btnPay").click(function(){
         confirmPay();
-        // $('.detailPembayaran').hide();
-        // $('.statusPembayaran').show();
       });
 
       if(!localStorage.getItem('waktuBayar') && !localStorage.getItem('tanggalOrder')){
