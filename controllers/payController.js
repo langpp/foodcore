@@ -69,12 +69,12 @@ exports.snapPay = async(req, res, next) =>{
       type: db.sequelize.QueryTypes.SELECT,
     });
     
-    var now = moment(new Date()); //todays date
+    var now = new Date(); //todays date
     var end = checkorderexist[0].createdAt; // another date
     var diffMs = (end - now);
     var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
     if(checkorderexist[0].createdAt){
-      if(diffMins < 15){
+      if(diffMins >=  0 && diffMins <= 15){
         return res.status(200).json({ status: 200, response: 'Successful', result:checkorderexist[0].uid_midtrans, uid: checkorderexist[0].uid})
       }else{
         let inarr = checkorderexist.map(({ id }) => id)
@@ -385,4 +385,43 @@ exports.getPayUnfinish = async(req, res, next) =>{
 	}else{
 		res.redirect('/login')
 	}  
+}
+
+exports.notification = async(req, res, next) =>{
+  if(req.body.status_code == 200){
+    var checkstr = 'SELECT * FROM `order` WHERE uid=? AND status=?';
+
+    var checkorder = await db.sequelize.query(checkstr, {
+      replacements: [req.body.order_id, 1],
+      type: db.sequelize.QueryTypes.SELECT,
+    });
+    if(checkorder[0]){
+      var date = new Date();
+          dataOrder= {
+          waktu_bayar: moment(date).format('YYYY-MM-DD HH:mm:ss'),
+          status: 2
+      }
+  
+      await order.update(dataOrder, {
+          where: {
+              id: checkorder[0].id
+          }
+      });
+  
+      dataOrderdetail= {
+          status: 2
+      }
+  
+      await order_item.update(dataOrderdetail, {
+          where: {
+              order_id: checkorder[0].id
+          }
+      });
+      return res.status(200).json({ status: 200, response: 'Transaction Paid!'})
+    }else{
+      return res.status(500).json({ status: 500, response: 'Transaction Not Found!'})
+    }
+  }else{
+    return res.status(201).json({ status: 201, response: 'Transaction Not Paid!'})
+  }
 }
