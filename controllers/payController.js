@@ -69,11 +69,11 @@ exports.snapPay = async(req, res, next) =>{
       type: db.sequelize.QueryTypes.SELECT,
     });
     
-    var now = new Date(); //todays date
-    var end = checkorderexist[0].createdAt; // another date
-    var diffMs = (end - now);
-    var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
-    if(checkorderexist[0].createdAt){
+    if(checkorderexist[0]){
+      var now = new Date(); //todays date
+      var end = checkorderexist[0].createdAt; // another date
+      var diffMs = (end - now);
+      var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
       if(diffMins >=  0 && diffMins <= 15){
         return res.status(200).json({ status: 200, response: 'Successful', result:checkorderexist[0].uid_midtrans, uid: checkorderexist[0].uid})
       }else{
