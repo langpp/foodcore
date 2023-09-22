@@ -127,29 +127,45 @@ exports.snapPay = async (req, res, next) => {
 		var subtotalorder = 0;
 		var updatereguler = 'N'
 		var arr_items = [];
-		resultCard.map(function(obj) {
-			if (obj.type === "Premium") {
-				totalorder = totalorder + (obj.rate * obj.count)
-				subtotalorder = subtotalorder + (obj.rate * obj.count)
-				arr_items.push({
-					"name": obj.name,
-					"price": parseFloat(obj.rate),
-					"quantity": obj.count,
-					"id": obj.id
-				})
-			} else {
+    var potongan = 15000;
+    resultCard.map(function(obj) {
+			if (obj.type === "Reguler") {
 				if (obj.count == 0) {
 					totalorder = totalorder - 15000
 					updatereguler = 'Y'
 				} else {
 					subtotalorder = subtotalorder + 15000
-					arr_items.push({
+          arr_items.push({
 						"name": obj.name,
-						"price": 0,
+						"price": parseFloat(obj.rate),
 						"quantity": obj.count,
 						"id": obj.id
 					})
 				}
+			} else {
+        totalorder = totalorder + (obj.rate * obj.count)
+				subtotalorder = subtotalorder + (obj.rate * obj.count)
+        if(updatereguler == 'Y'){
+          if(potongan > 0){
+            if(potongan > parseFloat(obj.rate)){
+              var price = 0
+              potongan = potongan - parseFloat(obj.rate)
+            }else{
+              var price = parseFloat(obj.rate) - potongan
+              potongan = potongan - parseFloat(obj.rate)
+            }
+          }else{
+            var price = parseFloat(obj.rate)
+          }
+        }else{
+          var price = parseFloat(obj.rate)
+        }
+				arr_items.push({
+					"name": obj.name,
+					"price": price,
+					"quantity": obj.count,
+					"id": obj.id
+				})
 			}
 		});
 		let parameter = {
@@ -219,7 +235,6 @@ exports.snapPay = async (req, res, next) => {
 					uid: uid
 				})
 			}).catch(err => {
-        console.log(err)
 				res.status(500).json({
 					status: 500,
 					response: 'Cannot create transaction!'
@@ -322,14 +337,14 @@ exports.changeStatus = async(req, res, next) =>{
     type: db.sequelize.QueryTypes.SELECT,
   });
   if(checkorder[0]){
-    const url = `https://api.sandbox.midtrans.com/v2/${uid}/status`;
+    const url = `https://api.midtrans.com/v2/${uid}/status`;
     const options = {method: 'GET', headers: {accept: 'application/json', 'Authorization': `Basic ${btoa(secret.serverKey+':')}`}};
 
     await fetch(url, options)
       .then(res => res.json())
       .then(async(json) => {
         if(json.transaction_status == 'settlement'){
-          if(checkorder[0].update_reguler == 'Y' && fraud_status == 'accept'){
+          if(checkorder[0].update_reguler == 'Y'){
             var checkpaket = 'SELECT * FROM jadwal_menu WHERE date(`date`)=? AND waktu=? AND company_id=? AND status=?';
             var getpaket = await db.sequelize.query(checkpaket, {
               replacements: [moment(checkorder[0].date).format('YYYY-MM-DD'), checkorder[0].waktu, checkorder[0].company_id, 2],
@@ -370,7 +385,7 @@ exports.changeStatus = async(req, res, next) =>{
           return res.status(200).json({ status: 200, response: 'Successful'})
         }
       })
-      .catch(err => res.status(500).json({ status: 500, response: 'Transaction not paid!'}));
+      .catch(err => {res.status(500).json({ status: 500, response: 'Transaction not paid!'})});
     
   }else{
     return res.status(500).json({ status: 500, response: 'Data Not Found!'})
