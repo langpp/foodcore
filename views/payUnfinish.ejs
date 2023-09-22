@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+	<%- include("./template/css.ejs") %>
+	<body>
+		<header class="header__section">
+			<%- include("./template/login_info.ejs") %>
+			<div class="main__header main__header2 header__sticky sticky" style="margin-top: 36px;">
+				<div class="container">
+					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
+						<div class="offcanvas__header--menu__open ">
+							<a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+							</a>
+						</div>
+						<%- include("./template/header_menu.ejs") %>
+					</div>
+				</div>
+			</div>
+			<%- include("./template/toolbar.ejs") %>
+			<%- include("./template/search_box.ejs") %>
+			<%- include("./template/card.ejs") %>
+		</header>
+	<!-- End header area -->
+
+	<main class="main__content_wrapper">
+    <section class="product__section section--padding mt-100">
+      <div class="container">
+        <div class="col-lg-12 mt-3">
+          <nav>
+            <ol class="cd-breadcrumb custom-separator">
+              <li><a href="javascript:void(0)">Home</a></li>
+              <li class="current"><em>Cek Pembayaran</em></li>
+            </ol>
+          </nav>
+        </div>
+          <!-- Start deals banner section -->
+          <section class="statusPembayaran deals__banner--section banner__bg">
+            <div class="container">
+              <div class="row align-items-center">
+                <div class="col-lg-5 col-md-5 deals__baner--col">
+                  <div class="deals__banner--content">
+                    <h3 class="deals__banner--content__subtitle text__secondary">Pembayaran Tertunda!</h3>
+                    <h2 class="deals__banner--content__maintitle">Status pembayaran anda dalam proses, sistem akan otomatis mengupdate status pembayaran anda.</h2>
+                    <div class="checkout__content--step__footer d-md-flex">
+                      <a class="continue__shipping--btn btn border-radius-5" href="/">Kembali Ke Beranda</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-7 col-md-7 deals__baner--col">
+                  <div class="banner__items text-right">
+                    <div class="banner__items--thumbnail display-block">
+                      <img class="banner__items--thumbnail__img display-block" src="/img/banner/banner-layer.png" alt="banner-layer-img">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <!-- End deals banner section -->
+      </div>
+    </section>
+    <!-- End product section -->
+  </main>
+  <%- include("./template/footer.ejs") %>
+  <%- include("./template/js.ejs") %>
+</body>
+</html>

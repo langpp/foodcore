@@ -196,11 +196,11 @@ exports.postLogin = async(req, res, next) =>{
 
         var urlTo = '/'
         if(user.userType == 1){
-          urlTo = req.protocol+'://'+req.get('host')+'/admin/client'
+          urlTo = '/admin/client'
         }else if(user.userType == 4){
-          urlTo = req.protocol+'://'+req.get('host')+'/admin/jadwal'
+          urlTo = '/admin/jadwal'
         }else if(user.userType == 5 || user.userType == 7){
-          urlTo = req.protocol+'://'+req.get('host')+'/premium'
+          urlTo = '/premium'
         }
 
 
