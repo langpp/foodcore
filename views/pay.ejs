@@ -162,6 +162,7 @@
           },
           success: function(ress) {
             $.LoadingOverlay("hide");
+            localStorage.setItem('remove_existing', true);
             snap.pay(ress.result, {
               onSuccess: function(result){
                 $.LoadingOverlay("hide");

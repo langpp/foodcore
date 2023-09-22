@@ -729,10 +729,13 @@ function checkOrder(date, jadwalwaktu) {
 				} else if (ress.response == "Existing") {
 					$("#stat").val('existing')
 					if(JSON.parse(localStorage.getItem('resultCard')).length > 0){
-						var a = JSON.parse(localStorage.getItem('resultCard'))
-						var b = ress.last_order;
-						a = a.filter(one => !b.find(two => one.id == two.paket_id && one.count == two.qty));
-						localStorage.setItem('resultCard', JSON.stringify(a))
+						if(localStorage.getItem('remove_existing')){
+							var a = JSON.parse(localStorage.getItem('resultCard'))
+							var b = ress.last_order;
+							a = a.filter(one => !b.find(two => one.id == two.paket_id && one.count == two.qty));
+							localStorage.setItem('resultCard', JSON.stringify([]))
+							localStorage.setItem('remove_existing', false);
+						}
 					}
 					
 					var orderItem = JSON.parse(localStorage.getItem('resultCard')) ? JSON.parse(localStorage.getItem('resultCard')).length > 0 ? JSON.parse(localStorage.getItem('resultCard')) : [] : [];
