@@ -146,7 +146,15 @@ exports.detailOrder = async(req, res, next) =>{
       ]
     })
 
-    return res.status(200).json({ status: 200, response: 'Successful', result: data_order_item})
+    const data_company = await company.findOne({
+      raw: true,
+      attributes: ['name'],
+      where: { 
+        id: sc.sess.company_id
+      }
+    })
+
+    return res.status(200).json({ status: 200, response: 'Successful', result: data_order_item, username: sc.sess.name, phone: sc.sess.phone, pt: data_company})
 	}else{
 		res.redirect('/login')
 	}
