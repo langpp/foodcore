@@ -205,12 +205,38 @@ exports.checkOrder = async(req, res, next) =>{
       })
 
       if(find_exist_order){
-        return res.status(200).json({ status: 200, response: 'Existing', result: data_order_item, complateorder: find_exist_order_date})
+        if(find_exist_order_date){
+          var last_order_id = find_exist_order_date.slice(-1).pop().id;
+          var last_order = await order_item.findAll({
+            raw: true,
+            attributes: [
+              'paket_id', 'qty', 'createdAt'],
+            where: { 
+              order_id: last_order_id,
+              status: 2
+            },
+            order: [
+              ['id', 'DESC']
+            ],
+          })
+          var now = new Date(); //todays date
+          now.toString('yyyy-MM-dd hh:mm:ss')
+          var end = last_order[0].createdAt; // another date
+          var diffMs = (now-end);
+          var diffMins = Math.round(diffMs / 60000);
+          if(diffMins > 60){
+            var last_order = []
+          }
+        }else{
+          var last_order = []
+        }
+
+        return res.status(200).json({ status: 200, response: 'Existing', result: data_order_item, complateorder: find_exist_order_date, last_order: last_order})
       }
 
-      return res.status(200).json({ status: 200, response: 'Successful', result: data_order_item, complateorder: find_exist_order_date})
+      return res.status(200).json({ status: 200, response: 'Successful', result: data_order_item, complateorder: find_exist_order_date, last_order:[]})
     }else{
-      return res.status(200).json({ status: 200, response: 'Not Found', result: [], complateorder: find_exist_order_date})
+      return res.status(200).json({ status: 200, response: 'Not Found', result: [], complateorder: find_exist_order_date, last_order:[]})
     }
     
 	}else{

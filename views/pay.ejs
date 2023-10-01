@@ -4,11 +4,11 @@
 	<body>
 		<header class="header__section">
 			<%- include("./template/login_info.ejs") %>
-			<div class="main__header main__header2 header__sticky sticky" style="margin-top: 36px;">
+			<div class="main_header mainheader2 header_sticky sticky" style="margin-top: 36px;">
 				<div class="container">
-					<div class="main__header--inner position__relative d-flex justify-content-between align-items-center">
-						<div class="offcanvas__header--menu__open ">
-							<a class="offcanvas__header--menu__open--btn" href="javascript:void(0)" data-offcanvas>
+					<div class="main_header--inner position_relative d-flex justify-content-between align-items-center">
+						<div class="offcanvas_header--menu_open ">
+							<a class="offcanvas_header--menu_open--btn" href="javascript:void(0)" data-offcanvas>
 							</a>
 						</div>
 						<%- include("./template/header_menu.ejs") %>
@@ -35,13 +35,13 @@
           <div class="detailPembayaran">
             <p>Detail Pembayaran:</p>
             <form action="#">
-              <div class="checkout__content--step checkout__contact--information2 border-radius-5">
+              <div class="checkout_content--step checkout_contact--information2 border-radius-5">
                 <div class="checkout__review d-flex justify-content-between align-items-center">
                   <div class="checkout__review--inner d-flex align-items-center">
                     <span class="checkout__review--content">Tanggal</span>
                   </div>
                   <div class="checkout__review--link">
-                    <div id="tanggalOrderPay" class="checkout__review--link__text"></div>
+                    <div id="tanggalOrderPay" class="checkout_review--link_text"></div>
                   </div>
                 </div>
                 <div class="checkout__review d-flex justify-content-between align-items-center">
@@ -49,7 +49,7 @@
                     <span class="checkout__review--content">Jadwal Makan</span>
                   </div>
                   <div class="checkout__review--link">
-                    <div id="waktuOrderPay" class="checkout__review--link__text"></div>
+                    <div id="waktuOrderPay" class="checkout_review--link_text"></div>
                   </div>
                 </div>
                 <div class="checkout__review d-flex justify-content-between align-items-center">
@@ -57,7 +57,7 @@
                     <span class="checkout__review--content"> Total Harga</span>
                   </div>
                   <div class="checkout__review--link">
-                    <div class="checkout__review--link__text">Rp. <span class="total"></span></div>
+                    <div class="checkout_review--link_text">Rp. <span class="total"></span></div>
                   </div>
                 </div>
                 <div class="checkout__review d-flex justify-content-between align-items-center">
@@ -66,7 +66,7 @@
                     </span>
                   </div>
                   <div class="checkout__review--link">
-                    <div class="checkout__review--link__text">Midtrans</div>
+                    <div class="checkout_review--link_text">Midtrans</div>
                   </div>
                 </div>
               </div>
@@ -82,20 +82,20 @@
             </div>
             <br><br>
             <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end"> -->
-              <!-- <div class="checkout__content--step__footer d-md-flex justify-content-md-end">
+              <!-- <div class="checkout_content--step_footer d-md-flex justify-content-md-end">
                 <a class="btnPay continue__shipping--btn btn border-radius-5" href="javascript:void(0)">Bayar</a>
               </div> -->
           </div>
 
           <!-- Start deals banner section -->
-          <section class="statusPembayaran deals__banner--section banner__bg">
+          <section class="statusPembayaran deals_banner--section banner_bg">
             <div class="container">
               <div class="row align-items-center">
                 <div class="col-lg-5 col-md-5 deals__baner--col">
                   <div class="deals__banner--content">
-                    <h3 class="deals__banner--content__subtitle text__secondary">Pembayaran Berhasil!</h3>
-                    <h2 class="deals__banner--content__maintitle">Kami akan mengirim pesanan sesuai tanggal yang anda pilih.</h2>
-                    <div class="checkout__content--step__footer d-md-flex">
+                    <h3 class="deals_banner--contentsubtitle text_secondary">Pembayaran Berhasil!</h3>
+                    <h2 class="deals_banner--content_maintitle">Kami akan mengirim pesanan sesuai tanggal yang anda pilih.</h2>
+                    <div class="checkout_content--step_footer d-md-flex mt-3">
                       <a class="continue__shipping--btn btn border-radius-5" href="/">Kembali Ke Beranda</a>
                     </div>
                   </div>
@@ -103,7 +103,7 @@
                 <div class="col-lg-7 col-md-7 deals__baner--col">
                   <div class="banner__items text-right">
                     <div class="banner__items--thumbnail display-block">
-                      <img class="banner__items--thumbnail__img display-block" src="/img/banner/banner-layer.png" alt="banner-layer-img">
+                      <img class="banner_items--thumbnail_img display-block" src="/img/banner/banner-layer.png" alt="banner-layer-img">
                     </div>
                   </div>
                 </div>
@@ -162,6 +162,7 @@
           },
           success: function(ress) {
             $.LoadingOverlay("hide");
+            localStorage.setItem('remove_existing', true);
             snap.pay(ress.result, {
               onSuccess: function(result){
                 $.LoadingOverlay("hide");

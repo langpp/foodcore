@@ -79,8 +79,8 @@
                     <td class="cart__table--body__list">
                         <div class="product__image two  d-flex align-items-center">
                             <div class="product__description">
-                                <h3 class="product__description--name h4"><a href="javascript:void(0)">${moment(val[2]).format('DD MMMM YYYY')} (${val[5]})</a></h3>
-                                <span class="product__description--variant">Tanggal Pengiriman: ${moment(val[3]).format('DD MMMM YYYY')}</span><br><span class="product__description--variant">List Tambahan Pesanan: </span><ul>`
+                                <h3 class="product__description--name h4"><a href="javascript:void(0)">${moment(val[3]).format('DD MMMM YYYY')} (${val[5]})</a></h3>
+                                <span class="product__description--variant">Tanggal Pengiriman: ${moment(val[2]).format('DD MMMM YYYY')}</span><br><span class="product__description--variant">List Tambahan Pesanan: </span><ul>`
                                 $.each(ress.order_details, function(index2, val2){
                                   if(val2.id == val[0]){
                                     html+=`<li class="li-style-number">${val2.paket} x ${val2.qty} - Rp ${thousandSeparator(parseInt(val2.rate))}</li>`
