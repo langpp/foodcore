@@ -68,7 +68,7 @@
                 $("#searchimage").attr('src', '/img/product/'+ress.result[0].image1)
                 $("#searchrate").html(`Rp ${ress.result[0].rateThousand}`)
                 $("#searchdescription").html(ress.result[0].keterangan)
-                $("#searchbtn").html(`<button class="addPaket btn btn-primary btn-sm minicart__open--btn w-100-media" href="javascript:void(0)" paketID="${ress.result[0].id}" paketName="${ress.result[0].name}" paketRate="${ress.result[0].rate}" paketRateThousand="${ress.result[0].rateThousand}" image1="${ress.result[0].image1}" image2="${ress.result[0].image2}" data-offcanvas>+</button>`)
+                $("#searchbtn").html(`<button class="addPaket btn btn-primary btn-sm minicart__open--btn w-100-media" href="javascript:void(0)" paketID="${ress.result[0].id}" paketName="${ress.result[0].name}" paketRate="${ress.result[0].rate}" paketRateThousand="${ress.result[0].rateThousand}" image1="${ress.result[0].image1}" image2="${ress.result[0].image2}" data-offcanvas>Tambah</button>`)
                 $(".predictive__search--close__btn").trigger('click');
                 $(".inputsearch").val('');
                 $(".resultBox").find('li').hide()

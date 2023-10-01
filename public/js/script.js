@@ -987,6 +987,9 @@ function detailOrder(order_id) {
 					$('.listHistoryOrder').append('<div class="minicart__product"><div class="minicart__product--items d-flex"><div class="minicart__thumb"><div><img src="/img/product/' + item.image1 + '" alt="prduct-img"></div></div><div class="minicart__text"><h4 class="minicart__subtitle">' + item.paket + '</h4><div class="minicart__price"><span class="current__price">Rp. ' + thousandSeparator(parseInt(item.rate)) + '</span></div><div class="minicart__text--footer d-flex align-items-center"><p class="minicart__header--desc">Jumlah: ' + item.qty + '</p></div></div></div></div>')
 					$(".detailorder").html(moment(item.date).format('DD MMMM YYYY'))
 				})
+				$(".detailorderpt").html(ress.pt.name)
+				$(".detailordernk").html(ress.username)
+				$(".detailordernt").html(ress.phone)
 				$('.totalHistoryOrder').html(thousandSeparator(parseInt(ress.result[0].total)))
 				$("#orderModal").modal("show");
 			} else {
