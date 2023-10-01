@@ -137,7 +137,7 @@ exports.snapPay = async (req, res, next) => {
 					subtotalorder = subtotalorder + 15000
           arr_items.push({
 						"name": obj.name,
-						"price": parseFloat(obj.rate),
+						"price": 0,
 						"quantity": obj.count,
 						"id": obj.id
 					})
