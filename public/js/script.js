@@ -730,11 +730,12 @@ function checkOrder(date, jadwalwaktu) {
 					$("#stat").val('existing')
 					if(JSON.parse(localStorage.getItem('resultCard')).length > 0){
 						if(localStorage.getItem('remove_existing') == true){
-							var a = JSON.parse(localStorage.getItem('resultCard'))
-							var b = ress.last_order;
-							a = a.filter(one => !b.find(two => one.id == two.paket_id && one.count == two.qty));
 							localStorage.setItem('resultCard', JSON.stringify([]))
 							localStorage.setItem('remove_existing', false);
+						}else{
+							var a = JSON.parse(localStorage.getItem('resultCard'))
+							a = a.filter(one => one.type !== 'Reguler');
+							localStorage.setItem('resultCard', JSON.stringify(a))
 						}
 					}
 					
