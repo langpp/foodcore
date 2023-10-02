@@ -729,7 +729,7 @@ function checkOrder(date, jadwalwaktu) {
 				} else if (ress.response == "Existing") {
 					$("#stat").val('existing')
 					if(JSON.parse(localStorage.getItem('resultCard')).length > 0){
-						if(localStorage.getItem('remove_existing')){
+						if(localStorage.getItem('remove_existing') == true){
 							var a = JSON.parse(localStorage.getItem('resultCard'))
 							var b = ress.last_order;
 							a = a.filter(one => !b.find(two => one.id == two.paket_id && one.count == two.qty));
