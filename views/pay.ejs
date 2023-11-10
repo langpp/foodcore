@@ -78,7 +78,8 @@
             <div class="text-right">
               <!-- <img src="/img/qr.jpg" class="mx-auto" alt="QR" style="width: 300px;"> -->
 
-              <button id="pay" class="btn btn-primary mt-3" onclick="snapPay()">Bayar Sekarang</button>  
+              <!-- <button id="pay" class="btn btn-primary mt-3" onclick="snapPay()">Bayar Sekarang</button>   -->
+              <button id="pay" class="btn btn-primary mt-3" onclick="snapXendit()">Bayar Sekarang</button>  
             </div>
             <br><br>
             <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end"> -->
@@ -175,6 +176,34 @@
                 swal("Notifikasi!", result.response, "error");
               }
             })
+          },error: function(err, data) {
+            $.LoadingOverlay("hide");
+            swal('Notifikasi', err.responseJSON.response, 'error');
+          }
+        });
+      }else{
+        confirmPay()
+      }
+    }
+
+    function snapXendit(){
+      $.LoadingOverlay("show");
+      if(totalOrder > 0){
+        $.ajax({
+          url: "/pay/snapXendit",
+          type: "POST",
+          dataType: "json",
+          data: {
+            waktu: localStorage.getItem('waktuBayar'),
+            date: localStorage.getItem('tanggalOrder'),
+            subtotal: subTotalOrder,
+            total: totalOrder,
+            resultCard: JSON.parse(localStorage.getItem('resultCard'))
+          },
+          success: function(ress) {
+            $.LoadingOverlay("hide");
+            localStorage.setItem('remove_existing', true);
+            window.location.href = `https://checkout-staging.xendit.co/v2/${ress.result}#qris`
           },error: function(err, data) {
             $.LoadingOverlay("hide");
             swal('Notifikasi', err.responseJSON.response, 'error');

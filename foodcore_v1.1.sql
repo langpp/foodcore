@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 16, 2023 at 09:48 AM
+-- Generation Time: Nov 10, 2023 at 09:46 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -90,9 +90,10 @@ CREATE TABLE `jadwal_menu` (
 --
 
 INSERT INTO `jadwal_menu` (`id`, `company_id`, `paket_id`, `date`, `status`, `createdAt`, `updatedAt`, `waktu`, `sehat`, `total`, `qty`, `qty_perubahan`) VALUES
-(73, 1, 6, '2023-09-20 00:00:00', 2, '2023-09-04 16:32:49', '2023-09-04 16:42:08', 'Pagi', 'Menu Biasa', 1500000.00, 100, 99),
-(74, 1, 6, '2023-09-19 00:00:00', 2, '2023-09-09 01:52:03', '2023-09-16 07:33:07', 'Pagi', 'Menu Biasa', 150000.00, 10, 8),
-(75, 1, 1, '2023-09-19 00:00:00', 2, '2023-09-09 02:02:43', '2023-09-12 14:30:45', 'Siang', 'Menu Biasa', 150000.00, 10, 10);
+(73, 1, 6, '2023-09-20 00:00:00', 3, '2023-09-04 16:32:49', '2023-09-19 03:02:41', 'Pagi', 'Menu Biasa', 1500000.00, 100, 99),
+(74, 1, 6, '2023-11-13 00:00:00', 2, '2023-09-09 01:52:03', '2023-10-02 02:39:44', 'Pagi', 'Menu Biasa', 150000.00, 10, 6),
+(75, 1, 1, '2023-10-06 00:00:00', 2, '2023-09-09 02:02:43', '2023-09-12 14:30:45', 'Pagi', 'Menu Biasa', 150000.00, 10, 10),
+(76, 1, 6, '2023-09-24 00:00:00', 2, '2023-09-19 02:02:12', '2023-09-19 04:47:01', 'Pagi', 'Menu Biasa', 150000.00, 10, 9);
 
 -- --------------------------------------------------------
 
@@ -133,14 +134,6 @@ CREATE TABLE `order` (
   `waktu_bayar` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
---
--- Dumping data for table `order`
---
-
-INSERT INTO `order` (`id`, `uid`, `uid_midtrans`, `user_id`, `company_id`, `date`, `waktu`, `status`, `createdAt`, `updatedAt`, `total`, `subtotal`, `update_reguler`, `waktu_bayar`) VALUES
-(131, '', '', 24, 1, '2023-09-19 00:00:00', 'Pagi', 2, '2023-09-16 07:33:07', '2023-09-16 07:33:07', -3000.00, 12000.00, 'Y', '2023-09-19 07:00:00'),
-(132, 'b3b64211-81e3-444f-866a-6d0ccb861d3c', '2b0b93ac-0266-4cad-9ffc-3f8603ae339f', 24, 1, '2023-09-19 00:00:00', 'Pagi', 2, '2023-09-16 07:34:43', '2023-09-16 07:35:23', 27000.00, 27000.00, 'N', '2023-09-16 14:35:23');
-
 -- --------------------------------------------------------
 
 --
@@ -157,15 +150,6 @@ CREATE TABLE `order_item` (
   `updatedAt` datetime NOT NULL,
   `rate` decimal(20,2) DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
-
---
--- Dumping data for table `order_item`
---
-
-INSERT INTO `order_item` (`id`, `order_id`, `paket_id`, `qty`, `status`, `createdAt`, `updatedAt`, `rate`) VALUES
-(173, 131, 36, 1, 2, '2023-09-16 07:33:07', '2023-09-16 07:33:07', 12000.00),
-(174, 132, 36, 1, 2, '2023-09-16 07:34:43', '2023-09-16 07:35:23', 12000.00),
-(175, 132, 33, 1, 2, '2023-09-16 07:34:43', '2023-09-16 07:35:23', 15000.00);
 
 -- --------------------------------------------------------
 
@@ -469,7 +453,7 @@ ALTER TABLE `hari`
 -- AUTO_INCREMENT for table `jadwal_menu`
 --
 ALTER TABLE `jadwal_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT for table `lauk`
@@ -481,13 +465,13 @@ ALTER TABLE `lauk`
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=209;
 
 --
 -- AUTO_INCREMENT for table `order_item`
 --
 ALTER TABLE `order_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=274;
 
 --
 -- AUTO_INCREMENT for table `paket`
@@ -523,7 +507,7 @@ ALTER TABLE `saran`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- Constraints for dumped tables

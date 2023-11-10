@@ -8,7 +8,11 @@ const moment = require('moment-timezone')
 const fetch = require('node-fetch');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../models/index.js');
+const axios = require('axios');
 moment.locale('id')
+
+const { Xendit, Invoice: InvoiceClient } =  require('xendit-node');
+const xenditInvoiceClient = new InvoiceClient({secretKey: secret.xenditKey})
 
 exports.getPay = async(req, res, next) =>{
   sc.sess=req.session
@@ -235,13 +239,368 @@ exports.snapPay = async (req, res, next) => {
 					uid: uid
 				})
 			}).catch(err => {
-        console.log(err)
 				res.status(500).json({
 					status: 500,
 					response: 'Cannot create transaction!'
 				})
 			});
 	}
+}
+
+exports.snapXendit = async(req, res, next) =>{
+  sc.sess=req.session
+  if(!(sc.sess.lng)){
+    sc.sess.lng = 'en'
+  }
+  req.setLocale(sc.sess.lng)
+	if (sc.sess.phone) {
+		let dates = req.body.date
+		let waktu = req.body.waktu
+		let total = req.body.total
+
+		var checkstr = 'SELECT * FROM `order` WHERE status!=? AND user_id=? AND date!=? AND waktu !=? AND total !=?';
+
+		var checkorder = await db.sequelize.query(checkstr, {
+			replacements: [2, sc.sess.user_id, dates, waktu, total],
+			type: db.sequelize.QueryTypes.SELECT,
+		});
+		if (checkorder[0]) {
+			let inarr = checkorder.map(({
+				id
+			}) => id)
+			await order_item.destroy({
+				where: {
+					[Op.and]: {
+						order_id: inarr,
+					}
+				}
+			})
+
+			await order.destroy({
+				where: {
+					[Op.and]: {
+						id: inarr,
+					}
+				}
+			})
+		}
+
+    var checkexist = 'SELECT * FROM `order` WHERE status!=? AND user_id=? AND date=? AND waktu =? AND total =?';
+
+		var checkorderexist = await db.sequelize.query(checkexist, {
+			replacements: [2, sc.sess.user_id, dates, waktu, total],
+			type: db.sequelize.QueryTypes.SELECT,
+		});
+
+		if (checkorderexist[0]) {
+			var now = new Date(); //todays date
+			var end = checkorderexist[0].createdAt; // another date
+			var diffMs = (now-end);
+      var diffMins = Math.round(diffMs / 60000);
+			if (diffMins >= 0 && diffMins <= 15) {
+				return res.status(200).json({
+					status: 200,
+					response: 'Successful',
+					result: checkorderexist[0].uid_midtrans,
+					uid: checkorderexist[0].uid
+				})
+			} else {
+				let inarr = checkorderexist.map(({
+					id
+				}) => id)
+				await order_item.destroy({
+					where: {
+						[Op.and]: {
+							order_id: inarr,
+						}
+					}
+				})
+
+				await order.destroy({
+					where: {
+						[Op.and]: {
+							id: inarr,
+						}
+					}
+				})
+			}
+		}
+
+    if (total < 1) {
+			return res.status(500).json({
+				status: 200,
+				response: 'Transaksi Harus Lebih Dari Rp 0'
+			})
+		}
+
+    var uid = uuidv4();
+		const resultCard = req.body.resultCard;
+		var totalorder = 0;
+		var subtotalorder = 0;
+		var updatereguler = 'N'
+		var arr_items = [];
+		var potongan = 15000;
+		resultCard.map(function(obj) {
+			if (obj.type === "Reguler") {
+				if (obj.count == 0) {
+					totalorder = totalorder - 15000
+					updatereguler = 'Y'
+				} else {
+					subtotalorder = subtotalorder + 15000
+          arr_items.push({
+						"name": obj.name,
+						"price": 0,
+						"quantity": obj.count,
+						"id": obj.id
+					})
+				}
+			} else {
+        totalorder = totalorder + (obj.rate * obj.count)
+				subtotalorder = subtotalorder + (obj.rate * obj.count)
+        if(updatereguler == 'Y'){
+          if(potongan > 0){
+            if(potongan > parseFloat(obj.rate)){
+              var price = 0
+              potongan = potongan - parseFloat(obj.rate)
+            }else{
+              var price = parseFloat(obj.rate) - potongan
+              potongan = potongan - parseFloat(obj.rate)
+            }
+          }else{
+            var price = parseFloat(obj.rate)
+          }
+        }else{
+          var price = parseFloat(obj.rate)
+        }
+				arr_items.push({
+					"name": obj.name,
+					"price": price,
+					"quantity": obj.count,
+					"id": obj.id
+				})
+			}
+		});
+    const data = {
+        "amount": total,
+        "invoiceDuration": 900,
+        "externalId": uid,
+        "description": "Checkout Menu Foodcore " + sc.sess.name,
+        "currency": "IDR",
+        "reminderTime": 1,
+        "paymentMethods": ['QRIS'],
+        "successRedirectUrl": 'https://foodcore.id/pay/checkXendit/'+uid,
+        "failureRedirectUrl": 'https://foodcore.id/pay'
+    };
+      
+    await xenditInvoiceClient.createInvoice({
+        data
+    }).then(async(response) => {
+      const user_id = sc.sess.user_id
+      const company_id = sc.sess.company_id
+      const date = new Date(Date.UTC(
+        parseInt(dates.substring(0, 4)),
+        parseInt(dates.substring(5, 7)) - 1,
+        parseInt(dates.substring(8, 10)),
+        parseInt(0),
+        parseInt(0),
+        parseInt(0),
+        parseInt(0)
+      ));
+
+      let transactionToken = response.id;
+
+      var dataOrder = {
+        user_id: user_id,
+        company_id: company_id,
+        date: dates,
+        total: totalorder,
+        subtotal: subtotalorder,
+        waktu: waktu,
+        waktu_bayar: '1990-01-01 00:00:00',
+        status: 1,
+        uid: uid,
+        uid_midtrans: transactionToken,
+        update_reguler: updatereguler
+      }
+      const newOrder = await order.create(dataOrder)
+      const order_id = newOrder.id
+
+      let orderPremium = resultCard.filter(obj => obj.type !== "Reguler");
+      let dataOrderItemPremium = orderPremium.map((item) => ({
+        order_id: order_id,
+        paket_id: item.id,
+        qty: item.count,
+        rate: item.rate,
+        status: 1,
+      }));
+      await order_item.bulkCreate(dataOrderItemPremium)
+
+      return res.status(200).json({
+        status: 200,
+        response: 'Successful',
+        result: response.id,
+        uid: uid
+      })
+    }).catch((error) => {
+      return res.status(500).json({
+        status: 500,
+        response: 'Cannot create transaction!'
+      })
+    });
+  }
+}
+
+exports.checkXendit = async(req, res, next) =>{
+  sc.sess=req.session
+  if(!(sc.sess.lng)){
+    sc.sess.lng = 'en'
+  }
+  req.setLocale(sc.sess.lng)
+	if (sc.sess.phone) {
+    var code = req.params.code;
+
+    var checkstr = 'SELECT * FROM `order` WHERE uid=? AND status=?';
+
+    var checkorder = await db.sequelize.query(checkstr, {
+      replacements: [code, 1],
+      type: db.sequelize.QueryTypes.SELECT,
+    });
+    if(checkorder[0]){
+      const xenditSecretKey = secret.xenditKey;
+      const apiUrl = `https://api.xendit.co/v2/invoices/${checkorder[0].uid_midtrans}`;
+      const headers = {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${Buffer.from(`${xenditSecretKey}:`).toString('base64')}`,
+      };
+
+      await axios
+      .get(apiUrl, { headers })
+      .then(async(response) => {
+        const invoiceDetails = response.data;
+        const transactionStatus = invoiceDetails.status;
+        if(transactionStatus == 'PAID'){
+          if(checkorder[0].update_reguler == 'Y'){
+            var checkpaket = 'SELECT * FROM jadwal_menu WHERE date(`date`)=? AND waktu=? AND company_id=? AND status=?';
+            var getpaket = await db.sequelize.query(checkpaket, {
+              replacements: [moment(checkorder[0].date).format('YYYY-MM-DD'), checkorder[0].waktu, checkorder[0].company_id, 2],
+              type: db.sequelize.QueryTypes.SELECT,
+            });
+
+            dataJadwal= {
+              qty_perubahan: getpaket[0].qty_perubahan - 1,
+            }
+            await jadwal_menu.update(dataJadwal, {
+              where: {
+                id: getpaket[0].id
+              }
+            });
+          }
+          
+          var date = new Date();
+          dataOrder= {
+            waktu_bayar: moment(date).format('YYYY-MM-DD HH:mm:ss'),
+            status: 2
+          }
+
+          await order.update(dataOrder, {
+            where: {
+              id: checkorder[0].id
+            }
+          });
+
+          dataOrderdetail= {
+            status: 2
+          }
+
+          await order_item.update(dataOrderdetail, {
+            where: {
+              order_id: checkorder[0].id
+            }
+          });
+          return res.redirect('/pay/finish')
+        }else{
+          return res.redirect('/pay')
+        }
+      })
+      .catch((error) => {
+        return res.redirect('/pay')
+      });
+    }else{
+      return res.redirect('/pay')
+    }
+  }
+}
+
+exports.notificationXendit = async(req, res, next) =>{
+  var code = req.body.id;
+  var checkstr = 'SELECT * FROM `order` WHERE uid_midtrans=? AND status=?';
+  var checkorder = await db.sequelize.query(checkstr, {
+    replacements: [code, 1],
+    type: db.sequelize.QueryTypes.SELECT,
+  });
+  if(checkorder[0]){
+    const xenditSecretKey = secret.xenditKey;
+    const apiUrl = `https://api.xendit.co/v2/invoices/${code}`;
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${Buffer.from(`${xenditSecretKey}:`).toString('base64')}`,
+    };
+
+    await axios
+    .get(apiUrl, { headers })
+    .then(async(response) => {
+      const invoiceDetails = response.data;
+      const transactionStatus = invoiceDetails.status;
+      if(transactionStatus == 'PAID'){
+        if(checkorder[0].update_reguler == 'Y'){
+          var checkpaket = 'SELECT * FROM jadwal_menu WHERE date(`date`)=? AND waktu=? AND company_id=? AND status=?';
+          var getpaket = await db.sequelize.query(checkpaket, {
+            replacements: [moment(checkorder[0].date).format('YYYY-MM-DD'), checkorder[0].waktu, checkorder[0].company_id, 2],
+            type: db.sequelize.QueryTypes.SELECT,
+          });
+
+          dataJadwal= {
+            qty_perubahan: getpaket[0].qty_perubahan - 1,
+          }
+          await jadwal_menu.update(dataJadwal, {
+            where: {
+              id: getpaket[0].id
+            }
+          });
+        }
+        
+        var date = new Date();
+        dataOrder= {
+          waktu_bayar: moment(date).format('YYYY-MM-DD HH:mm:ss'),
+          status: 2
+        }
+
+        await order.update(dataOrder, {
+          where: {
+            id: checkorder[0].id
+          }
+        });
+
+        dataOrderdetail= {
+          status: 2
+        }
+
+        await order_item.update(dataOrderdetail, {
+          where: {
+            order_id: checkorder[0].id
+          }
+        });
+        return res.status(200).json({ status: 200, response: 'Transaction Paid!'})
+      }else{
+        return res.status(201).json({ status: 201, response: 'Transaction Not Paid!'})
+      }
+    })
+    .catch((error) => {
+      return res.status(201).json({ status: 201, response: 'Transaction Not Paid!'})
+    });
+  }else{
+    return res.status(500).json({ status: 500, response: 'Transaction Not Found!'})
+  }
 }
 
 exports.confirmPay = async(req, res, next) =>{
@@ -269,6 +628,10 @@ exports.confirmPay = async(req, res, next) =>{
     var total = 0;
     var subtotal = 0;
     var updatereguler = false
+
+    if(!resultCard){
+      return res.status(200).json({ status: 200, response: 'Pilih menu terlebih dahulu!'})
+    }
 
     let dataOrderloop = resultCard.map(function(obj) {
       if(obj.type === "Premium"){

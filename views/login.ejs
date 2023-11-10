@@ -214,6 +214,7 @@
         },
         success: function(data) {
           if(data.response == "succeed"){
+            localStorage.clear();
             document.location.href = data.url;
           }else if(data.response == "Password incorrect"){
             $(".loginInfo").html(data.response)

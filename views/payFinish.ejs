@@ -63,5 +63,16 @@
   </main>
   <%- include("./template/footer.ejs") %>
   <%- include("./template/js.ejs") %>
+  <script>
+    $(document).ready(function() {
+      resultCard = []
+      subTotalOrder = 0
+      totalOrder = 0
+      localStorage.removeItem('tanggalOrder')
+      localStorage.removeItem('waktuBayar')
+      localStorage.removeItem('resultCard')
+      updateCard();
+    })
+  </script>
 </body>
 </html>

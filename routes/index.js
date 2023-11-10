@@ -17,8 +17,6 @@ const like = require('./like')
 const comingsoon = require('./comingsoon')
 const invoice = require('./invoice')
 
-const xendit = require('./xendit')
-
 const admin_client = require('./admin/client')
 const admin_paket = require('./admin/paket')
 const admin_jadwal = require('./admin/jadwal')
@@ -51,7 +49,5 @@ router.use('/admin/user', admin_user)
 router.use('/user/order', user_order)
 router.use('/user/profile', user_profile)
 
-
-router.use('/xendit', xendit)
 
 module.exports = router
