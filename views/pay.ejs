@@ -203,7 +203,7 @@
           success: function(ress) {
             $.LoadingOverlay("hide");
             localStorage.setItem('remove_existing', true);
-            window.location.href = `https://checkout-staging.xendit.co/v2/${ress.result}#qris`
+            window.location.href = `https://checkout.xendit.co/v2/${ress.result}#qris`
           },error: function(err, data) {
             $.LoadingOverlay("hide");
             swal('Notifikasi', err.responseJSON.response, 'error');

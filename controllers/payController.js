@@ -12,7 +12,7 @@ const axios = require('axios');
 moment.locale('id')
 
 const { Xendit, Invoice: InvoiceClient } =  require('xendit-node');
-const xenditInvoiceClient = new InvoiceClient({secretKey: secret.xenditKey})
+const xenditInvoiceClient = new InvoiceClient({secretKey: secret.xenditKeyProd})
 
 exports.getPay = async(req, res, next) =>{
   sc.sess=req.session
@@ -183,11 +183,7 @@ exports.snapPay = async (req, res, next) => {
 				phone: sc.sess.phone,
 			},
 			"item_details": arr_items,
-			"enabled_payments": ["other_qris", "gopay"],
-			"gopay": {
-				"enable_callback": true,
-				"callback_url": "https://foodcore.id/pay/finish"
-			}
+			"enabled_payments": ["other_qris"],
 		};
 
 		await snap.createTransaction(parameter)
@@ -391,7 +387,7 @@ exports.snapXendit = async(req, res, next) =>{
         "successRedirectUrl": 'https://foodcore.id/pay/checkXendit/'+uid,
         "failureRedirectUrl": 'https://foodcore.id/pay'
     };
-      
+    
     await xenditInvoiceClient.createInvoice({
         data
     }).then(async(response) => {
@@ -466,7 +462,7 @@ exports.checkXendit = async(req, res, next) =>{
       type: db.sequelize.QueryTypes.SELECT,
     });
     if(checkorder[0]){
-      const xenditSecretKey = secret.xenditKey;
+      const xenditSecretKey = secret.xenditKeyProd;
       const apiUrl = `https://api.xendit.co/v2/invoices/${checkorder[0].uid_midtrans}`;
       const headers = {
         'Content-Type': 'application/json',
@@ -539,7 +535,7 @@ exports.notificationXendit = async(req, res, next) =>{
     type: db.sequelize.QueryTypes.SELECT,
   });
   if(checkorder[0]){
-    const xenditSecretKey = secret.xenditKey;
+    const xenditSecretKey = secret.xenditKeyProd;
     const apiUrl = `https://api.xendit.co/v2/invoices/${code}`;
     const headers = {
       'Content-Type': 'application/json',
