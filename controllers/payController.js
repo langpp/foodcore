@@ -513,7 +513,7 @@ exports.checkXendit = async(req, res, next) =>{
               order_id: checkorder[0].id
             }
           });
-          return res.redirect('/pay/finish')
+          return res.redirect('/user/order?clear=true')
         }else{
           return res.redirect('/pay')
         }
